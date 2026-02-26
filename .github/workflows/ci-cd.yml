@@ -1,0 +1,159 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+env:
+  PYTHON_VERSION: "3.11"
+  COVERAGE_THRESHOLD: "80"
+
+jobs:
+  # ─────────────────────────────────
+  # STAGE 1: VALIDATE
+  # ─────────────────────────────────
+  validate:
+    name: "Validate Code Quality"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Lint with flake8
+        run: |
+          # Errores de sintaxis / código no definido (rompe el build)
+          flake8 src/ tests/ --count --select=E9,F63,F7,F82 --show-source --statistics
+          # Advertencias de estilo (max complejidad 10, max línea 120)
+          flake8 src/ tests/ --count --max-complexity=10 --max-line-length=120 --statistics
+
+  # ─────────────────────────────────
+  # STAGE 2: TEST
+  # ─────────────────────────────────
+  test:
+    name: "Run Tests & Check Coverage"
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Run tests with coverage
+        env:
+          API_KEY: "test-key-ci"
+          APP_NAME: "Agentes-CI"
+          DEBUG: "false"
+        run: |
+          pytest tests/ \
+            --cov=src \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-fail-under=${{ env.COVERAGE_THRESHOLD }} \
+            -v
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: coverage-report
+          path: coverage.xml
+          retention-days: 30
+
+  # ─────────────────────────────────
+  # STAGE 3: SECURITY
+  # ─────────────────────────────────
+  security:
+    name: "Security Scan"
+    needs: validate
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install dev dependencies
+        run: pip install -r requirements-dev.txt
+
+      - name: Dependency vulnerability scan (pip-audit)
+        run: pip-audit -r requirements.txt
+
+      - name: Static security analysis (bandit)
+        run: |
+          bandit -r src/ \
+            --severity-level medium \
+            --confidence-level medium \
+            -f json \
+            -o bandit-report.json \
+            || bandit -r src/ --severity-level medium --confidence-level medium
+
+      - name: Upload bandit report
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: bandit-security-report
+          path: bandit-report.json
+          retention-days: 30
+
+  # ─────────────────────────────────
+  # STAGE 4: BUILD
+  # ─────────────────────────────────
+  build:
+    name: "Build Artifact"
+    needs: [test, security]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: "pip"
+
+      - name: Install production dependencies
+        run: pip install -r requirements.txt
+
+      - name: Set artifact version
+        id: version
+        run: |
+          VERSION="${{ github.ref_name }}-${{ github.run_number }}-${GITHUB_SHA::8}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "Build version: ${VERSION}"
+
+      - name: Package application
+        run: |
+          zip -r "agentes-${{ steps.version.outputs.version }}.zip" \
+            src/ \
+            static/ \
+            templates/ \
+            requirements.txt \
+            --exclude "**/__pycache__/*" \
+            --exclude "**/*.pyc"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: "agentes-${{ steps.version.outputs.version }}"
+          path: "agentes-${{ steps.version.outputs.version }}.zip"
+          retention-days: 90
