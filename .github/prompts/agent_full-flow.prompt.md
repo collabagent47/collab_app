@@ -1,6 +1,6 @@
 ---
 description: 'Flujo completo del ecosistema multi-agente. Ejecuta el pipeline GAIDD (Spec) como primer paso obligatorio, presenta el menú de selección de agentes y coordina Backend, Frontend y QA según la selección.'
-agent: 'agent'
+mode: 'agent'
 ---
 
 Inicia el flujo completo del ecosistema multi-agente.

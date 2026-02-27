@@ -35,7 +35,7 @@ criterios de aceptación y contratos definidos en el SPEC.
 ## Verificación de Contexto del SPEC
 
 Antes de ejecutar tus skills verifica que tienes disponible en
-`docs/specs/specification.md`:
+`.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md`:
 - [ ] TODAS las HU con criterios de aceptación en Gherkin
 - [ ] Flujos críticos identificados en arquitectura
 - [ ] Contratos de API a verificar entre servicios

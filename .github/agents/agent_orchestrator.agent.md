@@ -60,7 +60,7 @@ Cuando el pipeline GAIDD complete el Paso 3, presenta el resumen de cierre y pre
 ## PASO 2 — Ensamblaje de Contexto por Agente
 
 Una vez completado el Spec Agent, recupera selectivamente
-del documento `docs/specs/specification.md` solo la
+del documento `.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md` solo la
 información relevante para cada agente potencial:
 
 ### Contexto para Backend Agent
@@ -205,7 +205,7 @@ Puedes invocar cada agente cuando lo necesites:
    @qa-agent       → conversación directa con el agente
    /qa             → ejecutar el prompt completo de QA
 
-💡 Tip: Cada agente leerá docs/specs/specification.md
+💡 Tip: Cada agente leerá .github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md
         para obtener su contexto del SPEC.
 ════════════════════════════════════════════════════
 ```

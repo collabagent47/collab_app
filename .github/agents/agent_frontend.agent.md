@@ -27,7 +27,7 @@ contratos de APIs a consumir y design system del proyecto.
 ## Verificación de Contexto del SPEC
 
 Antes de ejecutar tus skills verifica que tienes disponible en
-`docs/specs/specification.md`:
+`.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md`:
 - [ ] HU relacionadas con interfaces y flujos de usuario
 - [ ] Contratos de APIs a consumir (NO implementar)
 - [ ] Design system y patrones de componentes definidos

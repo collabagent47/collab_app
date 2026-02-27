@@ -1,6 +1,6 @@
 ---
 description: 'Ejecuta el QA Agent con todos sus 8 skills para generar el plan de calidad completo del proyecto.'
-agent: 'agent'
+mode: 'agent'
 ---
 
 Ejecuta el QA Agent completo con todos sus 8 skills en secuencia.
@@ -8,7 +8,7 @@ Ejecuta el QA Agent completo con todos sus 8 skills en secuencia.
 **Instrucciones para @qa-agent:**
 
 1. Cargar `.github/docs/lineamientos/qa-guidelines.md` como primer paso
-2. Leer el contexto completo del SPEC desde `docs/specs/specification.md`
+2. Leer el contexto completo del SPEC desde `.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md`
 3. Ejecutar los 8 skills en orden estricto:
    - SKILL 1: `test-strategy-planner` → generar `.github/docs/output/qa/test-strategy.md`
    - SKILL 2: `gherkin-case-generator` → generar features en `.github/docs/output/qa/features/`
@@ -20,4 +20,4 @@ Ejecuta el QA Agent completo con todos sus 8 skills en secuencia.
    - SKILL 8: `performance-analyzer` → generar `.github/docs/output/qa/performance-plan.md`
 4. Generar reporte consolidado de calidad al finalizar
 
-**Prerequisito:** Debe existir `docs/specs/specification.md`. Si no existe, ejecutar `/spec` primero.
+**Prerequisito:** Debe existir `.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md`. Si no existe, ejecutar `/spec` primero.

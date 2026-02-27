@@ -1,6 +1,6 @@
 ---
 description: 'Ejecuta el pipeline GAIDD directamente para validar y analizar un requerimiento o Historia de Usuario (Pasos 0 → 3).'
-agent: 'agent'
+mode: 'agent'
 ---
 
 Ejecuta el pipeline GAIDD completo de especificación.

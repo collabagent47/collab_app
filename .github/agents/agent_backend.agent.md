@@ -27,7 +27,7 @@ contratos y arquitectura relevantes para tu dominio.
 ## Verificación de Contexto del SPEC
 
 Antes de ejecutar tus skills verifica que tienes disponible en
-`docs/specs/specification.md`:
+`.github/docs/output/{HU-ID}/{HU-ID}.step_3.requirement-analysis.md`:
 - [ ] HU asignadas al backend con criterios de aceptación
 - [ ] Contratos de API a implementar
 - [ ] Arquitectura y stack tecnológico definido

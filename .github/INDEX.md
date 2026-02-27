@@ -13,7 +13,6 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 | `agent_backend.agent.md` | Backend Agent | Implementación de lógica de negocio, APIs y persistencia |
 | `agent_frontend.agent.md` | Frontend Agent | Implementación de interfaces, componentes y flujos de usuario |
 | `agent_qa.agent.md` | QA Agent | Estrategia de pruebas, casos Gherkin, riesgos y automatización |
-| `agent_automation.agent.md` | Automation Agent | Pipelines CI/CD, README y release notes |
 | `agent_spec_gaidd.epic-vs-user-story-evaluator.agent.md` | Evaluador INVEST | **Paso 0:** Evaluación INVEST — clasifica HU vs Épica |
 | `agent_spec_gaidd.high-level-requirement-evaluator.agent.md` | — | **Paso 0:** Evaluación IEEE 830 para requerimientos tradicionales |
 | `agent_spec_gaidd.requirement-validator.agent.md` | — | **Paso 2:** Validación de completitud y viabilidad técnica |
@@ -32,16 +31,6 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 | `prompt_agent_backend.prompt.md` | Activa directamente el Backend Agent |
 | `prompt_agent_frontend.prompt.md` | Activa directamente el Frontend Agent |
 | `prompt_agent_qa.prompt.md` | Activa directamente el QA Agent |
-| `prompt_agent_automation.prompt.md` | Activa directamente el Automation Agent |
-
-### Flujos Rápidos
-
-| Archivo | Descripción |
-|---------|-------------|
-| `prompt_quick_spec.prompt.md` | Validación rápida de requerimiento |
-| `prompt_quick_tests.prompt.md` | Generación rápida de casos de prueba |
-| `prompt_quick_review.prompt.md` | Revisión rápida de código |
-| `prompt_quick_pipeline.prompt.md` | Generación rápida de pipeline CI/CD |
 
 ### Prompts del Pipeline GAIDD
 
@@ -52,46 +41,6 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 | `prompt_agent_spec_gaidd.requirement-conflict-resolver.prompt.md` | Paso 2.1 | Resuelve conflictos y ambigüedades detectados |
 | `prompt_agent_spec_gaidd.requirement-analysis.prompt.md` | Paso 3 | Análisis técnico del requerimiento |
 
-### Prompts por Skill (ejecución independiente)
-
-Permiten activar un skill específico sin cargar el agente completo.
-
-**QA**
-
-| Archivo | Skill que activa |
-|---------|-----------------|
-| `prompt_skill_qa_gherkin-case-generator.prompt.md` | Genera casos Gherkin a partir de criterios de aceptación |
-| `prompt_skill_qa_test-strategy-planner.prompt.md` | Define estrategia base de pruebas |
-| `prompt_skill_qa_risk-identifier.prompt.md` | Identifica riesgos técnicos y funcionales |
-| `prompt_skill_qa_test-data-specifier.prompt.md` | Especifica datos de prueba |
-| `prompt_skill_qa_critical-flow-mapper.prompt.md` | Mapea flujos críticos del sistema |
-| `prompt_skill_qa_regression-strategy.prompt.md` | Define estrategia de regresión |
-| `prompt_skill_qa_automation-flow-proposer.prompt.md` | Propone flujos candidatos para automatización |
-| `prompt_skill_qa_performance-analyzer.prompt.md` | Analiza performance y define SLAs |
-
-**Backend**
-
-| Archivo | Skill que activa |
-|---------|-----------------|
-| `prompt_skill_backend_clean-code-reviewer.prompt.md` | Revisa y refactoriza código según SOLID y lineamientos |
-| `prompt_skill_backend_integration-test-generator.prompt.md` | Genera tests de integración para un endpoint |
-| `prompt_skill_backend_contract-test-generator.prompt.md` | Genera tests de contrato entre servicios |
-
-**Frontend**
-
-| Archivo | Skill que activa |
-|---------|-----------------|
-| `prompt_skill_frontend_component-reviewer.prompt.md` | Revisa calidad y buenas prácticas del componente |
-| `prompt_skill_frontend_accessibility-checker.prompt.md` | Verifica accesibilidad WCAG 2.1 |
-| `prompt_skill_frontend_ui-test-generator.prompt.md` | Genera tests de interfaz de usuario |
-
-**Automation**
-
-| Archivo | Skill que activa |
-|---------|-----------------|
-| `prompt_skill_automation_pipeline-config-generator.prompt.md` | Genera configuración completa de pipeline CI/CD |
-| `prompt_skill_automation_readme-doc-writer.prompt.md` | Genera o actualiza README del proyecto/módulo |
-| `prompt_skill_automation_release-notes-generator.prompt.md` | Genera notas de release / CHANGELOG |
 
 ---
 
@@ -125,14 +74,6 @@ Permiten activar un skill específico sin cargar el agente completo.
 | `skill_frontend_component-reviewer.md` | Revisa componentes de UI |
 | `skill_frontend_accessibility-checker.md` | Verifica accesibilidad (WCAG) |
 | `skill_frontend_ui-test-generator.md` | Genera tests de interfaz de usuario |
-
-### Automation (`skill_automation_*`)
-
-| Archivo | Descripción |
-|---------|-------------|
-| `skill_automation_pipeline-config-generator.md` | Genera configuración de pipeline CI/CD |
-| `skill_automation_readme-doc-writer.md` | Genera o actualiza documentación README |
-| `skill_automation_release-notes-generator.md` | Genera notas de release |
 
 ---
 
@@ -188,8 +129,7 @@ Reportes generados automáticamente por el pipeline GAIDD, organizados por agent
 │   ├── features/{dominio}/*.feature
 │   └── data/test-data-catalog.md
 ├── backend/                              ← Backend Agent ({backend_output_folder})
-├── frontend/                             ← Frontend Agent ({frontend_output_folder})
-└── automation/                           ← Automation Agent ({automation_output_folder})
+└── frontend/                              ← Frontend Agent ({frontend_output_folder})
 ```
 
 ---
@@ -216,7 +156,6 @@ agent_spec_gaidd.requirement-analysis.agent.md
 │ agent_backend.agent.md    → skill_backend_*         │
 │ agent_frontend.agent.md   → skill_frontend_*        │
 │ agent_qa.agent.md         → skill_qa_*              │
-│ agent_automation.agent.md → skill_automation_*      │
 └─────────────────────────────────────────────────────┘
        ↓ genera reportes en
 .github/docs/output/{agente}/
@@ -240,5 +179,4 @@ output_folder: "{project-root}/.github/docs/output"
 qa_output_folder:         "{output_folder}/qa"
 backend_output_folder:    "{output_folder}/backend"
 frontend_output_folder:   "{output_folder}/frontend"
-automation_output_folder: "{output_folder}/automation"
 ```
