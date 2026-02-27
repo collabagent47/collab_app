@@ -76,7 +76,7 @@ Debe usarse como referencia obligatoria durante análisis, refinamiento e implem
 <!-- Referencias de ejemplo - actualizar según proyecto específico -->
 <!-- Config: {project-root}/.github/docs/config/config.yaml -->
 <!-- Agents: {project-root}/.github/agents/ -->
-<!-- Output: {project-root}/.github/docs/output -->
+<!-- Output: {project-root}/.github/_gaidd-output -->
 <!-- Context: {project-root}/.github/docs/context -->
 
 Ahora verifico los archivos de contexto disponibles y los de validación del paso anterior.
@@ -105,8 +105,8 @@ Los siguientes archivos son necesarios para continuar y no se encuentran en el w
 
 | # | Archivo | Ubicación esperada | Para qué sirve |
 |---|---------|-------------------|----------------|
-| 1 | `HU-P001.step_2.requirement-validator.md` | `docs/output/HU-P001/` | Resultado de la validación del requerimiento en el Paso 2: completitud, claridad, viabilidad técnica, hallazgos y recomendaciones específicas. Sin este insumo no es posible contextualizar qué ambigüedades o riesgos ya fueron identificados. |
-| 2 | `HU-P001.step_2.resolution-of-conflicts.md` | `docs/output/HU-P001/` | Registro de cómo se resolvieron los conflictos y ambigüedades detectados en el Paso 2. Es necesario para no repetir análisis ya realizados ni contradecir resoluciones tomadas. |
+| 1 | `HU-P001.step_2.requirement-validator.md` | `_gaidd-output/HU-P001/` | Resultado de la validación del requerimiento en el Paso 2: completitud, claridad, viabilidad técnica, hallazgos y recomendaciones específicas. Sin este insumo no es posible contextualizar qué ambigüedades o riesgos ya fueron identificados. |
+| 2 | `HU-P001.step_2.resolution-of-conflicts.md` | `_gaidd-output/HU-P001/` | Registro de cómo se resolvieron los conflictos y ambigüedades detectados en el Paso 2. Es necesario para no repetir análisis ya realizados ni contradecir resoluciones tomadas. |
 1. El estilo base del backend es reactivo (WebFlux + Reactor + R2DBC).
 2. El módulo de Catálogo de Productos mantiene separación estricta por capas.
 3. La API REST del proyecto usa contratos JSON y versionado por ruta.

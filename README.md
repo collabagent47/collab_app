@@ -1,29 +1,25 @@
 # ASD — AI-Driven Development Framework
 
-Framework de desarrollo impulsado por IA, basado en el modelo **GAIDD** (Generative AI-Driven Development). Proporciona un ecosistema de agentes especializados, prompts estructurados y skills reutilizables para guiar el ciclo completo de desarrollo de software: desde la validación de requerimientos hasta la implementación y automatización.
+Framework de desarrollo impulsado por IA basado en el modelo **GAIDD** (Generative AI-Driven Development). Orquesta agentes especializados de GitHub Copilot para validar, analizar e implementar requerimientos de software con coherencia, trazabilidad y calidad.
 
 ---
 
-## ¿Qué es GAIDD?
-
-**GAIDD** es una metodología de desarrollo que integra GitHub Copilot como orquestador de un pipeline de agentes de IA especializados. Cada agente tiene un rol definido y colabora en orden para asegurar calidad, trazabilidad y consistencia a lo largo del proceso de desarrollo.
-
----
-
-## Estructura del Proyecto
+## Estructura
 
 ```
 .github/
-├── agents/        → Agentes especializados (backend, frontend, QA, automation, orchestrator, spec)
-├── prompts/       → Prompts de entrada para iniciar flujos y activar skills/agentes
-├── skills/        → Habilidades reutilizables por dominio (qa, backend, frontend, automation)
-└── docs/
-    ├── config/        → Configuración de usuario (config.yaml)
-    ├── context/       → Contexto del proyecto (arquitectura, stack, dominio)
-    ├── lineamientos/  → Estándares de desarrollo y QA
-    ├── output/        → Reportes generados por el pipeline GAIDD
-    ├── requirements/  → Requerimientos e historias de usuario
-    └── GAIDD/         → Documentación del framework y fases del pipeline
+├── agents/          # 10 agentes especializados (.agent.md)
+├── prompts/         # 14 prompts de entrada (.prompt.md)
+├── skills/          # 17 habilidades reutilizables por dominio
+├── docs/
+│   ├── config/      # config.yaml — configuración del usuario
+│   ├── lineamientos/ # Estándares dev, QA y generales
+│   ├── context/     # Arquitectura, dominio, stack técnico, DoD, DoR
+│   ├── GAIDD/       # Documentación del framework
+│   └── output/      # Reportes generados (por artefacto)
+├── INDEX.md         # Inventario completo con relaciones
+└── HU-P001.md       # Ejemplo de Historia de Usuario
+README.md            # Este archivo
 ```
 
 ---
@@ -31,55 +27,67 @@ Framework de desarrollo impulsado por IA, basado en el modelo **GAIDD** (Generat
 ## Inicio Rápido
 
 ### 1. Configura tu perfil
-Edita `.github/docs/config/config.yaml` con tus datos:
+
+Edita [`.github/docs/config/config.yaml`](.github/docs/config/config.yaml):
+
 ```yaml
 user_name: TuNombre
 user_role: TuRol
-seniority_level: Senior
+seniority_level: Junior | Mid | Senior
 communication_language: Español
+document_output_language: Español
+requirements_folder: "{project-root}/.github/docs/requirements"
+output_folder: "{project-root}/.github/docs/output"
 ```
 
-### 2. Ejecuta el flujo completo
-Usa el prompt principal en GitHub Copilot Chat:
+### 2. Ejecuta el pipeline completo
+
+En GitHub Copilot Chat, escribe:
+
 ```
-@workspace #file:.github/prompts/prompt_full-flow.prompt.md
+/prompt_full-flow
 ```
 
-### 3. Flujos disponibles
+Luego pega tu Historia de Usuario o Requerimiento. El sistema clasifica, evalúa y genera el reporte automáticamente.
+
+---
+
+## Prompts Disponibles
 
 | Prompt | Descripción |
 |--------|-------------|
-| `prompt_full-flow.prompt.md` | Flujo completo: GAIDD → Selección de agente |
-| `prompt_spec.prompt.md` | Solo pipeline GAIDD (validación de requerimiento) |
-| `prompt_backend.prompt.md` | Agente backend directamente |
-| `prompt_frontend.prompt.md` | Agente frontend directamente |
-| `prompt_qa.prompt.md` | Agente QA directamente |
-| `prompt_automation.prompt.md` | Agente automation directamente |
-| `prompt_quick_*.prompt.md` | Flujos rápidos por dominio |
+| `prompt_full-flow` | **Recomendado.** Pipeline GAIDD completo → agente especializado |
+| `prompt_spec` | Solo validación del requerimiento (pasos 0–3) |
+| `prompt_backend` | Activa directamente el agente de backend |
+| `prompt_frontend` | Activa directamente el agente de frontend |
+| `prompt_qa` | Activa directamente el agente de QA |
+| `prompt_automation` | Activa directamente el agente de automatización |
+| `prompt_quick_*` | Flujos rápidos: spec, tests, review, pipeline |
 
 ---
 
 ## Pipeline GAIDD
 
 ```
-Requerimiento / HU
+Artefacto de entrada
        ↓
-  Paso 0: Clasificación (HU vs Req. Tradicional)
+[Paso 0] Clasificación → HU o Req. Tradicional
        ↓
-  Paso 1: Evaluación INVEST / IEEE 830
+[Paso 0] Evaluación INVEST / IEEE 830
        ↓
-  Paso 2: Validación de completitud y viabilidad
+[Paso 2] Validación de completitud y viabilidad
        ↓
- Paso 2.1: Resolución de conflictos (si aplica)
+[Paso 3] Análisis técnico (QUÉ / DÓNDE / POR QUÉ)
        ↓
-  Paso 3: Análisis técnico (QUÉ / DÓNDE / POR QUÉ)
+Selección de agente especializado
+(Backend / Frontend / QA / Automation)
        ↓
-  Selección de Agente (Backend / Frontend / QA / Automation)
+Generación en docs/output/{artifact_id}/
 ```
 
 ---
 
-## Índice Completo
+## Documentación Completa
 
-Ver [.github/INDEX.md](.github/INDEX.md) para el inventario completo de agentes, prompts y skills con sus relaciones.
+Consulta el [Índice del Proyecto](.github/INDEX.md) para un inventario detallado de todos los agentes, prompts, skills y sus relaciones.
 
