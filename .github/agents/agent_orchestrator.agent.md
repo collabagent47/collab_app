@@ -51,7 +51,7 @@ Cuando el pipeline GAIDD complete el Paso 3, presenta el resumen de cierre y pre
 ════════════════════════════════════════════════════
 📋 Artefacto procesado: [ID y título]
 ✅ Validación: [CONTINUAR / decisión alcanzada]
-📄 Outputs generados en: {project-root}/.github/docs/output/[artifact_id]/
+📄 Outputs generados en: {project-root}/.github/_gaidd-output/[artifact_id]/
 ════════════════════════════════════════════════════
 ```
 
@@ -221,7 +221,7 @@ Al completar todos los agentes ejecutados:
 ════════════════════════════════════════════════════
 📅 Fecha de ejecución: [fecha]
 📦 Proyecto: [nombre detectado]
-📄 Outputs GAIDD: {project-root}/.github/docs/output/[artifact_id]/
+📄 Outputs GAIDD: {project-root}/.github/_gaidd-output/[artifact_id]/
 
 PIPELINE GAIDD (SPEC):
   📋 Artefacto evaluado:       [ID y título]
@@ -250,4 +250,4 @@ Deuda técnica identificada:   X items
 - NUNCA saltes el menú de selección del usuario
 - SIEMPRE respeta el orden de dependencias entre agentes
 - Ante errores en un agente reporta y pregunta si continuar con el siguiente
-- Los outputs del pipeline GAIDD en `docs/output/` son la fuente de verdad compartida
+- Los outputs del pipeline GAIDD en `_gaidd-output/` son la fuente de verdad compartida
