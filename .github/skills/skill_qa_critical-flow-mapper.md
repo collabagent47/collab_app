@@ -74,7 +74,7 @@ Detalle:
 
 ## Entregable: Mapa de Flujos Críticos
 
-Genera `docs/critical-flows.md`:
+Genera `{qa_output_folder}/critical-flows.md`:
 
 ```markdown
 # Mapa de Flujos Críticos — [Nombre del Proyecto]
@@ -106,7 +106,7 @@ PASO 3 → Documentar happy path con pasos detallados
 PASO 4 → Identificar sad paths y puntos de falla posibles
 PASO 5 → Mapear dependencias entre flujos
 PASO 6 → Asignar a suite de smoke o regresión
-PASO 7 → Generar docs/critical-flows.md
+PASO 7 → Generar {qa_output_folder}/critical-flows.md
 ```
 
 ## Reporte
@@ -123,6 +123,6 @@ Happy paths documentados:        X
 Sad paths identificados:         X por flujo (promedio)
 Dependencias mapeadas:           X relaciones entre flujos
 
-Documento generado: docs/critical-flows.md ✅
+Documento generado: {qa_output_folder}/critical-flows.md ✅
 ════════════════════════════════════════════════
 ```

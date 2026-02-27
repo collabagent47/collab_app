@@ -109,7 +109,7 @@ PASO 4 → Identificar edge cases del negocio
 PASO 5 → Generar el .feature file con todos los escenarios
 PASO 6 → Verificar que el Gherkin usa lenguaje de negocio (no técnico)
 PASO 7 → Asignar tags correctamente
-PASO 8 → Guardar en /tests/features/[dominio]/[nombre].feature
+PASO 8 → Guardar en {qa_output_folder}/features/[dominio]/[nombre].feature
 ```
 
 ## Reporte de Generación
@@ -133,6 +133,6 @@ Tags aplicados:
   @manual:                       X
 
 Archivos generados:
-  tests/features/[dominio]/*.feature  ✅
+  {qa_output_folder}/features/[dominio]/*.feature  ✅
 ════════════════════════════════════════════════
 ```

@@ -14,10 +14,10 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 | `agent_frontend.agent.md` | Frontend Agent | Implementación de interfaces, componentes y flujos de usuario |
 | `agent_qa.agent.md` | QA Agent | Estrategia de pruebas, casos Gherkin, riesgos y automatización |
 | `agent_automation.agent.md` | Automation Agent | Pipelines CI/CD, README y release notes |
-| `agent_spec_gaidd.epic-vs-user-story-evaluator.agent.md` | Santiago | **Paso 0:** Evaluación INVEST — clasifica HU vs Épica |
+| `agent_spec_gaidd.epic-vs-user-story-evaluator.agent.md` | Evaluador INVEST | **Paso 0:** Evaluación INVEST — clasifica HU vs Épica |
 | `agent_spec_gaidd.high-level-requirement-evaluator.agent.md` | — | **Paso 0:** Evaluación IEEE 830 para requerimientos tradicionales |
 | `agent_spec_gaidd.requirement-validator.agent.md` | — | **Paso 2:** Validación de completitud y viabilidad técnica |
-| `agent_spec_gaidd.requirement-analysis.agent.md` | Tomás | **Paso 3:** Análisis técnico (QUÉ / DÓNDE / POR QUÉ) |
+| `agent_spec_gaidd.requirement-analysis.agent.md` | Analizador Técnico | **Paso 3:** Análisis técnico (QUÉ / DÓNDE / POR QUÉ) |
 
 ---
 
@@ -27,12 +27,12 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 
 | Archivo | Descripción |
 |---------|-------------|
-| `prompt_full-flow.prompt.md` | **Punto de entrada recomendado.** Ejecuta el ecosistema completo: GAIDD → selección de agente |
-| `prompt_spec.prompt.md` | Ejecuta solo el pipeline GAIDD (validación de requerimiento) |
-| `prompt_backend.prompt.md` | Activa directamente el Backend Agent |
-| `prompt_frontend.prompt.md` | Activa directamente el Frontend Agent |
-| `prompt_qa.prompt.md` | Activa directamente el QA Agent |
-| `prompt_automation.prompt.md` | Activa directamente el Automation Agent |
+| `prompt_agent_full-flow.prompt.md` | **Punto de entrada recomendado.** Ejecuta el ecosistema completo: GAIDD → selección de agente |
+| `prompt_agent_spec.prompt.md` | Ejecuta solo el pipeline GAIDD (validación de requerimiento) |
+| `prompt_agent_backend.prompt.md` | Activa directamente el Backend Agent |
+| `prompt_agent_frontend.prompt.md` | Activa directamente el Frontend Agent |
+| `prompt_agent_qa.prompt.md` | Activa directamente el QA Agent |
+| `prompt_agent_automation.prompt.md` | Activa directamente el Automation Agent |
 
 ### Flujos Rápidos
 
@@ -47,10 +47,51 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 
 | Archivo | Paso | Descripción |
 |---------|------|-------------|
-| `prompt_spec_gaidd.granularity-classifier.prompt.md` | Paso 0 | Clasifica el artefacto (HU vs Req. Tradicional) y activa agente correspondiente |
-| `prompt_spec_gaidd.requirement-validator.prompt.md` | Paso 2 | Valida completitud y viabilidad técnica |
-| `prompt_spec_gaidd.requirement-conflict-resolver.prompt.md` | Paso 2.1 | Resuelve conflictos y ambigüedades detectados |
-| `prompt_spec_gaidd.requirement-analysis.prompt.md` | Paso 3 | Análisis técnico del requerimiento |
+| `prompt_agent_spec_gaidd.granularity-classifier.prompt.md` | Paso 0 | Clasifica el artefacto (HU vs Req. Tradicional) y activa agente correspondiente |
+| `prompt_agent_spec_gaidd.requirement-validator.prompt.md` | Paso 2 | Valida completitud y viabilidad técnica |
+| `prompt_agent_spec_gaidd.requirement-conflict-resolver.prompt.md` | Paso 2.1 | Resuelve conflictos y ambigüedades detectados |
+| `prompt_agent_spec_gaidd.requirement-analysis.prompt.md` | Paso 3 | Análisis técnico del requerimiento |
+
+### Prompts por Skill (ejecución independiente)
+
+Permiten activar un skill específico sin cargar el agente completo.
+
+**QA**
+
+| Archivo | Skill que activa |
+|---------|-----------------|
+| `prompt_skill_qa_gherkin-case-generator.prompt.md` | Genera casos Gherkin a partir de criterios de aceptación |
+| `prompt_skill_qa_test-strategy-planner.prompt.md` | Define estrategia base de pruebas |
+| `prompt_skill_qa_risk-identifier.prompt.md` | Identifica riesgos técnicos y funcionales |
+| `prompt_skill_qa_test-data-specifier.prompt.md` | Especifica datos de prueba |
+| `prompt_skill_qa_critical-flow-mapper.prompt.md` | Mapea flujos críticos del sistema |
+| `prompt_skill_qa_regression-strategy.prompt.md` | Define estrategia de regresión |
+| `prompt_skill_qa_automation-flow-proposer.prompt.md` | Propone flujos candidatos para automatización |
+| `prompt_skill_qa_performance-analyzer.prompt.md` | Analiza performance y define SLAs |
+
+**Backend**
+
+| Archivo | Skill que activa |
+|---------|-----------------|
+| `prompt_skill_backend_clean-code-reviewer.prompt.md` | Revisa y refactoriza código según SOLID y lineamientos |
+| `prompt_skill_backend_integration-test-generator.prompt.md` | Genera tests de integración para un endpoint |
+| `prompt_skill_backend_contract-test-generator.prompt.md` | Genera tests de contrato entre servicios |
+
+**Frontend**
+
+| Archivo | Skill que activa |
+|---------|-----------------|
+| `prompt_skill_frontend_component-reviewer.prompt.md` | Revisa calidad y buenas prácticas del componente |
+| `prompt_skill_frontend_accessibility-checker.prompt.md` | Verifica accesibilidad WCAG 2.1 |
+| `prompt_skill_frontend_ui-test-generator.prompt.md` | Genera tests de interfaz de usuario |
+
+**Automation**
+
+| Archivo | Skill que activa |
+|---------|-----------------|
+| `prompt_skill_automation_pipeline-config-generator.prompt.md` | Genera configuración completa de pipeline CI/CD |
+| `prompt_skill_automation_readme-doc-writer.prompt.md` | Genera o actualiza README del proyecto/módulo |
+| `prompt_skill_automation_release-notes-generator.prompt.md` | Genera notas de release / CHANGELOG |
 
 ---
 
@@ -127,15 +168,28 @@ Inventario completo de agentes, prompts, skills y documentación con sus relacio
 
 ### Outputs (`docs/output/`)
 
-Reportes generados automáticamente por el pipeline GAIDD, organizados por artefacto:
+Reportes generados automáticamente por el pipeline GAIDD, organizados por agente. Ruta base configurada en `config.yaml` → `output_folder`.
 
 ```
-docs/output/
-└── {artifact_id}/
-    ├── {artifact_id}.step_1.epic_vs_user-story_evaluation.md
-    ├── {artifact_id}.step_2.requirement-validator.md
-    ├── {artifact_id}.step_2.resolution-of-conflicts.md
-    └── {artifact_id}.step_3.requirement-analysis.md
+.github/docs/output/
+├── {artifact_id}/                        ← GAIDD pipeline (Spec Agent)
+│   ├── {artifact_id}.step_1.epic_vs_user-story_evaluation.md
+│   ├── {artifact_id}.step_2.requirement-validator.md
+│   ├── {artifact_id}.step_2.resolution-of-conflicts.md
+│   └── {artifact_id}.step_3.requirement-analysis.md
+├── qa/                                   ← QA Agent ({qa_output_folder})
+│   ├── test-strategy.md
+│   ├── risk-matrix.md
+│   ├── critical-flows.md
+│   ├── regression-plan.md
+│   ├── automation-roadmap.md
+│   ├── performance-plan.md
+│   ├── qa-quality-report.md
+│   ├── features/{dominio}/*.feature
+│   └── data/test-data-catalog.md
+├── backend/                              ← Backend Agent ({backend_output_folder})
+├── frontend/                             ← Frontend Agent ({frontend_output_folder})
+└── automation/                           ← Automation Agent ({automation_output_folder})
 ```
 
 ---
@@ -143,11 +197,11 @@ docs/output/
 ## 🔗 Relaciones Clave
 
 ```
-prompt_full-flow.prompt.md
+prompt_agent_full-flow.prompt.md
        ↓ activa
 agent_orchestrator.agent.md
        ↓ ejecuta
-prompt_spec_gaidd.granularity-classifier.prompt.md
+prompt_agent_spec_gaidd.granularity-classifier.prompt.md
        ↓ activa según tipo de artefacto
 ┌──────────────────────────────────────────────────────────┐
 │ Historia de Usuario → agent_spec_gaidd.epic-vs-user-story-evaluator  │
@@ -165,7 +219,7 @@ agent_spec_gaidd.requirement-analysis.agent.md
 │ agent_automation.agent.md → skill_automation_*      │
 └─────────────────────────────────────────────────────┘
        ↓ genera reportes en
-docs/output/{artifact_id}/
+.github/docs/output/{agente}/
 ```
 
 ---
@@ -183,4 +237,8 @@ communication_language: Español
 document_output_language: Español
 requirements_folder: "{project-root}/.github/docs/requirements"
 output_folder: "{project-root}/.github/docs/output"
+qa_output_folder:         "{output_folder}/qa"
+backend_output_folder:    "{output_folder}/backend"
+frontend_output_folder:   "{output_folder}/frontend"
+automation_output_folder: "{output_folder}/automation"
 ```

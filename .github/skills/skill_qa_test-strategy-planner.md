@@ -38,7 +38,7 @@ Para cada proyecto define la proporción según el tipo de arquitectura:
 
 ## Entregable: Plan de Estrategia
 
-Genera el documento `docs/test-strategy.md` con esta estructura:
+Genera el documento `{qa_output_folder}/test-strategy.md` con esta estructura:
 
 ```markdown
 # Test Strategy — [Nombre del Proyecto]
@@ -114,7 +114,7 @@ PASO 4 → Establecer criterios de entrada y salida
 PASO 5 → Definir métricas con umbrales concretos
 PASO 6 → Seleccionar herramientas acordes al stack del proyecto
 PASO 7 → Identificar riesgos de calidad iniciales
-PASO 8 → Generar docs/test-strategy.md
+PASO 8 → Generar {qa_output_folder}/test-strategy.md
 ```
 
 ## Reporte
@@ -128,6 +128,6 @@ Ambientes identificados:         X
 Herramientas seleccionadas:      X
 Riesgos iniciales identificados: X
 
-Documento generado: docs/test-strategy.md ✅
+Documento generado: {qa_output_folder}/test-strategy.md ✅
 ════════════════════════════════════════════════
 ```

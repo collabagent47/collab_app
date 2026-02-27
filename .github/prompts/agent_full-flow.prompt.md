@@ -8,7 +8,7 @@ Inicia el flujo completo del ecosistema multi-agente.
 **Ejecuta el @orchestrator-agent con las siguientes instrucciones:**
 
 1. Ejecutar el pipeline GAIDD como primer paso obligatorio cargando:
-   `{project-root}/.github/prompts/prompt_spec_gaidd.granularity-classifier.prompt.md`
+   `{project-root}/.github/prompts/prompt_agent_spec_gaidd.granularity-classifier.prompt.md`
 2. Seguir todos los pasos del pipeline GAIDD en orden (Pasos 0 → 3)
 3. Al completar el pipeline GAIDD, presentar el menú de selección de agentes al usuario
 4. Coordinar la ejecución según la opción seleccionada (A/B/C)
