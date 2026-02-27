@@ -53,7 +53,7 @@ NIVEL BAJO (D)   → Testing OPCIONAL, priorizar en el backlog
 
 ## Entregable: Matriz de Riesgos
 
-Genera `docs/risk-matrix.md`:
+Genera `{qa_output_folder}/risk-matrix.md`:
 
 ```markdown
 # Matriz de Riesgos — [Nombre del Proyecto]
@@ -92,7 +92,7 @@ PASO 3 → Aplicar catálogo de factores a cada HU y componente
 PASO 4 → Clasificar cada riesgo con nivel ASD
 PASO 5 → Generar plan de mitigación para riesgos Alto
 PASO 6 → Priorizar backlog de riesgos Medio y Bajo
-PASO 7 → Generar docs/risk-matrix.md
+PASO 7 → Generar {qa_output_folder}/risk-matrix.md
 PASO 8 → Comunicar riesgos Alto al equipo antes de continuar
 ```
 
@@ -112,6 +112,6 @@ RIESGOS IDENTIFICADOS:
 
 Riesgos Alto sin mitigación:     X  ← BLOQUEAN release si > 0
 
-Documento generado: docs/risk-matrix.md ✅
+Documento generado: {qa_output_folder}/risk-matrix.md ✅
 ════════════════════════════════════════════════
 ```

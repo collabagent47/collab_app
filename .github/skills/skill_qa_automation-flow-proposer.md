@@ -84,7 +84,7 @@ CRITERIO DE SELECCIÓN:
 
 ## Entregable: Hoja de Ruta de Automatización
 
-Genera `docs/automation-roadmap.md`:
+Genera `{qa_output_folder}/automation-roadmap.md`:
 
 ```markdown
 # Hoja de Ruta de Automatización — [Nombre del Proyecto]
@@ -120,13 +120,13 @@ Genera `docs/automation-roadmap.md`:
 ## Proceso de Análisis
 
 ```
-PASO 1 → Revisar docs/critical-flows.md y docs/regression-plan.md
+PASO 1 → Revisar {qa_output_folder}/critical-flows.md y {qa_output_folder}/regression-plan.md
 PASO 2 → Evaluar cada flujo contra los 4 criterios
 PASO 3 → Calcular ROI score (0-4) por flujo
 PASO 4 → Ordenar por prioridad P1 > P2 > P3 > Posponer
 PASO 5 → Seleccionar framework según stack del SPEC
 PASO 6 → Estimar esfuerzo por sprint
-PASO 7 → Generar docs/automation-roadmap.md
+PASO 7 → Generar {qa_output_folder}/automation-roadmap.md
 ```
 
 ## Reporte
@@ -143,6 +143,6 @@ Flujos evaluados:                X
 Framework recomendado:           [nombre]
 Esfuerzo total estimado:         X días persona
 
-Documento generado: docs/automation-roadmap.md ✅
+Documento generado: {qa_output_folder}/automation-roadmap.md ✅
 ════════════════════════════════════════════════
 ```

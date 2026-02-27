@@ -35,7 +35,7 @@ PASO 1 OBLIGATORIO: Ejecutando Pipeline de Especificación (GAIDD)...
 
 Carga y ejecuta el prompt de entrada del pipeline GAIDD siguiendo todos sus pasos en orden:
 
-  Cargar todo el archivo desde {project-root}/.github/prompts/prompt_spec_gaidd.granularity-classifier.prompt.md
+  Cargar todo el archivo desde {project-root}/.github/prompts/prompt_agent_spec_gaidd.granularity-classifier.prompt.md
   Seguir TODAS las instrucciones del archivo cargado sin omitir ningún paso.
 
 El pipeline GAIDD ejecutará internamente los siguientes pasos según el tipo de artefacto:

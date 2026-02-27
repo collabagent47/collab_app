@@ -6,3 +6,9 @@ communication_language: Español
 document_output_language: Español
 requirements_folder: "{project-root}/.github/docs/requirements"
 output_folder: "{project-root}/.github/docs/output"
+
+# Sub-carpetas de salida por agente (siempre relativas a output_folder)
+qa_output_folder: "{output_folder}/qa"
+backend_output_folder: "{output_folder}/backend"
+frontend_output_folder: "{output_folder}/frontend"
+automation_output_folder: "{output_folder}/automation"

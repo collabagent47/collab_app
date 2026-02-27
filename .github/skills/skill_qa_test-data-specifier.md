@@ -107,7 +107,7 @@ Regla: [min X caracteres, max Y caracteres, formato específico]
 
 ## Entregable: Catálogo de Datos de Prueba
 
-Genera `tests/data/test-data-catalog.md`:
+Genera `{qa_output_folder}/data/test-data-catalog.md`:
 
 ```markdown
 # Catálogo de Datos de Prueba — [Nombre del Proyecto]
@@ -139,7 +139,7 @@ PASO 3 → Clasificar: fixture estático vs factory dinámico
 PASO 4 → Definir datos borderline por campo con validaciones
 PASO 5 → Generar factories con faker para datos dinámicos
 PASO 6 → Definir estrategia de setup/teardown por ambiente
-PASO 7 → Generar tests/data/test-data-catalog.md
+PASO 7 → Generar {qa_output_folder}/data/test-data-catalog.md
 PASO 8 → Verificar que ningún dato real de producción fue usado
 ```
 
@@ -157,6 +157,6 @@ Tablas borderline definidas:     X
 
 Datos de producción usados:      0  ✅ (debe ser siempre 0)
 
-Documento generado: tests/data/test-data-catalog.md ✅
+Documento generado: {qa_output_folder}/data/test-data-catalog.md ✅
 ════════════════════════════════════════════════
 ```

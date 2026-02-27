@@ -1,228 +1,61 @@
-# 📋 Lineamientos de Calidad — QA Guidelines
-# Versión: 1.0.0
-# Última actualización: 2026-02-26
-# Aplica a: QA Agent
 
-## 1. Principios de Calidad
+# Guía de Lineamientos y Mejores Prácticas: Ingeniería de Calidad
 
-### Filosofía
-- La calidad es responsabilidad de TODO el equipo, no solo de QA
-- Shift-left: encontrar defectos lo antes posible en el ciclo
-- Automatizar lo que tiene ROI positivo demostrable
-- No asumir cobertura 100% E2E sin análisis previo
-- El riesgo guía la cobertura, no la completitud arbitraria
-- Sin datos de producción en ambientes de prueba
+Este documento extrae y consolida las prácticas y directrices más importantes definidas por el Centro de Excelencia de QA de Sofka, enfocadas en consolidar la **Calidad Aumentada** bajo una visión *AI-First*.
 
-### Priorización de Testing
-1. Flujos críticos de negocio (mayor impacto financiero/reputacional)
-2. Funcionalidades de alto riesgo técnico
-3. Integraciones entre sistemas y servicios
-4. Casos de borde y manejo de errores
+## 1. Lineamientos de Gestión y Colaboración (Ecosistema de Trabajo)
+Establecen los fundamentos para eliminar silos y operar con claridad mediante flujos ágiles asistidos.
+*   **Estructura y escalamiento:** Es fundamental conocer la estructura del equipo (líder directo, gestor, test manager, líder técnico) para asegurar continuidad operativa y decisiones ágiles.
+*   **Onboarding:** Se requiere un proceso de integración bien definido para conocer el contexto técnico/funcional y las herramientas de la cuenta.
+*   **Acuerdos Ágiles (DoR & DoD):** El Ingeniero de Calidad debe cuidar y acompañar el cumplimiento de los criterios de *Definition of Ready* y *Definition of Done* junto con el equipo.
+*   **Comunicación e Información:** Se debe mantener un ciclo de retroalimentación regular con el cliente, sincronización de cronogramas con Desarrollo y utilizar un repositorio central para la trazabilidad de la información.
+*   **Mejora Continua:** Fomentar prácticas de *Agile Testing*, el aprendizaje a partir de incidentes en producción, el cuidado de la salud del código (cobertura, duplicidad, seguridad) y mantener un plan de evolución y madurez.
 
-## 2. Pirámide de Testing
+## 2. Lineamientos de Estrategia y Planificación (Enfoque Predictivo)
+La planificación deja de ser un documento formal para ser una referencia viva basada en el riesgo (*Risk-Based Testing*).
+*   **Auditoría Temprana (Shift-Left):** Revisar requerimientos o Historias de Usuario con IA desde el inicio para detectar ambigüedades, asegurando la *Testabilidad* bajo criterios INVEST.
+*   **Entendimiento de Dependencias:** Usar IA para descubrir dependencias técnicas y de integración ocultas en la documentación.
+*   **Estrategia Inteligente y Riesgos:** Orientar los niveles y tipos de prueba (priorizando APIs/Servicios) apoyándose en la IA y en matrices de riesgo vivas para enfocar el esfuerzo en áreas de alto impacto.
+*   **Estimación y Regresión:** La IA funciona como un *par consultor* para contrastar las estimaciones de esfuerzo y para optimizar el set de pruebas de regresión, eliminando redundancias.
+*   **Plan de Pruebas Centralizado:** Generar un plan claro con apoyo de IA y socializarlo en el repositorio central.
 
-```
-         /  E2E  \          ← Pocos, solo flujos críticos
-        /──────────\
-       / Integración \      ← Contratos y servicios
-      /──────────────\
-     /   Unitarios    \     ← Base amplia y rápida
-    /──────────────────\
-```
+## 3. Lineamientos de Diseño y Cobertura (Génesis de Escenarios)
+Transforma la creación manual de casos utilizando IA generativa para ampliar la cobertura y la calidad.
+*   **Escenarios Gherkin:** Utilizar IA generativa para redactar casos (*Given-When-Then*), incluyendo flujos principales, alternos y de borde, los cuales luego son validados por el ingeniero.
+*   **Técnicas y Contratos:** Aplicar técnicas de diseño (caja negra/blanca) sabiendo que el objetivo no es la exhaustividad, sino maximizar la cobertura de riesgos. Analizar contratos de API tempranamente para detectar inconsistencias en las capas de integración.
+*   **Datos y Trazabilidad:** Generar datos de prueba sintéticos apoyados por IA cuidando la privacidad e integridad. Asegurar la trazabilidad verificando con IA que los escenarios cubran las historias de usuario y priorizar la ejecución según el impacto.
 
-### Cobertura Mínima por Nivel
-- Unitarios: 80% mínimo
-- Integración: 100% de endpoints documentados en SPEC
-- E2E: 100% de flujos críticos identificados
-- Performance: según clasificación de riesgo (no siempre requerido)
+## 4. Lineamientos de Ejecución (Manual y Exploratoria Aumentada)
+Las personas se concentran en analizar comportamientos complejos y la IA apoya en diagnósticos y evidencias operativas.
+*   **Documentación de Ciclos:** Vincular evidencia, hallazgos y el ciclo de ejecución a cada caso de prueba.
+*   **Pruebas Exploratorias:** Deben estar guiadas por mapas de riesgo generados con IA para enfocar áreas sensibles o con deuda técnica.
+*   **Gestión de Defectos:** Reportar errores con contexto claro; la IA puede estructurar el borrador del reporte y proponer un análisis de causa raíz. Es obligatorio tener un flujo de estados del defecto acordado, compartido y realizar pruebas de confirmación (re-test) con evidencia.
+*   **Apoyo Experto:** Se puede usar visión artificial para resaltar anomalías visuales automáticamente. El Ingeniero de QA es quien realiza la validación experta final de los resultados y facilita la etapa de aceptación (UAT).
 
-## 3. Estrategia de Pruebas
+## 5. Lineamientos de Ingeniería de Automatización
+La automatización es una solución de ingeniería robusta y mantenible donde la IA es un par de programación.
+*   **Arquitectura y Código:** Usar arquetipos claros por niveles y estrategias de ramas como *GitFlow* o *Trunk-Based Development*. La IA actúa como copiloto para acelerar la implementación (co-programación).
+*   **Mantenimiento y Resiliencia:** Promover la calidad temprana del código estático, las revisiones entre pares (y con IA) y el uso de *self-healing* para que los frameworks se adapten a cambios en la aplicación.
+*   **Continuous Testing:** Integrar las pruebas selectivas (basadas en impacto) en pipelines de CI/CD, con un pipeline dedicado específicamente a la estabilidad (regresivas).
+*   **DoR de Automatización:** Requisitos mínimos para automatizar: éxito manual previo sin bugs críticos, caso de prueba detallado, datos identificados, viabilidad técnica comprobada, ambiente estable y aprobación del equipo.
+*   **DoD de Automatización:** Un script finaliza cuando el código es revisado (por pares/IA), usa datos desacoplados, se integra al pipeline, cuenta con documentación, mantiene trazabilidad y se entrega al equipo.
 
-### Entregables Obligatorios de la Estrategia
-1. Nivel de Pruebas Requerido (Unit, Integration, E2E, Performance, Security)
-2. Matriz de cobertura vs requerimientos (HU trazables)
-3. Criterios de entrada y salida definidos
-4. Definición de ambientes necesarios
-5. Estrategia de datos de prueba
+## 6. Lineamientos de Observabilidad y Control
+Busca tener visibilidad del estado real del *release* combinando pruebas manuales y automatizadas.
+*   **Métricas y Reportes:** Analizar los datos con IA para entender la cobertura, el comportamiento de defectos y construir reportes enfocados en tendencias y toma de decisiones para el negocio, no solo en "estatus" numérico.
+*   **Riesgos Evolutivos:** Ajustar constantemente la matriz de riesgos basada en los hallazgos reales de la ejecución.
 
-### Restricciones de Estrategia
-- NO asumir automatización total sin análisis de ROI
-- NO proponer cobertura 100% E2E (es costoso e inestable)
-- NO avanzar sin criterios de entrada verificados
+## 7. Lineamientos de Performance (Eficiencia Anticipada)
+Disciplina continua para predecir el comportamiento del sistema bajo estrés real.
+*   **Gobernanza:** Conversar sobre rendimiento desde el refinamiento (*Sprint Planning*). Implementar un **DoR de Performance estricto** (objetivos claros y umbrales como P95 o TPS) y mantener trazabilidad con la Historia de Usuario.
+*   **Scripts Inteligentes:** Usar arquetipos estandarizados, priorizar la modularidad de fragmentos de código y usar IA para correlaciones dinámicas o *linting*.
+*   **Datos y Ambiente:** Utilizar "datos de un solo uso", gestionar secretos en bóvedas (sin texto plano) y documentar siempre la brecha de capacidad entre el ambiente de pruebas y producción.
+*   **Ejecución y Observabilidad:** Correlacionar reportes con métricas de infraestructura (CPU, RAM). Las pruebas de línea base deben ser requisito en el pipeline, ejecutarse inteligentemente según el impacto, y las de resistencia deben durar mínimo 120 minutos. Emplear IA para el diagnóstico automático frente a históricos.
 
-## 4. Estándares Gherkin
-
-### Reglas de Escritura
-- Lenguaje formal y en español
-- Un escenario = una sola regla de negocio
-- Given/When/Then coherente, atómico y verificable
-- Sin detalles técnicos de implementación en los escenarios
-- Trazable a una HU específica
-
-### Estructura Obligatoria
-```gherkin
-# language: es
-Feature: [nombre del módulo/funcionalidad]
-  Como [rol del usuario]
-  Quiero [funcionalidad]
-  Para [valor de negocio]
-
-  # Trazabilidad: HU-[número]
-  @criticidad-alta @regresion @automatizable
-  Scenario: [nombre descriptivo del escenario]
-    Given [estado inicial del sistema]
-    When  [acción que ejecuta el actor]
-    Then  [resultado esperado y verificable]
-    And   [condición adicional si aplica]
-```
-
-### Paths Obligatorios por HU
-- **Happy Path**: flujo exitoso principal
-- **Alternative Path**: variación válida del flujo
-- **Exception Path**: condición de excepción controlada
-- **Error Path**: error del sistema o datos completamente inválidos
-
-### Tags Obligatorios
-| Tag | Uso |
-|-----|-----|
-| @criticidad-alta | Escenario de alto impacto |
-| @criticidad-media | Escenario de impacto medio |
-| @criticidad-baja | Escenario de bajo impacto |
-| @regresion | Incluir en suite de regresión |
-| @automatizable | Candidato a automatización |
-| @smoke | Incluir en smoke test |
-
-### Reglas de Calidad por Escenario
-Cada escenario DEBE:
-- Ser atómico (una sola regla de negocio)
-- Tener Given/When/Then coherente
-- Ser trazable a un requerimiento (HU-X)
-- No mezclar múltiples reglas de negocio
-- Usar lenguaje de negocio, no técnico
-
-## 5. Gestión de Riesgos
-
-### Categorías de Riesgo Obligatorias
-1. Riesgos Funcionales → lógica de negocio incorrecta
-2. Riesgos Técnicos → deuda técnica, complejidad
-3. Riesgos de Integración → comunicación entre servicios
-4. Riesgos de Seguridad → vulnerabilidades, exposición de datos
-5. Riesgos de Performance → degradación bajo carga
-6. Riesgos Regulatorios → compliance (si aplica)
-
-### Regla ASD (obligatoria e improrrogable)
-```
-Si clasificación del riesgo = ALTO
-→ DEBE existir prueba asociada obligatoria definida
-→ Sin prueba asociada = riesgo no mitigado = BLOQUEO de entrega
-```
-
-### Matriz de Clasificación
-```
-              │  Impacto Bajo  │  Impacto Medio  │  Impacto Alto
-──────────────┼────────────────┼─────────────────┼──────────────
-Prob. Alta    │     MEDIO      │      ALTO       │    ALTO
-Prob. Media   │     BAJO       │      MEDIO      │    ALTO
-Prob. Baja    │     BAJO       │      BAJO       │    MEDIO
-```
-
-## 6. Datos de Prueba
-
-### Categorías Obligatorias
-- **Datos válidos**: entrada correcta dentro del dominio esperado
-- **Datos inválidos**: entrada incorrecta o fuera del dominio
-- **Datos límite**: valores en los bordes del dominio (min, max, en límite, fuera)
-- **Datos inconsistentes**: combinaciones válidas individualmente pero inconsistentes juntas
-- **Datos maliciosos**: SQL Injection, XSS, Path Traversal básico
-
-### Restricciones Absolutas
-- ❌ NUNCA usar datos reales de producción
-- ❌ NUNCA hardcodear credenciales en los tests
-- ✅ Definir estrategia de anonimización si aplica
-- ✅ Datos de prueba versionados junto al código fuente
-
-## 7. Flujos Críticos
-
-### Clasificación por Impacto
-| Tipo de Impacto | Criterio |
-|----------------|----------|
-| Financiero | Involucra dinero, pagos, facturación |
-| Reputacional | Datos de usuarios, experiencia visible |
-| Operativo | Funcionalidad core del negocio |
-
-### Regla de Priorización E2E
-```
-Impacto CRÍTICO (≥2 tipos altos) → E2E obligatorio
-Impacto ALTO (1 tipo alto)       → E2E recomendado
-Impacto MEDIO                    → E2E opcional con justificación
-Impacto BAJO                     → No requiere E2E
-```
-
-## 8. Automatización
-
-### Criterios para Automatizar (obligatorios)
-✅ Automatizar SI:
-- Flujo crítico de negocio
-- Alta frecuencia de ejecución (> 3 veces/sprint)
-- Alto impacto si falla
-- Flujo estable (no cambia frecuentemente)
-- ROI positivo demostrable
-
-❌ NO automatizar SI:
-- UI cambia frecuentemente
-- Prueba exploratoria o de experiencia de usuario
-- Validación visual subjetiva
-- Configuración más costosa que el beneficio
-- ROI negativo o neutro
-
-### Clasificación por Tipo
-| Tipo | Herramienta preferida |
-|------|----------------------|
-| Unit | Jest / JUnit 5 / Pytest |
-| Integration | Supertest / MockMvc / TestClient |
-| Contract | Pact |
-| E2E | Playwright (preferido) |
-| Performance | k6 |
-
-## 9. Performance
-
-### Variables de Evaluación Obligatorias
-1. Volumen esperado (usuarios simultáneos, TPS)
-2. Concurrencia sobre recursos compartidos
-3. SLA y umbrales de tiempo de respuesta definidos
-4. Dependencias externas y su latencia esperada
-5. Existencia de procesos batch o jobs críticos
-
-### Clasificación de Necesidad
-| Tipo | Cuándo aplicar |
-|------|---------------|
-| No requiere | Sistema interno, bajo volumen, sin SLA crítico |
-| Smoke Performance | Validación básica de tiempos antes de release |
-| Load Test | Comportamiento bajo volumen esperado normal |
-| Stress Test | Encontrar límite máximo del sistema |
-| Spike Test | Comportamiento ante picos repentinos de carga |
-| Soak Test | Estabilidad y memory leaks en el tiempo |
-
-### Umbrales Mínimos de Performance
-- Tiempo de respuesta API: < 200ms (percentil 95)
-- Disponibilidad: >= 99.9%
-- Error rate bajo carga normal: < 1%
-
-## 10. Regresión
-
-### Suite de Regresión Mínima Obligatoria
-Incluye SIEMPRE:
-- Flujos críticos de negocio
-- Flujos de autenticación y autorización
-- Contratos de integración core
-- Operaciones CRUD de recursos principales
-
-Frecuencia: en cada PR y cada deploy
-
-### Suite de Regresión Ampliada
-Se activa bajo:
-- Release a producción
-- Cambios de alto riesgo
-- Refactoring mayor
-
-Frecuencia: ejecución nocturna automática
+## 8. Lineamientos de Uso de Herramientas de IA
+Ecosistema de Sofka diseñado para cuidar la información y trabajar eficientemente.
+*   **Consentimiento:** Es obligatorio contar con el consentimiento explícito del cliente antes de usar IA, alineado con acuerdos de privacidad.
+*   **Portal SKAI:** Interfaz principal, segura y controlada para acceder a LLMs y configurar instrucciones personalizadas del proyecto.
+*   **Gemini:** Para razonamiento complejo, análisis de código, reportes narrativos y documentos extensos, dentro del entorno seguro de Sofka.
+*   **NotebookLM:** Para conectar la base de conocimiento del proyecto (requerimientos, manuales) en un solo contexto, resolviendo dudas y hallando inconsistencias.
+*   **GitHub Copilot y Healenium:** Copilot para asistir en la escritura de código de automatización; Healenium para incorporar capacidades de autocurado (*self-healing*) en interfaces de usuario.

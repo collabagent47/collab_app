@@ -44,7 +44,7 @@ Criterio:    Si falla → investigar y resolver antes de release candidato
 
 ## Entregable: Plan de Regresión
 
-Genera `docs/regression-plan.md`:
+Genera `{qa_output_folder}/regression-plan.md`:
 
 ```markdown
 # Plan de Regresión — [Nombre del Proyecto]
@@ -109,13 +109,13 @@ Genera `docs/regression-plan.md`:
 ## Proceso de Definición
 
 ```
-PASO 1 → Revisar docs/critical-flows.md para identificar candidatos a smoke
+PASO 1 → Revisar {qa_output_folder}/critical-flows.md para identificar candidatos a smoke
 PASO 2 → Seleccionar máximo 20 escenarios para smoke (flujos Alta criticidad)
 PASO 3 → Definir conjunto completo de regresión (todos @critico y @regresion)
 PASO 4 → Calcular duración estimada de cada suite
 PASO 5 → Definir frecuencias de ejecución por suite
 PASO 6 → Configurar comandos de ejecución en package.json / CI
-PASO 7 → Generar docs/regression-plan.md
+PASO 7 → Generar {qa_output_folder}/regression-plan.md
 ```
 
 ## Reporte
@@ -133,6 +133,6 @@ SUITE REGRESIÓN COMPLETA:
   Duración estimada:             X min (objetivo: <= 60 min)
   Cobertura HU:                  X%
 
-Documento generado: docs/regression-plan.md ✅
+Documento generado: {qa_output_folder}/regression-plan.md ✅
 ════════════════════════════════════════════════
 ```

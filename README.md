@@ -38,6 +38,10 @@ communication_language: Español
 document_output_language: Español
 requirements_folder: "{project-root}/.github/docs/requirements"
 output_folder: "{project-root}/.github/docs/output"
+qa_output_folder:         "{output_folder}/qa"
+backend_output_folder:    "{output_folder}/backend"
+frontend_output_folder:   "{output_folder}/frontend"
+automation_output_folder: "{output_folder}/automation"
 ```
 
 ### 2. Ejecuta el pipeline completo
@@ -45,7 +49,7 @@ output_folder: "{project-root}/.github/docs/output"
 En GitHub Copilot Chat, escribe:
 
 ```
-/prompt_full-flow
+/prompt_agent_full-flow
 ```
 
 Luego pega tu Historia de Usuario o Requerimiento. El sistema clasifica, evalúa y genera el reporte automáticamente.
@@ -56,13 +60,13 @@ Luego pega tu Historia de Usuario o Requerimiento. El sistema clasifica, evalúa
 
 | Prompt | Descripción |
 |--------|-------------|
-| `prompt_full-flow` | **Recomendado.** Pipeline GAIDD completo → agente especializado |
-| `prompt_spec` | Solo validación del requerimiento (pasos 0–3) |
-| `prompt_backend` | Activa directamente el agente de backend |
-| `prompt_frontend` | Activa directamente el agente de frontend |
-| `prompt_qa` | Activa directamente el agente de QA |
-| `prompt_automation` | Activa directamente el agente de automatización |
-| `prompt_quick_*` | Flujos rápidos: spec, tests, review, pipeline |
+| `prompt_agent_full-flow` | **Recomendado.** Pipeline GAIDD completo → agente especializado |
+| `prompt_agent_spec` | Solo validación del requerimiento (pasos 0–3) |
+| `prompt_agent_backend` | Activa directamente el agente de backend |
+| `prompt_agent_frontend` | Activa directamente el agente de frontend |
+| `prompt_agent_qa` | Activa directamente el agente de QA |
+| `prompt_agent_automation` | Activa directamente el agente de automatización |
+| `prompt_skill_*` | Ejecución independiente de un skill específico |
 
 ---
 
@@ -82,7 +86,7 @@ Artefacto de entrada
 Selección de agente especializado
 (Backend / Frontend / QA / Automation)
        ↓
-Generación en docs/output/{artifact_id}/
+Generación en .github/docs/output/{agente}/
 ```
 
 ---

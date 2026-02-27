@@ -90,7 +90,7 @@ export const thresholds = {
 
 ## Entregable: Plan de Performance
 
-Genera `docs/performance-plan.md`:
+Genera `{qa_output_folder}/performance-plan.md`:
 
 ```markdown
 # Plan de Performance Testing — [Nombre del Proyecto]
@@ -137,7 +137,7 @@ PASO 4 → Definir parámetros de carga para cada tipo
 PASO 5 → Definir umbrales de SLA como criterios de éxito
 PASO 6 → Seleccionar herramienta según stack del proyecto
 PASO 7 → Generar scripts base de prueba (si aplica)
-PASO 8 → Generar docs/performance-plan.md
+PASO 8 → Generar {qa_output_folder}/performance-plan.md
 ```
 
 ## Reporte
@@ -157,6 +157,6 @@ Pruebas planificadas:
 Herramienta seleccionada:        [nombre]
 Scripts base generados:          X
 
-Documento generado: docs/performance-plan.md ✅
+Documento generado: {qa_output_folder}/performance-plan.md ✅
 ════════════════════════════════════════════════
 ```
