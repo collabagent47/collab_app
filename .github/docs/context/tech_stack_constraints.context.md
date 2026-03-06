@@ -1,5 +1,8 @@
 # Restricciones de Stack Tecnológico
 
+> ⚠️ **PLANTILLA** — Reemplazar el contenido de ejemplo con el stack aprobado del proyecto.
+> Este archivo es leído por el agente `spec-generator` (Paso 2 del pipeline GAIDD) para validar viabilidad técnica.
+
 ## Backend aprobado
 
 - Java 21

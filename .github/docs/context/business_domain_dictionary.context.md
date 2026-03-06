@@ -1,5 +1,8 @@
 # Diccionario de Dominio de Negocio
 
+> ⚠️ **PLANTILLA** — Reemplazar el contenido de ejemplo con los términos del negocio del proyecto.
+> Este archivo es leído por el agente `spec-generator` (Paso 2 del pipeline GAIDD) para validar que los términos sean unívocos.
+
 ## Términos canónicos
 
 | Término                              | Definición canónica                                                   | Sinónimos aceptados    | Sinónimos rechazados                     | Ejemplo de uso correcto                  |

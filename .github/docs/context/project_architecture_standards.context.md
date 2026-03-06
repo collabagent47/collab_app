@@ -74,7 +74,7 @@ Debe usarse como referencia obligatoria durante análisis, refinamiento e implem
 ## 5) Decisiones de diseño vigentes (resumen operacional)
 
 <!-- Referencias de ejemplo - actualizar según proyecto específico -->
-<!-- Config: {project-root}/.github/docs/config/config.yaml -->
+<!-- Nota: .github/docs/config/config.yaml está disponible para personalización futura de agentes pero no es cargado por ningún agente actualmente. -->
 <!-- Agents: {project-root}/.github/agents/ -->
 <!-- Output: {project-root}/.github/_gaidd-output -->
 <!-- Context: {project-root}/.github/docs/context -->

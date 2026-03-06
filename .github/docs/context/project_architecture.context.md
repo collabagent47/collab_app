@@ -1,5 +1,8 @@
 # Arquitectura del Proyecto (Nivel Alto)
 
+> ⚠️ **PLANTILLA** — Reemplazar el contenido de ejemplo con la arquitectura real del proyecto.
+> Mantener la estructura de secciones; es la que leen los agentes para el análisis GAIDD (Paso 3 — QUÉ/DÓNDE/POR QUÉ).
+
 ## Estilo arquitectónico
 
 - Arquitectura en capas con separación por módulos de dominio.
