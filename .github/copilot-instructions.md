@@ -1,114 +1,66 @@
 # Copilot Instructions
 
-## ASSD Workflow (Agent Spec Software Development)
+## ASDD Workflow (Agent Spec Software Development)
 
-Este repositorio sigue el flujo **ASSD**: toda funcionalidad nueva se ejecuta en cuatro fases orquestadas por agentes especializados.
+Este repositorio sigue el flujo **ASDD**: toda funcionalidad nueva se ejecuta en cuatro fases orquestadas por agentes especializados.
 
 ```
-[Orchestrator] → [Spec Generator] → [Backend Developer] → [Frontend Developer] → [Test Engineer]
+[Orchestrator] → [Spec Generator] → [Backend ∥ Frontend ∥ DB] → [Tests BE ∥ Tests FE] → [QA] → [Doc]
 ```
 
-### Fases del flujo ASSD
-1. **SPEC**: El agente `spec-generator` genera una especificación técnica en `.github/specs/<feature>.spec.md`.
-2. **BACKEND**: El agente `backend-developer` implementa la spec en FastAPI (rutas, servicios, repositorios).
-3. **FRONTEND**: El agente `frontend-developer` implementa la spec en React/Vite.
-4. **TESTS**: El agente `test-engineer` genera pruebas unitarias basadas en la spec.
+### Fases del flujo ASDD
+1. **Spec**: El agente `spec-generator` genera la spec en `.github/specs/<feature>.spec.md`.
+2. **Implementación (paralelo)**: `backend-developer` + `frontend-developer` + `database-agent` (si hay cambios de DB).
+3. **Tests (paralelo)**: `test-engineer-backend` + `test-engineer-frontend`.
+4. **QA**: `qa-agent` genera estrategia, Gherkin, riesgos y análisis de performance.
+5. **Doc (opcional)**: `documentation-agent` genera README updates, API docs y ADRs.
 
-### Comandos de agente rápidos (slash commands):
-- `/generate-spec` — genera una nueva spec técnica a partir de un requerimiento
-- `/backend-task` — implementa una spec en el backend (FastAPI)
-- `/frontend-task` — implementa una spec en el frontend (React/Vite)
-- `/generate-tests` — genera pruebas unitarias para una spec o módulo existente
-- `/qa-task` — ejecuta el flujo completo de QA (estrategia, Gherkin, riesgos, automatización)
-- `/full-flow` — orquesta el flujo completo: Spec → Backend → Frontend → QA
+### Skills disponibles (slash commands):
+- `/asdd-orchestrate` — orquesta el flujo completo ASDD o consulta estado
+- `/generate-spec` — genera spec técnica en `.github/specs/`
+- `/implement-backend` — implementa feature completo en el backend
+- `/implement-frontend` — implementa feature completo en el frontend
+- `/unit-testing` — genera suite de tests (backend + frontend)
+- `/gherkin-case-generator` — casos Given-When-Then + datos de prueba
+- `/risk-identifier` — clasificación de riesgos ASD (Alto/Medio/Bajo)
+- `/automation-flow-proposer` — propuesta de automatización con ROI
+- `/performance-analyzer` — planificación de pruebas de performance
 
-### Skills disponibles (slash commands portables):
-- `/assd-orchestrate` — orquesta el flujo completo ASSD o consulta estado
-- `/generate-spec` — skill para generar specs técnicas (incluye plantilla)
-- `/backend-fastapi` — skill para implementación FastAPI con patrones de referencia
-- `/frontend-react` — skill para implementación React/Vite con plantillas
-- `/unit-testing` — skill para generación de tests (pytest + Vitest con plantillas)
-- `/clean-code-reviewer` — revisión de código backend: SOLID, Clean Code (CoE)
-- `/integration-test-generator` — tests de integración para endpoints REST (CoE)
-- `/contract-test-generator` — contract tests entre servicios (CoE)
-- `/component-reviewer` — revisión de componentes frontend (CoE)
-- `/accessibility-checker` — verificación de accesibilidad WCAG (CoE)
-- `/ui-test-generator` — tests de UI con Vitest + Testing Library (CoE)
-- `/test-strategy-planner` — pirámide de testing y estrategia QA (CoE)
-- `/gherkin-case-generator` — casos Given-When-Then desde criterios de aceptación (CoE)
-- `/risk-identifier` — clasificación de riesgos ASD (CoE)
-- `/test-data-specifier` — catálogo de datos de prueba sintéticos (CoE)
-- `/critical-flow-mapper` — mapeo de flujos críticos para E2E y smoke (CoE)
-- `/regression-strategy` — plan de regresión optimizado (CoE)
-- `/automation-flow-proposer` — propuesta de automatización con ROI (CoE)
-- `/performance-analyzer` — planificación de pruebas de performance (CoE)
-
-### Specs
-- Todas las specs viven en `.github/specs/`. Cada spec es la fuente de verdad para una funcionalidad.
-- Antes de implementar cualquier desarrollo, debe existir una spec aprobada.
+### Requerimientos y Specs
+- Los requerimientos de negocio viven en `.github/requirements/`. Son la entrada al pipeline ASDD.
+- Las specs técnicas viven en `.github/specs/`. Cada spec es la fuente de verdad para implementar.
+- Antes de implementar cualquier desarrollo, debe existir una spec aprobada en `.github/specs/`.
+- Flujo: `requirements/<feature>.md` → `/generate-spec` → `specs/<feature>.spec.md` (APPROVED)
 
 ---
 
-## Mapa de Archivos ASSD
-
-> Índice navegable completo: consultar la documentación del proyecto
+## Mapa de Archivos ASDD
 
 ### Agentes
-| Agente | Ruta |
-|---|---|
-| Orchestrator | `.github/agents/orchestrator.agent.md` |
-| Spec Generator | `.github/agents/spec-generator.agent.md` |
-| Backend Developer | `.github/agents/backend-developer.agent.md` |
-| Frontend Developer | `.github/agents/frontend-developer.agent.md` |
-| Test Engineer | `.github/agents/test-engineer.agent.md` |
+| Agente | Fase | Ruta |
+|---|---|---|
+| Orchestrator | Entry point | `.github/agents/orchestrator.agent.md` |
+| Spec Generator | Fase 1 | `.github/agents/spec-generator.agent.md` |
+| Backend Developer | Fase 2 | `.github/agents/backend-developer.agent.md` |
+| Frontend Developer | Fase 2 | `.github/agents/frontend-developer.agent.md` |
+| Database Agent | Fase 2 | `.github/agents/database.agent.md` |
+| Test Engineer Backend | Fase 3 | `.github/agents/test-engineer-backend.agent.md` |
+| Test Engineer Frontend | Fase 3 | `.github/agents/test-engineer-frontend.agent.md` |
+| QA Agent | Fase 4 | `.github/agents/qa.agent.md` |
+| Documentation Agent | Fase 5 | `.github/agents/documentation.agent.md` |
 
 ### Skills
-| Skill | Ruta principal | Recursos |
+| Skill | Agente | Ruta |
 |---|---|---|
-| `/assd-orchestrate` | `.github/skills/assd-orchestrate/SKILL.md` | — |
-| `/generate-spec` | `.github/skills/generate-spec/SKILL.md` | `spec-template.md` |
-| `/backend-fastapi` | `.github/skills/backend-fastapi/SKILL.md` | `patterns.py` |
-| `/frontend-react` | `.github/skills/frontend-react/SKILL.md` | `templates/Page.jsx`, `templates/Page.module.css` |
-| `/unit-testing` | `.github/skills/unit-testing/SKILL.md` | `templates/test_service.py`, `test_router.py`, `Component.test.jsx`, `useHook.test.js` |
-| **Backend CoE** | | |
-| `/clean-code-reviewer` | `.github/skills/clean-code-reviewer/SKILL.md` | — |
-| `/integration-test-generator` | `.github/skills/integration-test-generator/SKILL.md` | — |
-| `/contract-test-generator` | `.github/skills/contract-test-generator/SKILL.md` | — |
-| **Frontend CoE** | | |
-| `/component-reviewer` | `.github/skills/component-reviewer/SKILL.md` | — |
-| `/accessibility-checker` | `.github/skills/accessibility-checker/SKILL.md` | — |
-| `/ui-test-generator` | `.github/skills/ui-test-generator/SKILL.md` | — |
-| **QA CoE** | | |
-| `/test-strategy-planner` | `.github/skills/test-strategy-planner/SKILL.md` | — |
-| `/gherkin-case-generator` | `.github/skills/gherkin-case-generator/SKILL.md` | — |
-| `/risk-identifier` | `.github/skills/risk-identifier/SKILL.md` | — |
-| `/test-data-specifier` | `.github/skills/test-data-specifier/SKILL.md` | — |
-| `/critical-flow-mapper` | `.github/skills/critical-flow-mapper/SKILL.md` | — |
-| `/regression-strategy` | `.github/skills/regression-strategy/SKILL.md` | — |
-| `/automation-flow-proposer` | `.github/skills/automation-flow-proposer/SKILL.md` | — |
-| `/performance-analyzer` | `.github/skills/performance-analyzer/SKILL.md` | — |
-
-### Prompts
-| Comando | Ruta |
-|---|---|
-| `/generate-spec` | `.github/prompts/generate-spec.prompt.md` |
-| `/backend-task` | `.github/prompts/backend-task.prompt.md` |
-| `/frontend-task` | `.github/prompts/frontend-task.prompt.md` |
-| `/generate-tests` | `.github/prompts/generate-tests.prompt.md` |
-| `/qa-task` | `.github/prompts/qa-task.prompt.md` |
-| `/full-flow` | `.github/prompts/full-flow.prompt.md` |
-
-### Lineamientos y Contexto (CoE Sofka)
-| Documento | Ruta |
-|---|---|
-| Lineamientos de Desarrollo | `.github/docs/lineamientos/dev-guidelines.md` |
-| Lineamientos QA | `.github/docs/lineamientos/qa-guidelines.md` |
-| Guía de Desarrollo | `.github/docs/lineamientos/guidelines.md` |
-| Reglas de Oro | `.github/docs/context/reglas-de-oro.md` |
-| Definition of Done | `.github/docs/context/definition_of_done.context.md` |
-| Definition of Ready | `.github/docs/context/definition_of_ready.context.md` |
-| Arquitectura | `.github/docs/context/project_architecture.context.md` |
-| Stack y restricciones | `.github/docs/context/tech_stack_constraints.context.md` |
+| `/asdd-orchestrate` | Orchestrator | `.github/skills/asdd-orchestrate/SKILL.md` |
+| `/generate-spec` | Spec Generator | `.github/skills/generate-spec/SKILL.md` |
+| `/implement-backend` | Backend Developer | `.github/skills/implement-backend/SKILL.md` |
+| `/implement-frontend` | Frontend Developer | `.github/skills/implement-frontend/SKILL.md` |
+| `/unit-testing` | Test Engineer Backend + Frontend | `.github/skills/unit-testing/SKILL.md` |
+| `/gherkin-case-generator` | QA Agent | `.github/skills/gherkin-case-generator/SKILL.md` |
+| `/risk-identifier` | QA Agent | `.github/skills/risk-identifier/SKILL.md` |
+| `/automation-flow-proposer` | QA Agent | `.github/skills/automation-flow-proposer/SKILL.md` |
+| `/performance-analyzer` | QA Agent | `.github/skills/performance-analyzer/SKILL.md` |
 
 ### Instructions (path-scoped)
 | Scope | Ruta | Se aplica a |
@@ -117,37 +69,63 @@ Este repositorio sigue el flujo **ASSD**: toda funcionalidad nueva se ejecuta en
 | Frontend | `.github/instructions/frontend.instructions.md` | `frontend/src/**/*.{js,jsx}` |
 | Tests | `.github/instructions/tests.instructions.md` | `backend/tests/**` · `frontend/src/__tests__/**` |
 
+### Lineamientos y Contexto
+| Documento | Ruta |
+|---|---|
+| Lineamientos de Desarrollo | `.github/docs/lineamientos/dev-guidelines.md` |
+| Lineamientos QA | `.github/docs/lineamientos/qa-guidelines.md` |
+| Stack + Arquitectura + Naming | `.github/instructions/backend.instructions.md` |
+| Stack Frontend + Naming | `.github/instructions/frontend.instructions.md` |
+
 ### Lineamientos generales para todos los agentes
-- **Reglas de Oro**: ver sección siguiente de este archivo — rigen TODAS las interacciones.
-- **Guía de agentes y reglas críticas**: `.github/AGENTS.md`
+- **Reglas de Oro**: ver `.github/AGENTS.md` — rigen TODAS las interacciones.
 - **Specs activas**: `.github/specs/` — consultar siempre antes de implementar.
-- **Documentación completa**: `docs/README.md` — índice de todos los archivos del repositorio.
 
 ---
 
-## Reglas de Oro (CoE Sofka)
+## Reglas de Oro
 
 > Principio rector: todas las contribuciones de la IA deben ser seguras, transparentes, con propósito definido y alineadas con las instrucciones explícitas del usuario.
 
 ### I. Integridad del Código y del Sistema
-- **No código no autorizado**: no escribir, generar ni sugerir código nuevo a menos que el usuario lo solicite explícitamente para una tarea específica.
+- **No código no autorizado**: no escribir, generar ni sugerir código nuevo a menos que el usuario lo solicite explícitamente.
 - **No modificaciones no autorizadas**: no modificar, refactorizar ni eliminar código, archivos o estructuras existentes sin aprobación explícita.
 - **Preservar la lógica existente**: respetar los patrones arquitectónicos, el estilo de codificación y la lógica operativa existentes del proyecto.
 
 ### II. Clarificación de Requisitos
-- **Clarificación obligatoria**: si la solicitud, intención o contexto es ambiguo, incompleto o poco claro, detenerse y solicitar clarificación detallada antes de proceder.
+- **Clarificación obligatoria**: si la solicitud es ambigua, incompleta o poco clara, detenerse y solicitar clarificación antes de proceder.
 - **No realizar suposiciones**: basar todas las acciones estrictamente en información explícita provista por el usuario.
-- **Verificar la comprensión**: ante acciones significativas, resumir la tarea brevemente y confirmar con el usuario.
 
 ### III. Transparencia Operativa
-- **Explicar antes de actuar**: antes de cualquier acción solicitada, explicar qué se hará, los pasos involucrados y posibles implicaciones.
+- **Explicar antes de actuar**: antes de cualquier acción, explicar qué se hará y posibles implicaciones.
 - **Detención ante la incertidumbre**: si surge inseguridad o conflicto con estas reglas, detenerse y consultar al usuario.
-- **Acciones orientadas a un propósito**: cada acción debe ser directamente relevante para la solicitud explícita. Sin funcionalidad ni consejos no solicitados.
+- **Acciones orientadas a un propósito**: cada acción debe ser directamente relevante para la solicitud explícita.
+
+---
+
+## Diccionario de Dominio
+
+Términos canónicos a usar en specs, código y mensajes:
+
+| Término | Definición | Sinónimos rechazados |
+|---------|-----------|---------------------|
+| **Usuario** (`user`) | Persona autenticada mediante Firebase | Persona, cliente |
+| **Perfil** (`profile`) | Datos personales y configuración del Usuario | Cuenta, ficha |
+| **UID** (`uid`) | Identificador único provisto por Firebase Auth | ID técnico, `_id` |
+| **Pregunta Frecuente** (`faq`) | Par pregunta-respuesta publicado para consulta | Artículo de ayuda |
+| **Pregunta** (`question`) | Texto de la pregunta dentro de una FAQ | Título |
+| **Respuesta** (`answer`) | Texto de la respuesta dentro de una FAQ | Descripción, contenido |
+| **Dashboard** | Pantalla principal con métricas (solo lectura) | Inicio |
+| **Modo Oscuro** (`dark mode`) | Tema visual alternativo con colores oscuros | Modo noche |
+| **Token** (`idToken`) | Token Firebase en header `Authorization: Bearer` | Contraseña, sesión |
+| **Administrador** | Rol con permisos completos | Superusuario |
+| `created_at` | Timestamp de creación en UTC | Fecha alta |
+| `updated_at` | Timestamp de última actualización en UTC | Fecha modificación |
+
+**Reglas:** `uid` siempre de Firebase. `FAQ` = par completo. Timestamps en snake_case. `Dashboard` es solo lectura.
 
 ---
 
 ## Project Overview
 
 > Ver `README.md` en la raíz del proyecto.
-
-

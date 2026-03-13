@@ -2,7 +2,7 @@
 applyTo: "backend/**/*.py"
 ---
 
-> **Scope**: Se aplica a proyectos con capa backend. Si el proyecto usa un lenguaje o estructura diferente, adaptar la sección de convenciones y wiring al stack real definido en `tech_stack_constraints.context.md`.
+> **Scope**: Se aplica a proyectos con capa backend. Si el proyecto usa un lenguaje o estructura diferente, adaptar la sección de convenciones y wiring al stack real definido en esta misma instrucción.
 
 # Instrucciones para Archivos de Backend (Python/FastAPI)
 
@@ -22,12 +22,16 @@ routes → services → repositories → MongoDB
 ## Wiring de Dependencias (patrón obligatorio en routers)
 
 ```python
-db = get_db()
-repo = UserRepository(db)
-service = AuthService(repo)
+# ✅ Correcto — Depends() en la firma del endpoint
+@router.post("/")
+async def create_item(body: ItemCreate, db=Depends(get_db)):
+    repo = ItemRepository(db)
+    service = ItemService(repo)
+    return await service.create(body)
 ```
 
-NUNCA inyectar `get_db()` directamente en servicios o modelos.
+NUNCA inyectar `get_db()` directamente como `db = get_db()` fuera de `Depends()`.
+NUNCA instanciar repositorios o servicios fuera del router.
 
 ## Convenciones de Código
 

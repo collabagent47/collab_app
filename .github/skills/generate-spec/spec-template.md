@@ -1,111 +1,222 @@
+---
+id: SPEC-###
+status: DRAFT
+feature: nombre-del-feature
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+author: spec-generator
+version: "1.0"
+related-specs: []
+---
+
 # Spec: [Nombre de la Funcionalidad]
 
-## Metadata
-- **ID**: SPEC-###
-- **Fecha**: YYYY-MM-DD
-- **Estado**: DRAFT
-- **Autor**: Spec Generator Agent
+> **Estado:** `DRAFT` → aprobar con `status: APPROVED` antes de iniciar implementación.
+> **Ciclo de vida:** DRAFT → APPROVED → IN_PROGRESS → IMPLEMENTED → DEPRECATED
 
-## Descripción
+---
+
+## 1. REQUERIMIENTOS
+
+### Descripción
 Resumen de la funcionalidad en 2-3 oraciones. Qué hace, para quién y qué problema resuelve.
 
-## Requerimiento de Negocio
-El requerimiento original tal como fue proporcionado por el usuario.
+### Requerimiento de Negocio
+El requerimiento original tal como fue proporcionado por el usuario (o copiado de `.github/requirements/<feature>.md`).
 
-## Casos de Uso
+### Historias de Usuario
 
-### UC-01: [Nombre del caso de uso]
-- **Actor**: usuario autenticado / usuario anónimo / sistema
-- **Precondición**: estado del sistema antes de ejecutar el flujo
-- **Flujo principal**:
-  1. Paso 1
-  2. Paso 2
-  3. Paso N
-- **Flujo alternativo** (opcional): qué pasa si algo falla
-- **Postcondición**: estado del sistema después de la operación
+#### HU-01: [Título descriptivo corto]
 
-## Modelos de Datos
+```
+Como:        [rol del usuario — ej. Usuario autenticado, Administrador]
+Quiero:      [acción o funcionalidad concreta]
+Para:        [valor o beneficio esperado por el negocio]
 
-### Entidades afectadas
-| Entidad | Cambios | Descripción |
-|---------|---------|-------------|
-| `EntidadX` | nueva / modificada | descripción |
+Prioridad:   Alta / Media / Baja
+Estimación:  XS / S / M / L / XL
+Dependencias: HU-X, HU-Y o Ninguna
+Capa:        Backend / Frontend / Ambas
+```
 
-### Campos relevantes
-| Campo | Tipo | Obligatorio | Regla |
-|-------|------|-------------|-------|
-| `campo` | string / number / bool | sí / no | descripción |
+#### Criterios de Aceptación — HU-01
 
-## API Endpoints
+**Happy Path**
+```gherkin
+CRITERIO-1.1: [nombre del escenario exitoso]
+  Dado que:  [contexto inicial válido]
+  Cuando:    [acción del usuario]
+  Entonces:  [resultado esperado verificable]
+```
 
-### [MÉTODO] /[path]
-- **Descripción**: qué hace este endpoint
+**Error Path**
+```gherkin
+CRITERIO-1.2: [nombre del escenario de error]
+  Dado que:  [contexto inicial]
+  Cuando:    [acción inválida o datos incorrectos]
+  Entonces:  [manejo del error esperado con código HTTP y mensaje]
+```
+
+**Edge Case** *(si aplica)*
+```gherkin
+CRITERIO-1.3: [nombre del caso borde]
+  Dado que:  [contexto de borde]
+  Cuando:    [acción en el límite]
+  Entonces:  [resultado esperado en el límite]
+```
+
+### Reglas de Negocio
+1. Regla de validación (ej. "el campo X es obligatorio y no puede superar 100 caracteres")
+2. Regla de autorización (ej. "solo el Administrador puede eliminar")
+3. Regla de integridad (ej. "el nombre debe ser único en la colección")
+
+---
+
+## 2. DISEÑO
+
+### Modelos de Datos
+
+#### Entidades afectadas
+| Entidad | Almacén | Cambios | Descripción |
+|---------|---------|---------|-------------|
+| `FeatureEntity` | tabla/colección `features` | nueva / modificada | descripción del recurso |
+
+#### Campos del modelo
+| Campo | Tipo | Obligatorio | Validación | Descripción |
+|-------|------|-------------|------------|-------------|
+| `id` | string / UUID | sí | auto-generado | Identificador único |
+| `name` | string | sí | max 100 chars | Nombre del recurso |
+| `description` | string | no | max 500 chars | Descripción |
+| `created_at` | datetime (UTC) | sí | auto-generado | Timestamp creación |
+| `updated_at` | datetime (UTC) | sí | auto-generado | Timestamp actualización |
+
+#### Índices / Constraints
+- Listar índices necesarios con su justificación de uso (búsqueda frecuente, unicidad, etc.)
+
+### API Endpoints
+
+#### POST /api/v1/[features]
+- **Descripción**: Crea un nuevo recurso
 - **Auth requerida**: sí / no
 - **Request Body**:
   ```json
-  { "campo": "valor" }
+  { "name": "string", "description": "string (opcional)" }
   ```
+- **Response 201**:
+  ```json
+  { "uid": "uuid", "name": "string", "created_at": "iso8601", "updated_at": "iso8601" }
+  ```
+- **Response 400**: campo obligatorio faltante o inválido
+- **Response 401**: token ausente o expirado
+- **Response 409**: ya existe un recurso con ese nombre
+
+#### GET /api/v1/[features]
+- **Descripción**: Lista todos los recursos
+- **Auth requerida**: sí
 - **Response 200**:
   ```json
-  { "data": { "campo": "valor" } }
+  [{ "uid": "uuid", "name": "string", ... }]
   ```
-- **Response 400**: descripción del error de validación
-- **Response 401**: no autenticado (si aplica)
-- **Response 404**: recurso no encontrado (si aplica)
-- **Response 409**: conflicto de unicidad (si aplica)
 
-## Frontend
+#### GET /api/v1/[features]/{uid}
+- **Descripción**: Obtiene un recurso por uid
+- **Auth requerida**: sí
+- **Response 200**: recurso completo
+- **Response 404**: no encontrado
 
-### Componentes nuevos
-| Componente | Archivo | Props | Descripción |
-|------------|---------|-------|-------------|
-| `ComponentName` | `components/ComponentName` | `prop1: tipo` | qué hace |
+#### PUT /api/v1/[features]/{uid}
+- **Descripción**: Actualiza un recurso existente
+- **Auth requerida**: sí
+- **Request Body**: campos opcionales a actualizar
+- **Response 200**: recurso actualizado
+- **Response 404**: no encontrado
 
-### Páginas nuevas
+#### DELETE /api/v1/[features]/{uid}
+- **Descripción**: Elimina un recurso
+- **Auth requerida**: sí
+- **Response 204**: eliminado exitosamente
+- **Response 404**: no encontrado
+
+### Diseño Frontend
+
+#### Componentes nuevos
+| Componente | Archivo | Props principales | Descripción |
+|------------|---------|------------------|-------------|
+| `FeatureCard` | `components/FeatureCard` | `item, onDelete, onEdit` | Tarjeta de un ítem |
+| `FeatureFormModal` | `components/FeatureFormModal` | `isOpen, onSubmit, onClose` | Modal de creación/edición |
+
+#### Páginas nuevas
 | Página | Archivo | Ruta | Protegida |
 |--------|---------|------|-----------|
-| `FeaturePage` | `pages/FeaturePage` | `/feature` | sí/no |
+| `FeaturePage` | `pages/FeaturePage` | `/features` | sí / no |
 
-### Hooks / State
-| Hook / Store | Archivo | Retorna | Descripción |
-|--------------|---------|---------|-------------|
-| `useFeature` | `hooks/useFeature` | `{ data, loading, error }` | qué hace |
+#### Hooks y State
+| Hook | Archivo | Retorna | Descripción |
+|------|---------|---------|-------------|
+| `useFeature` | `hooks/useFeature` | `{ items, loading, error, create, update, remove }` | CRUD del feature |
 
-### Servicios (llamadas API)
-| Función | Archivo | Descripción |
-|---------|---------|-------------|
-| `getFeature()` | `services/featureService` | fetch a GET /feature |
+#### Services (llamadas API)
+| Función | Archivo | Endpoint |
+|---------|---------|---------|
+| `getFeatures(token)` | `services/featureService` | `GET /api/v1/features` |
+| `createFeature(data, token)` | `services/featureService` | `POST /api/v1/features` |
+| `updateFeature(uid, data, token)` | `services/featureService` | `PUT /api/v1/features/{uid}` |
+| `deleteFeature(uid, token)` | `services/featureService` | `DELETE /api/v1/features/{uid}` |
 
-## Reglas de Negocio
-1. Regla de validación 1
-2. Regla de autorización 2
-3. Regla de integridad 3
+### Arquitectura y Dependencias
+- Paquetes nuevos requeridos: ninguno / listar si aplica
+- Servicios externos: listar integraciones (auth, storage, third-party APIs)
+- Impacto en punto de entrada de la app: registrar router/módulo si aplica
 
-## Plan de Pruebas Unitarias
+### Notas de Implementación
+> Observaciones técnicas, decisiones de diseño o advertencias para los agentes de desarrollo.
 
-### Backend — Services
-- [ ] `test_[service]_[happy_path]` — descripción breve
-- [ ] `test_[service]_[error_case]` — descripción breve
+---
 
-### Backend — Repositories
-- [ ] `test_[repo]_[happy_path]` — descripción breve
-- [ ] `test_[repo]_[error_case]` — descripción breve
+## 3. LISTA DE TAREAS
 
-### Backend — Routes
-- [ ] `test_[route]_returns_200` — descripción breve
-- [ ] `test_[route]_returns_401_unauthorized` — descripción breve
+> Checklist accionable para todos los agentes. Marcar cada ítem (`[x]`) al completarlo.
+> El Orchestrator monitorea este checklist para determinar el progreso.
 
-### Frontend — Components
-- [ ] `[Component] renders [elemento] correctly` — descripción breve
-- [ ] `[Component] calls [handler] on [evento]` — descripción breve
+### Backend
 
-### Frontend — Hooks
-- [ ] `[useHook] returns [estado] on mount` — descripción breve
-- [ ] `[useHook] handles [error] gracefully` — descripción breve
+#### Implementación
+- [ ] Crear modelos `[Feature]Create`, `[Feature]Update`, `[Feature]Response`, `[Feature]Document`
+- [ ] Implementar `[Feature]Repository` — métodos CRUD
+- [ ] Implementar `[Feature]Service` — lógica de negocio de HU-01
+- [ ] Implementar router/controller `/api/v1/[features]` — endpoints CRUD
+- [ ] Registrar en punto de entrada de la app
 
-## Dependencias
-- Paquetes / librerías nuevas requeridas (si aplica)
-- Servicios externos o infraestructura necesaria
+#### Tests Backend
+- [ ] `test_[service]_create_success` — happy path creación
+- [ ] `test_[service]_create_duplicate_raises_conflict` — error unicidad
+- [ ] `test_[service]_get_not_found_raises_error` — error not found
+- [ ] `test_[repo]_insert_returns_document` — repositorio insert
+- [ ] `test_[router]_post_returns_201` — endpoint creación
+- [ ] `test_[router]_post_returns_401_no_token` — sin autenticación
+- [ ] `test_[router]_get_returns_200` — listado
 
-## Notas de Implementación
-Observaciones técnicas, decisiones de diseño o advertencias para los agentes de desarrollo.
+### Frontend
+
+#### Implementación
+- [ ] Crear `[feature]Service` — funciones para todos los endpoints
+- [ ] Crear `use[Feature]` — hook/store con estado, loading, error y acciones CRUD
+- [ ] Implementar `[Feature]Card` + estilos
+- [ ] Implementar `[Feature]FormModal` + estilos
+- [ ] Implementar `[Feature]Page` + estilos — layout completo
+- [ ] Registrar ruta `/[features]` en el sistema de rutas
+
+#### Tests Frontend
+- [ ] `[FeatureCard] renders name correctly`
+- [ ] `[FeatureCard] calls onDelete when button clicked`
+- [ ] `[FeatureFormModal] submits form with correct data`
+- [ ] `use[Feature] loads items on mount`
+- [ ] `use[Feature] handles create error gracefully`
+- [ ] `[FeaturePage] renders list of items`
+
+### QA
+- [ ] Ejecutar skill `/gherkin-case-generator` → criterios CRITERIO-1.1, 1.2, 1.3
+- [ ] Ejecutar skill `/risk-identifier` → clasificación ASD de riesgos
+- [ ] Revisar cobertura de tests contra criterios de aceptación
+- [ ] Validar que todas las reglas de negocio están cubiertas
+- [ ] Actualizar estado spec: `status: IMPLEMENTED`

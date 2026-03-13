@@ -95,7 +95,7 @@ Antes de automatizar un flujo, verificar:
 
 ### DoD de Automatización
 Un script finaliza cuando:
-- [ ] Código revisado (por pares o con `/clean-code-reviewer`)
+- [ ] Código revisado por pares (pull request review)
 - [ ] Datos desacoplados del código
 - [ ] Integrado al pipeline de CI
 - [ ] Con documentación y trazabilidad hacia la HU

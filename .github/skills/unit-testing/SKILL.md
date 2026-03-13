@@ -1,79 +1,68 @@
 ---
 name: unit-testing
-description: Genera pruebas unitarias completas para backend (pytest + pytest-asyncio) y frontend (Vitest + Testing Library) a partir de una spec ASSD y el código implementado. Usa esta skill cuando necesites crear o completar la suite de tests de un feature. Cubre happy paths, error paths y edge cases.
+description: Genera tests unitarios e integración para backend y/o frontend. Lee la spec y el código implementado. Requiere spec APPROVED e implementación completa.
 argument-hint: "<nombre-feature> [backend|frontend|ambos]"
 ---
 
-# Skill: unit-testing
+# Unit Testing
 
-Genera pruebas unitarias automáticamente basándose en la spec ASSD y el código ya implementado.
+## Definition of Done — verificar al completar
 
-## Cuándo usar esta skill
+- [ ] Cobertura ≥ 80% en lógica de negocio (quality gate bloqueante)
+- [ ] Tests aislados — sin conexión a DB real ni Firebase (siempre mocks)
+- [ ] Escenario feliz + errores de negocio + validaciones de entrada cubiertos
+- [ ] Los cambios no rompen contratos existentes del módulo
 
-- Después de implementar el backend o frontend de un feature
-- Cuando necesites aumentar la cobertura de tests
-- Para verificar que el código existente cumple los contratos de la spec
-
-## Stack de Testing
-
-| Entorno | Framework | Mocks | Runner |
-|---------|-----------|-------|--------|
-| Backend | pytest + pytest-asyncio | unittest.mock.AsyncMock | `poetry run pytest` |
-| Frontend | Vitest | vi.mock() | `npx vitest run` |
-
-## Proceso
-
-1. **Lee la spec** en `.github/specs/<feature>.spec.md` — sección "Plan de Pruebas Unitarias"
-2. **Lee el código** implementado para conocer los contratos exactos
-3. **Genera tests** usando las plantillas en [templates/](./templates/)
-4. **Ejecuta** los tests para verificar que pasan
-5. **Reporta** al usuario el resultado
-
-## Estructura de directorios de tests
+## Prerequisito — Lee en paralelo
 
 ```
-backend/tests/
-  conftest.py                            ← fixtures compartidas
-  services/test_<feature>_service.py
-  repositories/test_<feature>_repository.py
-  routes/test_<feature>_router.py
-
-frontend/src/__tests__/
-  <Component>.test.jsx
-  use<Hook>.test.js
+.github/specs/<feature>.spec.md        (criterios de aceptación)
+código implementado en backend/ y/o frontend/
+.github/instructions/backend.instructions.md   (pytest + pytest-asyncio)
+.github/instructions/frontend.instructions.md  (Vitest + Testing Library)
 ```
 
-## Cobertura obligatoria por unidad
+## Output por scope
 
-Para cada función o componente, cubrir:
-- ✅ **Happy path** — flujo exitoso con datos válidos
-- ❌ **Error path** — excepción esperada o respuesta de error
-- 🔲 **Edge case** — datos vacíos, duplicados, permisos, límites
+### Backend → `backend/tests/`
 
-## Plantillas de referencia
+| Archivo | Cubre |
+|---------|-------|
+| `routes/test_<feature>_router.py` | Endpoints: 200/201, 400, 401, 404, 422 |
+| `services/test_<feature>_service.py` | Lógica: happy path + errores de negocio |
+| `repositories/test_<feature>_repository.py` | Queries: parámetros y retornos correctos |
 
-- Backend service test: [templates/test_service.py](./templates/test_service.py)
-- Backend repository test: [templates/test_repository.py](./templates/test_repository.py)
-- Backend router test: [templates/test_router.py](./templates/test_router.py)
-- Frontend component test: [templates/Component.test.jsx](./templates/Component.test.jsx)
-- Frontend hook test: [templates/useHook.test.js](./templates/useHook.test.js)
+### Frontend → `frontend/src/__tests__/`
 
-## Reglas críticas
+| Archivo | Cubre |
+|---------|-------|
+| `components/<Feature>.test.jsx` | Render + interacciones (click, submit) |
+| `hooks/use<Feature>.test.js` | Estado inicial + respuesta API + error handling |
+| `pages/<Feature>Page.test.jsx` | Render completo con providers |
 
-- **Independencia**: cada test no depende del estado de otro
-- **Sin efectos reales**: mockear Firebase, MongoDB y cualquier llamada de red
-- **Nombres descriptivos**: `test_create_user_when_uid_exists_returns_existing_user`
-- **Un assert lógico por test** (pueden ser múltiples `assert` si describen la misma cosa)
-- Usar `conftest.py` para fixtures reutilizables del backend
+## Patrones core
 
-## Comandos de instalación de dependencias
-
-```bash
-# Backend (si no están instalados)
-cd backend
-poetry add --group dev pytest pytest-asyncio httpx
-
-# Frontend (si no están instalados)
-cd frontend
-npm install --save-dev vitest @testing-library/react @testing-library/user-event @testing-library/jest-dom jsdom
+```python
+# Backend — AAA con AsyncMock (pytest-asyncio)
+@pytest.mark.asyncio
+async def test_create_success():
+    repo = AsyncMock()
+    repo.find_by_name.return_value = None
+    repo.insert.return_value = {"uid": "abc", "name": "test"}
+    result = await FeatureService(repo).create(FeatureCreate(name="test"))
+    assert result["uid"] == "abc"
 ```
+
+```js
+// Frontend — mock service + renderHook (Vitest + Testing Library)
+vi.mock('../../services/featureService');
+getFeatures.mockResolvedValue([{ uid: '1' }]);
+const { result } = renderHook(() => useFeature());
+await waitFor(() => expect(result.current.data).toHaveLength(1));
+```
+
+## Restricciones
+
+- Solo `tests/` o `__tests__/`. No modificar código fuente.
+- Nunca conectar a DB real ni Firebase — siempre mocks.
+- Cobertura mínima ≥ 80% en lógica de negocio.

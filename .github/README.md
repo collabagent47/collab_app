@@ -1,12 +1,13 @@
-# ASSD Framework — Guía de Uso
+# ASDD Framework — Guía de Uso (GitHub Copilot)
 
-**ASSD** (Agent Spec Software Development) es un framework de desarrollo asistido por IA que organiza el trabajo de software en cuatro fases orquestadas por agentes especializados en GitHub Copilot Chat.
+**ASDD** (Agent Spec Software Development) es un framework de desarrollo asistido por IA que organiza el trabajo de software en cinco fases orquestadas por agentes especializados.
 
 ```
-Requerimiento → Spec → Backend → Frontend → Tests/QA
+Requerimiento → Spec → [Backend ∥ Frontend ∥ DB] → [Tests BE ∥ Tests FE] → QA → Doc (opcional)
 ```
 
-> **Índice completo de archivos**: `docs/README.md` (en la raíz del repositorio)
+> Esta guía cubre el uso con **GitHub Copilot Chat** en VS Code.
+> Para uso con **Claude Code CLI**, ver `.claude/README.md`.
 
 ---
 
@@ -18,181 +19,164 @@ Requerimiento → Spec → Backend → Frontend → Tests/QA
 | GitHub Copilot Chat | Extensión instalada y activa |
 | Setting habilitado | `github.copilot.chat.codeGeneration.useInstructionFiles: true` |
 
-El archivo `.vscode/settings.json` (en la raíz del repositorio) ya configura el auto-descubrimiento de agentes, skills, prompts e instructions — no requiere configuración manual adicional. Si no existe, créalo con las rutas correspondientes a `.github/`.
+El archivo `.vscode/settings.json` ya configura el auto-descubrimiento de agentes, skills e instructions. Si no existe, créalo con las rutas correspondientes a `.github/`.
 
 ---
 
-## Onboarding: nuevo proyecto
+## Onboarding — nuevo proyecto
 
-Al copiar esta carpeta `.github/` a un proyecto nuevo, completa estos archivos **en orden** antes de usar cualquier agente:
+Al copiar `.github/` y `docs/` a un proyecto nuevo, completa estos archivos **en orden** antes de usar cualquier agente:
 
 | # | Archivo | Qué escribir |
 |---|---------|-------------|
 | 1 | `README.md` (raíz del proyecto) | Stack, arquitectura, comandos (`install`, `dev`, `test`, `build`), variables de entorno |
-| 2 | `docs/context/tech_stack_constraints.context.md` | Lenguaje, framework, base de datos, herramientas aprobadas |
-| 3 | `docs/context/project_architecture.context.md` | Capas, módulos, bounded contexts |
-| 4 | `docs/context/business_domain_dictionary.context.md` | Términos canónicos del negocio (glosario) |
-| 5 | `docs/context/definition_of_ready.context.md` + `definition_of_done.context.md` | Criterios DoR y DoD del equipo |
+| 2 | `.claude/rules/backend.md + frontend.md` | Lenguaje, framework, base de datos, herramientas aprobadas |
+| 3 | `.claude/rules/backend.md + frontend.md` | Capas, módulos, bounded contexts |
+| 4 | `CLAUDE.md (Diccionario de Dominio)` | Términos canónicos del negocio (glosario) |
+| 5 | `CLAUDE.md` (DoR + DoD ya incluidos) | Criterios DoR y DoD del equipo |
 
-Una vez completados, los agentes tienen todo el contexto necesario para operar de forma autónoma.
+Una vez completados, los agentes tienen todo el contexto para operar de forma autónoma.
 
-**No modificar nunca**: `agents/`, `skills/`, `instructions/`, `prompts/`, `docs/lineamientos/`, `copilot-instructions.md`, `AGENTS.md`
-
----
-
-## El flujo ASSD paso a paso
-
-### Paso 1 — Spec
-
-Antes de escribir una sola línea de código, genera la especificación técnica del feature.
-
-```
-@Spec Generator describeme el feature: [tu requerimiento aquí]
-```
-
-O con el prompt:
-```
-/generate-spec
-```
-
-El agente ejecuta el **pipeline GAIDD** (validación INVEST/IEEE 830 → análisis de contexto → análisis técnico QUÉ/DÓNDE/POR QUÉ) y genera el archivo en `specs/<feature>.spec.md`.
+**No modificar**: `agents/`, `skills/`, `instructions/`, `.github/docs/lineamientos/`, `copilot-instructions.md`, `AGENTS.md`
 
 ---
 
-### Paso 2 — Backend
+## El flujo ASDD paso a paso
 
-Con la spec aprobada, implementa la capa backend:
+### Paso 1 — Spec (obligatorio, siempre primero)
+
+Genera la especificación técnica antes de escribir código:
 
 ```
-@Backend Developer implementa la spec specs/<feature>.spec.md
+@Spec Generator genera la spec para: [tu requerimiento]
+```
+```
+/generate-spec <nombre-feature>
 ```
 
-O con el prompt:
-```
-/backend-task
-```
-
-El agente sigue la arquitectura en capas del proyecto (definida en `project_architecture.context.md`) y aplica los lineamientos de `dev-guidelines.md`.
+El agente valida el requerimiento y genera `specs/<feature>.spec.md` con estado `DRAFT`.
+Revisa y aprueba la spec (cambia a `APPROVED`) antes de continuar.
 
 ---
 
-### Paso 3 — Frontend
+### Paso 2 — Implementación (paralelo)
 
-Con el backend listo, implementa la interfaz:
-
-```
-@Frontend Developer implementa la spec specs/<feature>.spec.md
-```
-
-O con el prompt:
-```
-/frontend-task
-```
-
----
-
-### Paso 4 — Tests y QA
-
-Genera la suite de pruebas y la estrategia QA completa:
+Con la spec `APPROVED`, lanza backend, frontend y base de datos en paralelo:
 
 ```
-@Test Engineer genera tests para specs/<feature>.spec.md
+@Backend Developer implementa specs/<feature>.spec.md
+@Frontend Developer implementa specs/<feature>.spec.md
+@Database Agent diseña el modelo de datos para specs/<feature>.spec.md
 ```
 
-O con el prompt:
-```
-/generate-tests
-```
-
-Para el flujo QA completo (estrategia + Gherkin + riesgos + automatización):
-```
-/qa-task
-```
-
----
-
-### Flujo completo en un solo comando
-
-Para orquestar las 4 fases de principio a fin:
-
+O con el Orchestrator para coordinar todo automáticamente:
 ```
 @Orchestrator ejecuta el flujo completo para: [tu requerimiento]
 ```
 
-O:
+> **Database Agent** solo es necesario si hay cambios en el modelo de datos.
+
+---
+
+### Paso 3 — Tests (paralelo)
+
+Con la implementación completa, genera los tests:
+
 ```
-/full-flow
+@Test Engineer Backend genera tests para specs/<feature>.spec.md
+@Test Engineer Frontend genera tests para specs/<feature>.spec.md
+```
+```
+/unit-testing <nombre-feature>
+```
+
+---
+
+### Paso 4 — QA
+
+Con tests completos, ejecuta la estrategia QA:
+
+```
+@QA Agent ejecuta QA para specs/<feature>.spec.md
+```
+
+El agente genera: casos Gherkin, matriz de riesgos y (si hay SLAs) plan de performance.
+
+---
+
+### Paso 5 — Documentación *(opcional)*
+
+Al cerrar el feature:
+
+```
+@Documentation Agent documenta el feature specs/<feature>.spec.md
+```
+
+---
+
+### Flujo completo con Orchestrator
+
+```
+@Orchestrator ejecuta el flujo completo para: [tu requerimiento]
+```
+```
+/asdd-orchestrate <nombre-feature>
 ```
 
 ---
 
 ## Agentes disponibles (`@nombre` en Copilot Chat)
 
-| Agente | Cuándo usarlo |
-|---|---|
-| `@Orchestrator` | Coordinar el flujo completo o consultar estado (`/assd-orchestrate status`) |
-| `@Spec Generator` | Validar un requerimiento y generar su spec técnica |
-| `@Backend Developer` | Implementar un feature en la capa backend |
-| `@Frontend Developer` | Implementar un feature en la capa frontend |
-| `@Test Engineer` | Generar tests unitarios y ejecutar el flujo QA completo |
+| Agente | Fase | Cuándo usarlo |
+|---|---|---|
+| `@Orchestrator` | Entry point | Coordinar el flujo completo (`/asdd-orchestrate status` para ver estado) |
+| `@Spec Generator` | Fase 1 | Validar un requerimiento y generar su spec técnica |
+| `@Backend Developer` | Fase 2 ∥ | Implementar el backend según la spec |
+| `@Frontend Developer` | Fase 2 ∥ | Implementar el frontend según la spec |
+| `@Database Agent` | Fase 2 ∥ | Diseñar modelos de datos, migrations y seeders |
+| `@Test Engineer Backend` | Fase 3 ∥ | Generar tests para el backend (paralelo con Frontend) |
+| `@Test Engineer Frontend` | Fase 3 ∥ | Generar tests para el frontend (paralelo con Backend) |
+| `@QA Agent` | Fase 4 | Gherkin, riesgos y análisis de performance |
+| `@Documentation Agent` | Fase 5 | README, API docs y ADRs |
 
 ---
 
 ## Skills disponibles (`/comando` en Copilot Chat)
 
-### ASSD Core
-| Comando | Qué hace |
-|---|---|
-| `/assd-orchestrate` | Orquesta el flujo completo o muestra el estado actual |
-| `/generate-spec` | Genera una spec técnica con pipeline GAIDD |
-| `/backend-fastapi` | Implementa un feature en backend con arquitectura en capas |
-| `/frontend-react` | Implementa un feature en frontend con componentes y hooks |
-| `/unit-testing` | Genera suite de tests unitarios (backend + frontend) |
-
-### Backend CoE
-| Comando | Qué hace |
-|---|---|
-| `/clean-code-reviewer` | Revisa código backend: SOLID, Clean Code, nomenclatura |
-| `/integration-test-generator` | Genera tests de integración para endpoints REST |
-| `/contract-test-generator` | Genera contract tests entre servicios |
-
-### Frontend CoE
-| Comando | Qué hace |
-|---|---|
-| `/component-reviewer` | Revisa componentes: SRP, separación UI/lógica, tipado |
-| `/accessibility-checker` | Verifica accesibilidad WCAG en interfaces |
-| `/ui-test-generator` | Genera tests de UI con Testing Library |
-
-### QA CoE
-| Comando | Qué hace |
-|---|---|
-| `/test-strategy-planner` | Define pirámide de testing y estrategia QA |
-| `/gherkin-case-generator` | Genera casos Given-When-Then desde criterios de aceptación |
-| `/risk-identifier` | Clasifica riesgos por nivel (Alto/Medio/Bajo) |
-| `/test-data-specifier` | Catálogo de datos de prueba sintéticos |
-| `/critical-flow-mapper` | Mapea flujos críticos para E2E y smoke tests |
-| `/regression-strategy` | Plan de regresión optimizado |
-| `/automation-flow-proposer` | Propone flujos a automatizar con estimación de ROI |
-| `/performance-analyzer` | Planifica pruebas de carga y performance |
+| Comando | Agente | Qué hace |
+|---|---|---|
+| `/asdd-orchestrate` | Orchestrator | Orquesta el flujo completo o muestra estado actual |
+| `/generate-spec` | Spec Generator | Genera spec técnica con validación INVEST/IEEE 830 |
+| `/implement-backend` | Backend Developer | Implementa feature completo en el backend |
+| `/implement-frontend` | Frontend Developer | Implementa feature completo en el frontend |
+| `/unit-testing` | Test Engineers | Genera suite de tests (backend + frontend) |
+| `/gherkin-case-generator` | QA Agent | Flujos críticos + casos Given-When-Then + datos de prueba |
+| `/risk-identifier` | QA Agent | Matriz de riesgos ASD (Alto/Medio/Bajo) |
+| `/automation-flow-proposer` | QA Agent | Propone flujos a automatizar con estimación de ROI |
+| `/performance-analyzer` | QA Agent | Planifica pruebas de carga y performance |
 
 ---
 
 ## Prompts disponibles (`/nombre` en Copilot Chat)
+
+Alternativa rápida a invocar agentes directamente:
 
 | Comando | Cuándo usarlo |
 |---|---|
 | `/generate-spec` | Crear una nueva spec desde un requerimiento |
 | `/backend-task` | Implementar una spec en el backend |
 | `/frontend-task` | Implementar una spec en el frontend |
+| `/db-task` | Diseñar esquema de datos, migrations y seeders |
 | `/generate-tests` | Generar tests para una spec o módulo existente |
-| `/qa-task` | Ejecutar el flujo QA completo (8 skills secuenciales) |
-| `/full-flow` | Orquestar las 4 fases de principio a fin |
+| `/qa-task` | Ejecutar el flujo QA (Gherkin + riesgos + performance) |
+| `/doc-task` | Generar documentación técnica del feature |
+| `/full-flow` | Orquestar todas las fases de principio a fin |
 
 ---
 
 ## Instructions automáticas (sin intervención manual)
 
-Estos archivos se inyectan automáticamente en el contexto de Copilot cuando el archivo activo coincide con el patrón:
+Inyectadas automáticamente por Copilot cuando el archivo activo coincide:
 
 | Archivo activo | Instructions aplicadas |
 |---|---|
@@ -200,81 +184,82 @@ Estos archivos se inyectan automáticamente en el contexto de Copilot cuando el 
 | `frontend/src/**/*.{js,jsx}` (o equivalente) | `instructions/frontend.instructions.md` |
 | `backend/tests/**` / `frontend/src/__tests__/**` | `instructions/tests.instructions.md` |
 
-> Si el proyecto usa un stack diferente, los patrones `applyTo:` de cada archivo deben ajustarse al stack real.
+> Si el proyecto usa otro stack, ajusta los patrones `applyTo:` de cada archivo.
 
 ---
 
 ## Lineamientos de referencia
 
-Cargados automáticamente por los agentes durante la ejecución:
+Cargados automáticamente por los agentes:
 
 | Documento | Contenido |
 |---|---|
-| `docs/lineamientos/dev-guidelines.md` | Clean Code, SOLID, API REST, Seguridad, Observabilidad, Testing (LIN-DEV-001…013) |
-| `docs/lineamientos/qa-guidelines.md` | Estrategia QA, Gherkin, Riesgos, Automatización, Performance |
-| `docs/lineamientos/guidelines.md` | Referencia rápida de estándares: código, tests, API, Git, pipeline |
+| `.github/docs/lineamientos/dev-guidelines.md` | Clean Code, SOLID, API REST, Seguridad, Observabilidad |
+| `.github/docs/lineamientos/qa-guidelines.md` | Estrategia QA, Gherkin, Riesgos, Automatización, Performance |
+| `.github/docs/lineamientos/guidelines.md` | Referencia rápida de estándares: código, tests, API, Git |
 
 ---
 
 ## Estructura de carpetas
 
 ```
-.github/
-├── README.md                        ← este archivo
-├── AGENTS.md                        ← reglas críticas para todos los agentes
-├── copilot-instructions.md          ← siempre activo en Copilot Chat
+Project Root/
 │
-├── agents/                          ← 5 agentes (@nombre en Copilot Chat)
-│   ├── orchestrator.agent.md
-│   ├── spec-generator.agent.md
-│   ├── backend-developer.agent.md
-│   ├── frontend-developer.agent.md
-│   └── test-engineer.agent.md
+├── docs/output/                     ← artefactos generados por los agentes
+│   ├── qa/                          ← Gherkin, riesgos, performance
+│   ├── api/                         ← documentación de API
+│   └── adr/                         ← Architecture Decision Records
 │
-├── skills/                          ← 19 skills (/comando en Copilot Chat)
-│   ├── assd-orchestrate/
-│   ├── generate-spec/
-│   ├── backend-fastapi/
-│   ├── frontend-react/
-│   ├── unit-testing/
-│   └── [14 skills CoE más...]
-│
-├── prompts/                         ← 6 prompts (/nombre en Copilot Chat)
-│   ├── generate-spec.prompt.md
-│   ├── backend-task.prompt.md
-│   ├── frontend-task.prompt.md
-│   ├── generate-tests.prompt.md
-│   ├── qa-task.prompt.md
-│   └── full-flow.prompt.md
-│
-├── instructions/                    ← se aplican automáticamente por contexto de archivo
-│   ├── backend.instructions.md
-│   ├── frontend.instructions.md
-│   └── tests.instructions.md
-│
-├── specs/                           ← specs generadas por @Spec Generator
-│   └── <feature>.spec.md
-│
-└── docs/
-    ├── lineamientos/                ← lineamientos CoE (no modificar)
+└── .github/                         ← framework Copilot (auto-contenido para compartir)
+    ├── README.md                    ← este archivo
+    ├── AGENTS.md                    ← reglas críticas para todos los agentes
+    ├── copilot-instructions.md      ← siempre activo en Copilot Chat
+    │
+    ├── agents/                      ← 9 agentes (@nombre en Copilot Chat)
+    │   ├── orchestrator.agent.md
+    │   ├── spec-generator.agent.md
+    │   ├── backend-developer.agent.md
+    │   ├── frontend-developer.agent.md
+    │   ├── database.agent.md
+    │   ├── test-engineer-backend.agent.md
+    │   ├── test-engineer-frontend.agent.md
+    │   ├── qa.agent.md
+    │   └── documentation.agent.md
+    │
+    ├── skills/                      ← 9 skills (/comando en Copilot Chat)
+    │   ├── asdd-orchestrate/
+    │   ├── generate-spec/
+    │   ├── implement-backend/
+    │   ├── implement-frontend/
+    │   ├── unit-testing/
+    │   ├── gherkin-case-generator/
+    │   ├── risk-identifier/
+    │   ├── automation-flow-proposer/
+    │   └── performance-analyzer/
+    │
+    ├── docs/lineamientos/           ← guidelines del framework (incluidos al compartir)
     │   ├── dev-guidelines.md
-    │   ├── qa-guidelines.md
-    │   └── guidelines.md
-    └── context/                     ← archivos de contexto del proyecto (completar por proyecto)
-        ├── tech_stack_constraints.context.md
-        ├── project_architecture.context.md
-        ├── business_domain_dictionary.context.md
-        ├── definition_of_ready.context.md
-        └── definition_of_done.context.md
+    │   └── qa-guidelines.md
+    │
+    ├── prompts/                     ← 8 prompts (/nombre en Copilot Chat)
+    │
+    ├── instructions/                ← aplicadas automáticamente por contexto de archivo
+    │   ├── backend.instructions.md  ← applyTo: backend/**
+    │   ├── frontend.instructions.md ← applyTo: frontend/src/**
+    │   └── tests.instructions.md   ← applyTo: tests/**
+    │
+    ├── requirements/                ← requerimientos de negocio (input del pipeline)
+    │   └── <feature>.md
+    │
+    └── specs/                       ← specs técnicas (fuente de verdad)
+        └── <feature>.spec.md        ← DRAFT → APPROVED → IN_PROGRESS → IMPLEMENTED
 ```
 
 ---
 
 ## Reglas de Oro
 
-Rigen todas las interacciones de los agentes con el código:
-
-1. **No código no autorizado** — los agentes no generan ni modifican código sin instrucción explícita del usuario.
-2. **No suposiciones** — si el requerimiento es ambiguo, el agente pregunta antes de actuar.
-3. **Transparencia** — el agente explica qué va a hacer antes de hacerlo.
-4. **No implementar sin spec** — siempre debe existir una spec aprobada en `specs/` antes de cualquier desarrollo.
+1. **No código sin spec aprobada** — siempre debe existir `specs/<feature>.spec.md` con estado `APPROVED`.
+2. **No código no autorizado** — los agentes no generan ni modifican código sin instrucción explícita.
+3. **No suposiciones** — si el requerimiento es ambiguo, el agente pregunta antes de actuar.
+4. **Transparencia** — el agente explica qué va a hacer antes de hacerlo.

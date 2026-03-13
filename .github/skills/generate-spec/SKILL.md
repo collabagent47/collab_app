@@ -1,38 +1,55 @@
 ---
 name: generate-spec
-description: Genera una especificación técnica ASSD completa a partir de un requerimiento de negocio. Usa esta skill cuando necesites documentar un nuevo feature antes de implementarlo. Crea el archivo spec en .github/specs/<nombre-feature>.spec.md siguiendo el formato estándar del proyecto.
+description: Genera una spec técnica ASDD en .github/specs/<feature>.spec.md. Obligatorio antes de cualquier implementación.
 argument-hint: "<nombre-feature>: <descripción del requerimiento>"
 ---
 
-# Skill: generate-spec
+# Generate Spec
 
-Genera una especificación técnica completa en formato ASSD para un nuevo feature del proyecto.
+## Definition of Ready — validar antes de generar
 
-## Cuándo usar esta skill
+Una historia puede generar spec solo si cumple:
 
-- Antes de implementar cualquier funcionalidad nueva
-- Cuando necesites documentar los contratos de API entre backend y frontend
-- Para definir el plan de pruebas antes de escribir código
+- [ ] Estructura **Como / Quiero / Para que** completa
+- [ ] Términos canónicos del dominio (ver `CLAUDE.md` / `copilot-instructions.md` → Diccionario de Dominio)
+- [ ] Criterios BDD: **Dado / Cuando / Entonces** (feliz + validaciones + errores)
+- [ ] Contrato API explícito si aplica (método, ruta `/api/v1/...`, request, response, códigos HTTP)
+- [ ] Alineada con arquitectura y stack (FastAPI + MongoDB + React + Firebase)
+- [ ] Dependencias y riesgos identificados
+
+Si el requerimiento no cumple el DoR → listar las preguntas pendientes antes de generar.
 
 ## Proceso
 
-1. **Analiza** el requerimiento de negocio del usuario
-2. **Explora** el código existente para identificar patrones y entidades relacionadas:
-   - Lee los modelos/entidades existentes del proyecto
-   - Lee los endpoints/controladores existentes
-   - Lee las páginas/vistas existentes del frontend (si aplica)
-3. **Genera** la spec usando la plantilla en [spec-template.md](./spec-template.md)
-4. **Guarda** el archivo en `.github/specs/<nombre-feature>.spec.md`
-5. **Confirma** al usuario con un resumen de la spec creada
+1. Busca requerimiento en `.github/requirements/<feature>.md` (si existe, úsalo)
+2. Lee las instrucciones de stack: `.github/instructions/backend.instructions.md`, `frontend.instructions.md`
+3. Explora código existente — no duplicar modelos ni endpoints existentes
+4. Valida DoR (arriba) — si hay ambigüedades, lista preguntas antes de continuar
+5. Usa plantilla: `.github/skills/generate-spec/spec-template.md` EXACTAMENTE
+6. Guarda en `.github/specs/<nombre-en-kebab-case>.spec.md`
 
-## Reglas
+## Frontmatter obligatorio
 
-- El nombre del archivo debe ser en kebab-case
-- La spec debe cubrir TODAS las secciones de la plantilla
-- Los endpoints deben documentar request body, response 200 y posibles errores
-- El plan de pruebas debe incluir mínimo un test por endpoint y por componente
-- Estado inicial de toda spec: `DRAFT`
+```yaml
+---
+id: SPEC-###
+status: DRAFT
+feature: nombre-del-feature
+created: YYYY-MM-DD
+updated: YYYY-MM-DD
+author: spec-generator
+version: "1.0"
+related-specs: []
+---
+```
 
-## Plantilla de referencia
+## Secciones obligatorias
 
-Usa el archivo [spec-template.md](./spec-template.md) como base para la spec.
+- `## 1. REQUERIMIENTOS` — HU (Como/Quiero/Para) + criterios Gherkin + reglas de negocio
+- `## 2. DISEÑO` — modelos de datos, endpoints API (request/response/HTTP codes), frontend
+- `## 3. LISTA DE TAREAS` — checklists backend `[ ]`, frontend `[ ]`, QA `[ ]`
+
+## Restricciones
+
+- Solo leer + crear. No modificar código existente.
+- Status siempre `DRAFT`. El usuario aprueba antes de implementar.

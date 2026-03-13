@@ -26,19 +26,31 @@ src/
 
 ## Llamadas a la API Backend
 
+Usar siempre **Axios** (no `fetch`). Las llamadas van en `services/`, nunca directamente en componentes o páginas.
+
 ```js
-// Siempre usar VITE_API_URL del .env
-const res = await fetch(`${import.meta.env.VITE_API_URL}/endpoint`, {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify(data),
-});
+// services/featureService.js
+import axios from 'axios';
+const API_BASE = import.meta.env.VITE_API_URL;
+
+export async function getFeatures(token) {
+  const res = await axios.get(`${API_BASE}/api/v1/features`, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}
+
+export async function createFeature(data, token) {
+  const res = await axios.post(`${API_BASE}/api/v1/features`, data, {
+    headers: { Authorization: `Bearer ${token}` }
+  });
+  return res.data;
+}
 ```
 
-Para endpoints protegidos, incluir el token de Firebase:
+El token se obtiene siempre desde `useAuth()`:
 ```js
-const idToken = await user.getIdToken();
-headers['Authorization'] = `Bearer ${idToken}`;
+const { token } = useAuth();
 ```
 
 ## Rutas (React Router v6)

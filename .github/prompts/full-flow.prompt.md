@@ -1,19 +1,24 @@
 ---
-description: 'Flujo completo del ecosistema multi-agente. Ejecuta el pipeline GAIDD (Spec) como primer paso obligatorio, presenta el menú de selección de agentes y coordina Backend, Frontend y QA según la selección.'
-agent: 'agent'
+description: 'Orquesta el flujo completo ASDD: Spec → [Backend ∥ Frontend ∥ DB] → [Tests Backend ∥ Tests Frontend] → QA → DOC (opcional). Requiere un requerimiento de negocio como input.'
+agent: Orchestrator
 ---
 
-Inicia el flujo completo del ecosistema multi-agente.
+Inicia el flujo completo ASDD con paralelismo máximo.
 
-**Ejecuta el @orchestrator-agent con las siguientes instrucciones:**
+**Feature**: ${input:featureName:nombre del feature en kebab-case}
+**Requerimiento**: ${input:requirement:descripción funcional del feature}
 
-1. Ejecutar el pipeline GAIDD como primer paso obligatorio cargando:
-   `{project-root}/.github/prompts/prompt_agent_spec_gaidd.granularity-classifier.prompt.md`
-2. Seguir todos los pasos del pipeline GAIDD en orden (Pasos 0 → 3)
-3. Al completar el pipeline GAIDD, presentar el menú de selección de agentes al usuario
-4. Coordinar la ejecución según la opción seleccionada (A/B/C)
-5. Generar el reporte final consolidado
+**El @Orchestrator ejecuta automáticamente:**
 
-**Contexto del proyecto:** El proyecto se encuentra en el workspace actual.
-El requerimiento o Historia de Usuario a evaluar debe ser proporcionado por el usuario
-o buscado en `{project-root}/.github/docs/requirements/`.
+1. **[FASE 1 — Secuencial]** `Spec Generator` → genera `.github/specs/${input:featureName}.spec.md`
+2. **[FASE 2 — Paralelo]** al aprobar la spec:
+   - `Backend Developer` → implementa `backend/app/`
+   - `Frontend Developer` → implementa `frontend/src/`
+   - `Database Agent` → si hay cambios de esquema en la spec
+3. **[FASE 3 — Paralelo]** al completar implementación:
+   - `Test Engineer Backend` → genera `backend/tests/`
+   - `Test Engineer Frontend` → genera `frontend/src/__tests__/`
+4. **[FASE 4]** `QA Agent` → estrategia, Gherkin, riesgos, automatización
+5. **[FASE 5 — Opcional]** `Documentation Agent` → si el usuario lo solicita
+
+**El requerimiento se puede buscar también en** `.github/requirements/`.
