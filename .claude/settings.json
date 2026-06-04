@@ -3,8 +3,66 @@
   "env": {
     "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
   },
+  "includeGitInstructions": false,
   "permissions": {
-    "defaultMode": "bypassPermissions",
+    "allow": [
+      "Bash(cmd /c \"move \\\\\"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\\\\\" \\\\\"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\COLLAB_TECH\\\\\"\")",
+      "Bash(ls \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\\" 2>/dev/null)",
+      "Read(//d/Estudio/studyVue/pokemon-game/src/node_modules\" 2>/dev/**)",
+      "Read(//d/Estudio/studyVue/pokemon-game/src/node_modules/**)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(where node *)",
+      "Bash(node -e \"process.exit\\(0\\)\")",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" --version)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npx.cmd\" tsc -p tsconfig.app.json --noEmit)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" node_modules\\\\typescript\\\\bin\\\\tsc -p tsconfig.app.json --noEmit)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"node_modules\\\\typescript\\\\bin\\\\tsc\" -p tsconfig.app.json --noEmit)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" node_modules\\\\.bin\\\\npm install @hookform/resolvers)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npm.cmd\" install @hookform/resolvers)",
+      "Edit(/.claude/skills/owasp-scan/**)",
+      "Bash(cp \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.claude/skills/owasp-scan/SKILL.md\" \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.github/skills/owasp-scan/SKILL.md\")",
+      "Edit(/.claude/skills/asdd-orchestrate/**)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \"node_modules\\\\vite\\\\bin\\\\vite.js\" build)",
+      "Read(//d/Estudio/studyVue/pokemon-game/**)",
+      "Bash(npm run *)",
+      "Bash(npx --node-options=\"\" vite build)",
+      "Bash(node -e ' *)",
+      "Bash(Test-Path \"D:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\\\\README.md\")",
+      "Edit(/.claude/skills/feedback/**)",
+      "Bash(cp \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.claude/skills/feedback/SKILL.md\" \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.github/skills/feedback/SKILL.md\")",
+      "Bash(mkdir -p \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.github/skills/feedback\" && cp \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.claude/skills/feedback/SKILL.md\" \"d:/Estudio/studyVue/pokemon-game/src/node_modules/asd/.github/skills/feedback/SKILL.md\")",
+      "PowerShell(node --version)",
+      "PowerShell(npm --version)",
+      "PowerShell(cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; $env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; node --version; npm run build 2>&1 | Select-Object -First 40)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run build 2>&1 | Select-Object -First 50)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; node -e \"console.log\\(require\\('./node_modules/@testing-library/react/package.json'\\).version\\)\")",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run build 2>&1 | Select-Object -First 30)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run --reporter=verbose 2>&1 | Select-Object -Last 60)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run --reporter=verbose 2>&1 | Select-Object -Last 25)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run --reporter=verbose 2>&1 | Select-Object -Last 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm install -D @testing-library/dom 2>&1 | Select-Object -Last 5)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-Object -Last 10)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-String \"FAIL|Error|AssertionError\" | Select-Object -First 20)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-Object -Last 8)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run build 2>&1 | Select-Object -Last 10)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run dev 2>&1 | Select-Object -First 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-Object -Last 6)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx tsc --noEmit 2>&1 | Select-Object -First 20)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run lint 2>&1 | Select-Object -First 20)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; node -e \"console.log\\(require\\('./node_modules/eslint/package.json'\\).version\\)\")",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react-hooks globals 2>&1 | Select-Object -Last 6)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm install -D @eslint/js 2>&1 | Select-Object -Last 3)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run lint 2>&1 | Select-Object -Last 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run quality 2>&1 | Select-Object -Last 20)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run lint; if \\($?\\) { npm run typecheck } 2>&1)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run test -- --run 2>&1 | Select-Object -Last 6)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run build 2>&1 | Select-Object -Last 8)",
+      "PowerShell(gh --version 2>&1)",
+      "PowerShell(vercel --version 2>&1)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; npm install -g vercel 2>&1 | Select-Object -Last 4)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; vercel --version 2>&1)"
+    ],
     "deny": [
       "Read(./.env)",
       "Read(./.env.*)",
@@ -13,12 +71,14 @@
       "Bash(git push *)",
       "Bash(git reset --hard *)",
       "Bash(rm -rf *)"
+    ],
+    "defaultMode": "bypassPermissions",
+    "additionalDirectories": [
+      "d:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd\\.claude\\skills\\owasp-scan",
+      "d:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd\\.claude\\skills\\feedback"
     ]
   },
-  "teammateMode": "in-process",
-  "includeGitInstructions": false,
   "model": "claude-sonnet-4-6",
-  "autoApprove": true,
   "hooks": {
     "PreToolUse": [
       {
@@ -72,5 +132,7 @@
         ]
       }
     ]
-  }
+  },
+  "teammateMode": "in-process",
+  "autoApprove": true
 }

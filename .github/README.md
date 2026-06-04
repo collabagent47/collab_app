@@ -154,6 +154,8 @@ Al cerrar el feature:
 | `/risk-identifier` | QA Agent | Matriz de riesgos ASD (Alto/Medio/Bajo) |
 | `/automation-flow-proposer` | QA Agent | Propone flujos a automatizar con estimación de ROI |
 | `/performance-analyzer` | QA Agent | Planifica pruebas de carga y performance |
+| `/owasp-scan` | QA Agent / Security | Auditoría OWASP Top 10: SAST + dependencias + config — genera reporte con plan de remediación |
+| `/feedback` | Orchestrator | Retrospectiva estructurada de proyecto o fase — captura aprendizajes y los aplica al framework |
 
 ---
 
@@ -169,6 +171,8 @@ Alternativa rápida a invocar agentes directamente:
 | `/db-task` | Diseñar esquema de datos, migrations y seeders |
 | `/generate-tests` | Generar tests para una spec o módulo existente |
 | `/qa-task` | Ejecutar el flujo QA (Gherkin + riesgos + performance) |
+| `/security-task` | Auditoría OWASP Top 10 completa — SAST + deps + config + reporte |
+| `/feedback` | Retrospectiva del proyecto — captura aprendizajes y mejora el framework |
 | `/doc-task` | Generar documentación técnica del feature |
 | `/full-flow` | Orquestar todas las fases de principio a fin |
 

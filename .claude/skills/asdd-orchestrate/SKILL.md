@@ -20,6 +20,10 @@ argument-hint: "<nombre-feature> | status"
 
 [FASE 4 — SECUENCIAL]
   qa-agent → /gherkin-case-generator, /risk-identifier
+
+[FASE 5 — CONDICIONAL]
+  /owasp-scan → docs/output/security/<feature>-owasp-report.md
+  Condición: spec contiene auth / PII / pagos / APIs externas  ─OR─  risk-matrix tiene nivel ALTO de seguridad
 ```
 
 ## Proceso
@@ -30,7 +34,9 @@ argument-hint: "<nombre-feature> | status"
 2. Lanza Fase 2 en paralelo (backend + frontend + database si aplica)
 3. Cuando Fase 2 completa → lanza Fase 3 en paralelo (tests-be + tests-fe)
 4. Cuando Fase 3 completa → lanza Fase 4 (qa-agent)
-5. Actualiza spec a `IMPLEMENTED` y reporta estado final al usuario
+5. Evalúa condición de seguridad → si se cumple, lanza Fase 5 (`/owasp-scan`)
+   - Si hay findings CRÍTICOS o ALTOS → detener flujo y notificar al usuario antes de marcar IMPLEMENTED
+6. Actualiza spec a `IMPLEMENTED` y reporta estado final al usuario
 
 ## Comando status
 Al recibir `status`: lista specs en `.github/specs/` con su estado actual y próxima acción.

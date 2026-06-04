@@ -1,0 +1,1 @@
+- [Collab ROI Explorer MVP — capa de dominio](project_collab_roi_explorer.md) — tipos, motor ROI, validaciones, escenarios, plantilla Agroinsumos, Academia, casos de práctica

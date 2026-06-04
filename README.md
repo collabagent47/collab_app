@@ -1,185 +1,218 @@
-# ASDD — Agent Spec-Driven Development
+# Collab ROI Explorer
 
-Framework de desarrollo asistido por IA que transforma requerimientos en código funcional mediante agentes especializados orquestados. Garantiza calidad y trazabilidad a través de especificaciones técnicas aprobadas antes de cualquier implementación.
+Plataforma web para que el equipo Collab prepare sesiones comerciales, explore clientes, detecte fricciones y estime ROI de forma pedagógica usando la metodología EVIAR.
 
-```
-Requerimiento → Spec → [Backend ∥ Frontend ∥ DB] → [Tests BE ∥ Tests FE] → QA → Docs
-```
+## Stack
 
----
-
-## Compatibilidad
-
-| Herramienta | Configuración | Carpeta de agentes |
-|-------------|---------------|--------------------|
-| **Claude Code CLI** | `.claude/settings.json` | `.claude/agents/` |
-| **GitHub Copilot** | `.github/copilot-instructions.md` | `.github/agents/` |
-
-Ambas herramientas comparten el mismo flujo, las mismas specs y los mismos lineamientos. Solo difiere la carpeta de entrada de los agentes.
+| Capa | Tecnología |
+|------|-----------|
+| Framework | React 19 + TypeScript |
+| Build | Vite 6 |
+| Estilos | Tailwind CSS v4 |
+| Estado | Zustand |
+| Formularios | React Hook Form + Zod |
+| Animaciones | Framer Motion |
+| Gráficas | Recharts |
+| Iconos | Lucide React |
+| Tests unitarios | Vitest + React Testing Library |
+| Tests E2E | Playwright |
+| Persistencia MVP | localStorage |
 
 ---
 
 ## Instalación
 
-### Claude Code CLI
+```bash
+# Requiere Node.js >= 18
+npm ci
+```
 
-1. Instala Claude Code: https://claude.ai/code
-2. Autentícate con tu cuenta Anthropic
-3. Clona este repositorio en tu proyecto
-4. Copia `.claude/` a la raíz de tu proyecto
+## Ejecución local
 
 ```bash
-cp -r .claude/ /tu-proyecto/.claude/
-cp -r .github/ /tu-proyecto/.github/
+npm run dev
+# http://localhost:5173
 ```
-
-### GitHub Copilot
-
-1. Instala la extensión **GitHub Copilot Chat** en VS Code
-2. Activa el uso de instruction files en tu settings.json de VS Code:
-
-```json
-{
-  "github.copilot.chat.codeGeneration.useInstructionFiles": true
-}
-```
-
-3. Copia `.github/` a la raíz de tu proyecto
 
 ---
 
-## Flujo de trabajo
-
-### Opción A — Orquestación automática completa
-
-```
-/asdd-orchestrate nombre-feature
-```
-
-El Orchestrator gestiona todo: genera la spec, espera aprobación, ejecuta fases en paralelo y reporta el estado al final.
-
-### Opción B — Control manual paso a paso
+## Scripts disponibles
 
 ```bash
-# 1. Generar especificación técnica
-/generate-spec nombre-feature
-
-# 2. Revisar y aprobar la spec generada en .github/specs/<feature>.spec.md
-#    Cambiar el campo:  status: DRAFT  →  status: APPROVED
-
-# 3. Implementar backend y frontend (se pueden ejecutar en paralelo)
-/implement-backend nombre-feature
-/implement-frontend nombre-feature
-
-# 4. Generar tests
-/unit-testing nombre-feature
-
-# 5. Análisis QA
-/gherkin-case-generator
-/risk-identifier
-```
-
-> **Regla de Oro**: Ningún agente escribe código si la spec no tiene `status: APPROVED`.
-
----
-
-## Skills disponibles
-
-| Comando | Qué hace |
-|---------|----------|
-| `/asdd-orchestrate` | Orquesta el flujo ASDD completo |
-| `/generate-spec` | Genera spec técnica en `.github/specs/` |
-| `/implement-backend` | Implementa el backend según la spec aprobada |
-| `/implement-frontend` | Implementa el frontend según la spec aprobada |
-| `/unit-testing` | Genera tests unitarios e integración |
-| `/gherkin-case-generator` | Genera escenarios Given-When-Then y datos de prueba |
-| `/risk-identifier` | Clasifica riesgos de calidad (Alto / Medio / Bajo) |
-| `/automation-flow-proposer` | Propone flujos a automatizar con análisis de ROI |
-| `/performance-analyzer` | Define estrategia de performance testing con k6 |
-
----
-
-## Agentes disponibles
-
-| Agente | Fase | Responsabilidad |
-|--------|------|-----------------|
-| `orchestrator` | Entry point | Coordina el flujo completo |
-| `spec-generator` | 1 | Genera especificaciones técnicas |
-| `backend-developer` | 2 | Rutas, servicios, repositorios |
-| `frontend-developer` | 2 | Páginas, componentes, hooks |
-| `database-agent` | 2 | Modelos, migrations, seeders |
-| `test-engineer-backend` | 3 | Tests unitarios e integración backend |
-| `test-engineer-frontend` | 3 | Tests unitarios y e2e frontend |
-| `qa-agent` | 4 | Estrategia QA, Gherkin, riesgos, performance |
-| `documentation-agent` | 5 | README, API docs, ADRs |
-
-**Claude Code**: invoca agentes con `@nombre-agente` o con skills `/comando`
-**GitHub Copilot**: usa `@nombre-agente` en el chat o los prompts en `.github/prompts/`
-
----
-
-## Ciclo de vida de una spec
-
-```
-DRAFT → APPROVED → IN_PROGRESS → IMPLEMENTED → DEPRECATED
-```
-
-Las specs viven en `.github/specs/<feature>.spec.md`. Solo pasan a implementación cuando el usuario las aprueba manualmente cambiando el campo `status`.
-
----
-
-## Estructura del repositorio
-
-```
-.
-├── .claude/                        ← Configuración Claude Code CLI
-│   ├── settings.json               ← Modelo, permisos, hooks
-│   ├── agents/                     ← Sub-agentes Claude Code
-│   ├── skills/                     ← Skills invocables con /comando
-│   ├── rules/                      ← Reglas automáticas por tipo de archivo
-│   ├── hooks/                      ← Scripts pre/post edit
-│   └── docs/lineamientos/          ← Dev guidelines y QA guidelines
-│
-├── .github/                        ← Configuración GitHub Copilot
-│   ├── copilot-instructions.md     ← Instrucciones globales + diccionario de dominio
-│   ├── AGENTS.md                   ← Reglas de Oro para todos los agentes
-│   ├── agents/                     ← Agentes Copilot
-│   ├── skills/                     ← Skills portables
-│   ├── instructions/               ← Instrucciones por scope (backend, frontend, tests)
-│   ├── prompts/                    ← Prompts rápidos reutilizables
-│   ├── requirements/               ← Requerimientos de entrada (input)
-│   └── specs/                      ← Especificaciones técnicas (output de fase 1)
+npm run dev           # Servidor de desarrollo
+npm run build         # Build de producción (dist/)
+npm run preview       # Preview del build de producción
+npm run lint          # ESLint (flat config v9)
+npm run typecheck     # TypeScript sin emitir archivos
+npm run test          # Tests unitarios (Vitest)
+npm run test:watch    # Tests en modo watch
+npm run test:coverage # Tests con reporte de cobertura
+npm run test:e2e      # Tests E2E con Playwright
+npm run quality       # lint + typecheck + test + build (gate completo)
 ```
 
 ---
 
-## Ejemplo completo
+## Tests
+
+### Unitarios y regresión
 
 ```bash
-# 1. Escribe el requerimiento
-echo "El usuario debe poder convertir monedas en tiempo real" \
-  > .github/requirements/conversiones.md
+npm run test
+```
 
-# 2. Genera la spec
-/generate-spec conversiones
+**Prueba de regresión obligatoria DoD-027** — caso Fertilizantes Mix escenario medio:
 
-# 3. Abre .github/specs/conversiones.spec.md, revisa y cambia:
-#    status: DRAFT  →  status: APPROVED
+| Indicador | Valor esperado |
+|-----------|---------------|
+| Ahorro operativo | $324.000 |
+| Beneficio comercial | $567.000 |
+| Beneficio total | $891.000 |
+| ROI financiero | ~27,28% |
+| Multiplicador | ~1,27x |
+| Payback | ~0,78 meses |
 
-# 4. Orquesta la implementación
-/asdd-orchestrate conversiones
+### E2E
 
-# → Backend implementado
-# → Frontend implementado
-# → Tests generados
-# → Análisis QA completado
+```bash
+npx playwright install   # una vez
+npm run test:e2e
 ```
 
 ---
 
-## Documentación interna
+## Deploy en Vercel (opción principal)
 
-- `.github/README.md` — Guía detallada para GitHub Copilot
-- `.claude/README.md` — Guía detallada para Claude Code CLI
-- `.github/AGENTS.md` — Reglas de Oro y lineamientos de todos los agentes
-- `.github/specs/README.md` — Convenciones y ciclo de vida de specs
+Vercel detecta automáticamente Vite. La configuración ya está en `vercel.json`.
+
+### Pasos
+
+1. **Subir repositorio a GitHub**
+
+```bash
+git init
+git add .
+git commit -m "feat: Collab ROI Explorer MVP"
+git branch -M main
+git remote add origin https://github.com/<usuario>/collab-roi-explorer.git
+git push -u origin main
+```
+
+2. **Importar en Vercel**
+   - Ir a [vercel.com](https://vercel.com) → **Add New Project**
+   - Seleccionar el repositorio `collab-roi-explorer`
+   - Vercel detecta Vite automáticamente
+
+3. **Verificar configuración** (Vercel la lee de `vercel.json`, pero confirmar):
+   - Framework Preset: **Vite**
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+   - Install Command: `npm ci`
+
+4. **Deploy** → clic en **Deploy**
+
+5. **Validar URL pública**
+   - Abrir la URL generada (ej. `https://collab-roi-explorer.vercel.app`)
+   - Navegar el flujo completo: Dashboard → Nueva exploración → Agroinsumos → EVIAR → Fricciones → ROI → Resumen ejecutivo → Modo presentación
+   - Verificar que no hay pantalla blanca ni errores en consola
+
+6. **Deploys automáticos**
+   - Cada push a `main` despliega automáticamente en producción
+   - Cada PR genera un preview deployment con URL propia
+
+---
+
+## Alternativa — GitHub Pages
+
+Solo usar si no se quiere conectar un servicio externo.
+
+1. Ir a **Settings → Pages → Source: GitHub Actions**
+2. Hacer push a `main`
+3. El workflow `.github/workflows/deploy-github-pages.yml` despliega automáticamente
+
+> **Nota:** GitHub Pages requiere configurar la variable `GITHUB_PAGES=true` para que el `base` en `vite.config.ts` use `/collab-roi-explorer/`. Vercel NO necesita esto.
+
+---
+
+## Variables de entorno
+
+Crear `.env.local` basado en `.env.example`:
+
+```env
+VITE_APP_NAME=Collab ROI Explorer
+VITE_APP_ENV=production
+```
+
+En Vercel: **Project Settings → Environment Variables** → agregar las variables.
+
+---
+
+## CI/CD
+
+El quality gate corre automáticamente en cada push y pull request a `main` y `develop`:
+
+```
+lint → typecheck → test (101 tests, incluye regresión DoD-027) → build
+```
+
+Un fallo en cualquier paso **bloquea el merge**.
+
+---
+
+## Arquitectura
+
+```
+src/
+  domain/
+    roi/                ← Motor ROI puro (sin dependencias de UI)
+    methodology/        ← Metodología EVIAR
+    knowledge-base/     ← Tipos de base de conocimiento
+  data/
+    templates/          ← Plantillas por sector (Agroinsumos, etc.)
+    comercial/          ← Documentos reales de clientes (insumos históricos)
+  lib/
+    presentation.ts     ← DTO mapper seguro para modo presentación
+    storage.ts          ← localStorage con schema versioning
+  services/             ← CRUD localStorage (interfaz migrable a API)
+  stores/               ← Zustand stores (explorations, app, knowledge)
+  hooks/                ← Lógica de UI (wraps de stores + services)
+  components/
+    shared/             ← QualityWarning, LearnerHint, DataBadge, ProgressRing
+    exploration/        ← ExplorationCard, FrictionCard, ROIScenarioCard
+    workspace/          ← ClientStoryBlock, ROIInputPanel, InsumosList
+    layout/             ← AppShell, Sidebar, Topbar
+  pages/                ← DashboardPage, ExplorationWorkspacePage, AcademyPage, etc.
+  tests/
+    unit/               ← Motor ROI (27 tests), validaciones (9), componentes (18), etc.
+    integration/        ← Flujos + seguridad modo presentación
+    e2e/                ← Playwright smoke tests
+```
+
+---
+
+## GAPS / Pendientes
+
+| Gap | Estado |
+|-----|--------|
+| Backend real (FastAPI + MongoDB) | Post-MVP |
+| Autenticación y roles | Post-MVP |
+| Exportación PDF | TODO documentado en componentes |
+| Modo oscuro | Post-MVP |
+| Templates adicionales (Restaurante, Inmobiliaria, Viajes) | Post-MVP — fuentes en `src/data/comercial/` |
+| Tests E2E completos (solo smoke por ahora) | Post-MVP |
+| Code splitting (bundle actual ~280KB gzipped) | Recomendado antes de escalar |
+| ESLint reglas más estrictas (react/recommended) | Backlog |
+
+---
+
+## Troubleshooting
+
+| Problema | Solución |
+|---------|---------|
+| `npm ci` falla | Verificar Node.js >= 18: `node --version` |
+| Pantalla blanca en Vercel | Verificar que `vercel.json` tiene el rewrite `/* → /index.html` |
+| Pantalla blanca en GitHub Pages | Verificar `GITHUB_PAGES=true` en el workflow de deploy |
+| Rutas SPA no funcionan | El `vercel.json` y `netlify.toml` ya incluyen los rewrites correctos |
+| Tests fallan | Requiere Node.js >= 18 |
+| `Playwright` no encuentra navegadores | Ejecutar `npx playwright install` |
+| ESLint falla en CI | Verificar que `eslint.config.js` existe y tiene flat config v9 |

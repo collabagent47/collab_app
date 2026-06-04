@@ -1,0 +1,1 @@
+- [Collab ROI Explorer MVP](project_collab_roi.md) — CI/CD + design system implementados; AppShell con sidebar/topbar; Node v10 local incompatible con Vite 6 (usar CI Node 20)

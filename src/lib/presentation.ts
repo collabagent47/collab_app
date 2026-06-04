@@ -1,0 +1,51 @@
+/**
+ * DTO mapper para modo presentación.
+ * Extrae SOLO los campos seguros para mostrar al cliente.
+ * Excluye explícitamente: notes, sessionPreparations, roiInputs, operation (raw),
+ * cualquier dato interno no presentable.
+ */
+
+import type { Exploration, RecommendedModule, OpportunityType, ROIScenarioResults } from '../domain/roi/roi-types'
+
+export interface PresentationViewModel {
+  clientName: string
+  sector: string
+  city?: string
+  mainChannel?: string
+  mainProduct?: string
+  targetCustomer?: string
+  improvementGoal?: string
+  frictionIds: string[]
+  recommendedModules: RecommendedModule[]
+  opportunityType?: OpportunityType
+  roiResults?: ROIScenarioResults
+  executiveSummary?: string
+}
+
+/**
+ * Convierte una Exploration completa en un ViewModel seguro para presentación al cliente.
+ * NINGÚN campo interno (notes, sessionPreparations, roiInputs, operation) pasa este filtro.
+ */
+export function toPresentationViewModel(exploration: Exploration): PresentationViewModel {
+  return {
+    clientName: exploration.clientName,
+    sector: exploration.sector,
+    city: exploration.city,
+    mainChannel: exploration.mainChannel,
+    mainProduct: exploration.mainProduct,
+    targetCustomer: exploration.targetCustomer,
+    improvementGoal: exploration.improvementGoal,
+    frictionIds: exploration.frictionIds,
+    recommendedModules: exploration.recommendedModules,
+    opportunityType: exploration.opportunityType,
+    roiResults: exploration.roiResults,
+    executiveSummary: exploration.executiveSummary,
+    // EXCLUIDOS DELIBERADAMENTE:
+    // exploration.notes            — notas internas del equipo
+    // exploration.sessionPreparations — preparaciones de sesión internas
+    // exploration.roiInputs        — datos técnicos de entrada al motor
+    // exploration.operation        — datos operativos crudos
+    // exploration.insumos          — catálogo interno de productos
+    // exploration.dataQuality      — métrica interna de calidad
+  }
+}

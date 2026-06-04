@@ -1,0 +1,2 @@
+- [SPEC-003 CI/CD Generated](spec-003-cicd-approved.md) — Spec CI/CD para Collab ROI Explorer, status APPROVED
+- [Collab ROI Master Prompt](collab-roi-master-prompt.md) — Sistema visual y componentes requeridos para el diseño

@@ -153,6 +153,8 @@ El Orchestrator coordina todas las fases con máximo paralelismo automáticament
 | `/risk-identifier` | qa-agent | Matriz de riesgos ASD (Alto/Medio/Bajo) |
 | `/automation-flow-proposer` | qa-agent | Propone flujos a automatizar con estimación de ROI |
 | `/performance-analyzer` | qa-agent | Planifica pruebas de carga y performance |
+| `/owasp-scan` | qa-agent / security | Auditoría OWASP Top 10: SAST + deps + config + reporte |
+| `/feedback` | orchestrator | Retrospectiva de proyecto — captura aprendizajes y mejora el framework |
 
 ---
 

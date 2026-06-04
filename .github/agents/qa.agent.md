@@ -33,6 +33,7 @@ tests en backend/tests/ y frontend/src/__tests__/
 2. `/risk-identifier` → matriz de riesgos ASD (**obligatorio**)
 3. `/performance-analyzer` → solo si hay SLAs definidos en la spec
 4. `/automation-flow-proposer` → solo si el usuario lo solicita
+5. `/owasp-scan` → auditoría OWASP Top 10 + reporte de seguridad (**obligatorio** si spec contiene auth, PII, pagos o APIs externas; o si `/risk-identifier` detecta riesgo de seguridad ALTO)
 
 ## Output — `docs/output/qa/`
 
@@ -42,6 +43,12 @@ tests en backend/tests/ y frontend/src/__tests__/
 | `<feature>-risks.md` | risk-identifier | Siempre |
 | `<feature>-performance.md` | performance-analyzer | Si hay SLAs |
 | `automation-proposal.md` | automation-flow-proposer | Si se solicita |
+
+## Output — `docs/output/security/`
+
+| Archivo | Skill | Cuándo |
+|---------|-------|--------|
+| `<feature>-owasp-report.md` | owasp-scan | Si hay auth / PII / pagos / APIs externas o riesgo ALTO de seguridad |
 
 ## Restricciones
 

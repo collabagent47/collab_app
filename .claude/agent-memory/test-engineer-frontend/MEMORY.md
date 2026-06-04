@@ -1,0 +1,1 @@
+- [Collab ROI Explorer project context](project_collab_roi.md) — Stack, test setup gaps (missing jest-dom), ROI rounding gap DoD-027, mock patterns for framer-motion and useAppStore
