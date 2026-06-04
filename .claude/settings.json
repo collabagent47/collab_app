@@ -61,7 +61,10 @@
       "PowerShell(gh --version 2>&1)",
       "PowerShell(vercel --version 2>&1)",
       "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; npm install -g vercel 2>&1 | Select-Object -Last 4)",
-      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; vercel --version 2>&1)"
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; vercel --version 2>&1)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm install -D @types/node 2>&1 | Select-Object -Last 3)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run typecheck 2>&1 | Select-Object -Last 5)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm run build 2>&1 | Select-Object -Last 6)"
     ],
     "deny": [
       "Read(./.env)",
@@ -75,7 +78,8 @@
     "defaultMode": "bypassPermissions",
     "additionalDirectories": [
       "d:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd\\.claude\\skills\\owasp-scan",
-      "d:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd\\.claude\\skills\\feedback"
+      "d:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd\\.claude\\skills\\feedback",
+      "D:\\Estudio\\studyVue\\pokemon-game\\src\\node_modules\\asd"
     ]
   },
   "model": "claude-sonnet-4-6",

@@ -23,6 +23,7 @@ import { ROIScenarioCard } from '../../components/exploration/ROIScenarioCard'
 import type { RecommendedModule, OpportunityType } from '../../domain/knowledge-base/knowledge-types'
 import type { ROIInputs } from '../../domain/roi/roi-types'
 import { EVIAR_STEPS } from '../../domain/methodology/eviar'
+import { cn } from '../../lib/utils'
 
 const STEP_HINTS: Record<string, string> = {
   E: 'Antes de llenar datos, pregunta primero. Usa las preguntas guía del paso E para entender el contexto del cliente.',
