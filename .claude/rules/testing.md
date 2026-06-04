@@ -45,6 +45,80 @@ Lee `.claude/rules/backend.md` para:
 - ❌ Error path — excepción esperada, respuesta de error
 - 🔲 Edge case — vacío, duplicado, límites, permisos
 
+## Configuración de Vitest (React + TypeScript)
+
+### Separar siempre vite.config.ts de vitest.config.ts
+
+```typescript
+// vitest.config.ts — SEPARADO de vite.config.ts
+/// <reference types="vitest" />
+import { defineConfig } from 'vitest/config'
+import react from '@vitejs/plugin-react'
+
+export default defineConfig({
+  plugins: [react()],
+  test: {
+    environment: 'jsdom',
+    globals: true,
+    setupFiles: './src/tests/setup.ts',
+    include: ['src/tests/**/*.test.{ts,tsx}'],
+  },
+})
+```
+
+Razón: usar `defineConfig` de `vitest/config` en el mismo archivo que usa `defineConfig` de `vite`
+genera un conflicto de tipos de Plugin que rompe `tsc -b`. (Aprendizaje: collab-roi-explorer-mvp)
+
+### Usar `npx vitest run` en CI, no `npm run test`
+
+```yaml
+# ci.yml — correcto
+- run: npx vitest run
+
+# Incorrecto — puede ser watch mode si CI=true no se detecta
+- run: npm run test   # solo si el script dice "vitest run" explícitamente
+```
+
+Razón: `vitest` sin argumentos = watch mode. En CI puede colgar si hay problemas de detección.
+
+### Peer dependencies obligatorias de testing
+
+```json
+"devDependencies": {
+  "@testing-library/dom": "^10.0.0",    // peer dep de @testing-library/react
+  "@testing-library/react": "^16.0.0",
+  "@testing-library/user-event": "^14.5.0",
+  "@types/node": "^24.0.0"              // para process.env en vite.config.ts y playwright.config.ts
+}
+```
+
+Razón: `@testing-library/dom` es peer dep de react pero no se instala automáticamente.
+`@types/node` es necesario para cualquier uso de `process.env` en configs.
+(Aprendizaje: collab-roi-explorer-mvp — ambos causaron fallos en CI)
+
+### screen vs window.screen — importar explícitamente
+
+```typescript
+// CORRECTO — importar screen desde testing-library
+import { render, screen } from '@testing-library/react'
+
+// INCORRECTO — con Vitest globals: true, 'screen' resuelve a window.screen (DOM API)
+// No usar screen como global cuando globals: true está activo
+```
+
+### Excluir tests de tsconfig.app.json
+
+```json
+// tsconfig.app.json
+{
+  "include": ["src"],
+  "exclude": ["src/tests"]
+}
+```
+
+Razón: los tests usan tipos de vitest/testing-library que no deben contaminar la compilación
+de producción. `tsc -b` fallará si los tests tienen imports de vitest globals en tsconfig de producción.
+
 ## Anti-patrones Prohibidos
 - Tests que dependen del orden de ejecución
 - Llamadas reales a servicios externos (DB, APIs, auth)

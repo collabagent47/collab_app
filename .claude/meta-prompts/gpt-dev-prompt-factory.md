@@ -105,6 +105,24 @@ datos de prueba sintéticos, cobertura mínima esperada.
 ### 9. GAPS / PENDIENTES
 Todo lo que falta o no está en los insumos. NUNCA rellenar con suposiciones plausibles.
 
+### 10. Entorno y publicación (obligatorio desde MVP)
+
+Incluir respuestas a estas preguntas — si no están en los insumos, declararlas como ASUNCIONES en la sección 2:
+
+```
+¿Cuál es la versión mínima de Node.js requerida en local y en CI?
+¿Existe corpus de datos reales (documentos Word, Excel, PDF)? Si sí:
+  - ¿Se incluyen en el repo o en un storage externo (Notion, Drive, SharePoint)?
+  - ¿Son la fuente de verdad para fixtures de prueba?
+¿Qué plataforma de deploy se usará en el MVP (Vercel / Netlify / GitHub Pages / otro)?
+¿Cuál es el repositorio git destino? ¿Existe o se crea desde cero?
+¿Hay un CI/CD mínimo requerido desde el inicio (lint + typecheck + test + build)?
+```
+
+> Aprendizaje (2026-06-04, collab-roi-explorer-mvp): la ausencia de estas preguntas causó
+> ~30% de tiempo extra en resolver incompatibilidad de Node.js, corpus binarios sin proceso
+> y ambigüedad en repositorio de destino.
+
 ## Antes de responder — autochequeo (no lo incluyas en la salida)
 - [ ] ¿Cada criterio de aceptación tiene su entrada en el Definition of Done medible?
 - [ ] ¿Extraje TODAS las aclaraciones/notas/TBD como reglas literales?
