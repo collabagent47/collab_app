@@ -78,7 +78,13 @@
       "Bash(\"C:/Program Files/nodejs/node.exe\" --version)",
       "Bash(Get-Content \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\\\\src\\\\data\\\\templates\\\\academy-content.ts\")",
       "Bash(Measure-Object -Line)",
-      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx tsc --noEmit 2>&1 | Select-Object -First 10)"
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx tsc --noEmit 2>&1 | Select-Object -First 10)",
+      "Edit(/.claude/skills/responsive-review/**)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npm audit --production 2>&1 | Select-Object -Last 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run src/tests/unit/auth-permissions.test.ts --reporter=verbose 2>&1 | Select-Object -Last 20)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run src/tests/unit/auth-permissions.test.ts --clearCache 2>&1 | Select-Object -Last 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; Remove-Item -Recurse -Force \".vite\" -ErrorAction SilentlyContinue; Remove-Item -Recurse -Force \"node_modules/.cache\" -ErrorAction SilentlyContinue; npx vitest run src/tests/unit/auth-permissions.test.ts --reporter=verbose 2>&1 | Select-Object -Last 15)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run src/tests/unit/auth-permissions.test.ts --reporter=verbose 2>&1 | Select-String \"FAIL|AssertionError|expected|received|Error\" | Select-Object -First 10)"
     ],
     "deny": [
       "Read(./.env)",

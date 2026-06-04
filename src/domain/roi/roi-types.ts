@@ -6,6 +6,7 @@
 
 import type { GuidedQuestionAnswer, ExplorationType } from '../session/session-types'
 export type { GuidedQuestionAnswer, ExplorationType }
+export type { User, UserRole } from '../auth/auth-types'
 
 // ---------------------------------------------------------------------------
 // Enumeraciones de estado y clasificación
@@ -214,6 +215,10 @@ export interface Exploration {
   explorationType?: ExplorationType;
   /** Respuestas a preguntas guía — NO renderizar en modo presentación. */
   guidedAnswers?: GuidedQuestionAnswer[];
+  /** Propietario de la exploración — usuario que la creó */
+  ownerId?: string;
+  /** Visibilidad de la exploración */
+  visibility?: 'private' | 'team' | 'presentation';
 }
 
 // ---------------------------------------------------------------------------

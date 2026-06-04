@@ -6,6 +6,7 @@
  */
 
 import type { Exploration, RecommendedModule, OpportunityType, ROIScenarioResults } from '../domain/roi/roi-types'
+import type { User, UserRole } from '../domain/auth/auth-types'
 
 export interface PresentationViewModel {
   clientName: string
@@ -25,8 +26,33 @@ export interface PresentationViewModel {
 /**
  * Convierte una Exploration completa en un ViewModel seguro para presentación al cliente.
  * NINGÚN campo interno (notes, sessionPreparations, roiInputs, operation) pasa este filtro.
+ * Si el usuario es viewer o learner, el ViewModel retorna un subconjunto reducido de campos.
  */
-export function toPresentationViewModel(exploration: Exploration): PresentationViewModel {
+export function toPresentationViewModel(
+  exploration: Exploration,
+  user?: User | null,
+): PresentationViewModel {
+  const effectiveRole: UserRole = user?.role ?? 'viewer'
+  const isRestrictedViewer = effectiveRole === 'viewer' || effectiveRole === 'learner'
+
+  if (isRestrictedViewer) {
+    return {
+      clientName: exploration.clientName,
+      sector: exploration.sector,
+      opportunityType: exploration.opportunityType,
+      frictionIds: exploration.frictionIds,
+      recommendedModules: exploration.recommendedModules.filter(
+        (m) => m.status === 'included_mvp',
+      ),
+      roiResults: exploration.roiResults
+        ? { optimistic: exploration.roiResults.optimistic } as ROIScenarioResults
+        : undefined,
+      executiveSummary: exploration.executiveSummary,
+      // EXCLUIDOS PARA VIEWER/LEARNER:
+      // city, mainChannel, mainProduct, targetCustomer, improvementGoal
+    }
+  }
+
   return {
     clientName: exploration.clientName,
     sector: exploration.sector,

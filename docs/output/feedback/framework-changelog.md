@@ -2,7 +2,46 @@
 
 ---
 
-## 2026-06-04 — Proyecto: collab-roi-explorer-mvp
+## 2026-06-04 (sesión 2) — Proyecto: collab-roi-explorer-mvp — Fase Responsive + P1 aplicados
+
+### Cambios aplicados (P0)
+
+- **`.claude/rules/frontend.md`**: Sección "Override Tailwind CSS v4" agregada al final
+  - Razón: 3 bugs RWD detectados post-deploy (badge superpuesto, h-calc incorrecto, sidebar sin breakpoints)
+  - Aprendizaje: los bugs de layout no los detectan los unit tests; necesitan inspección visual o tests Playwright multi-viewport
+
+- **`.claude/skills/asdd-orchestrate/SKILL.md`** + mirror `.github/`: Fase 6 "Deploy" agregada al flujo
+  - Razón: deploy consumió ~30% de la sesión sin estar en el plan del orquestador
+  - Incluye: CI/CD pipeline, URL verification, checklist RWD mínimo (390px, 768px, 1280px)
+
+- **`.github/skills/generate-spec/spec-template.md`**: Sección "Entorno de ejecución" + "Notas de arquitectura" agregadas
+  - Razón: P0 documentado en changelog anterior pero nunca aplicado al archivo
+  - Agrega: Node version, deploy platform, repo destino, corpus, rama de deploy
+  - Agrega: regla dominio exportable, regla RWD en cards, regla alturas workspace
+
+- **`.claude/skills/responsive-review/SKILL.md`** + mirror `.github/`: Nuevo skill creado
+  - Razón: 3 bugs RWD encontrados solo por inspección visual — no existe skill para detectarlos sistemáticamente
+  - Detecta 7 anti-patrones: badge sin shrink-0, min-w-0 faltante, h-calc incorrecto, sidebar sin hidden lg:flex, absolute en cards, alturas fijas, break-words obsoleto
+  - Output: reporte en `docs/output/responsive-review/`
+
+### Cambios confirmados de sesión anterior (P0 verificado aplicado)
+
+- ✅ **`.claude/meta-prompts/gpt-dev-prompt-factory.md`**: Sección 10 "Entorno y publicación" — APLICADO
+- ✅ **`.claude/rules/testing.md`**: vitest.config.ts, npx vitest run, peer deps — APLICADO
+- ✅ **`.gitignore`**: `*.tsbuildinfo` — APLICADO (ya existía en el archivo)
+
+### Backlog actualizado
+
+- Agregar preguntas breakpoints + rama deploy a `gpt-dev-prompt-factory.md` — P1
+- Tests Playwright multi-viewport (390px, 768px, 1280px) en flujo ROI — P1
+- Extraer `inferOpportunityType` a `src/domain/` como exportación — P1
+- Conectar Vercel al repo GitHub — P1 (15min manual)
+- Protocolo corpus binarios → storage externo — P2
+- Code splitting bundle 280KB → < 200KB — P2
+
+---
+
+## 2026-06-04 (sesión 1) — Proyecto: collab-roi-explorer-mvp
 
 ### Cambios aplicados (P0)
 

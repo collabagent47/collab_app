@@ -45,3 +45,22 @@ El frontend completo del Collab ROI Explorer MVP fue construido sobre el dominio
 - `src/App.tsx` — ruta /session/quick dentro de AppShell
 - `src/lib/presentation.ts` — guidedAnswers excluido explícitamente del DTO de presentación
 - Typecheck: pasa 0 errores con Node 23 (Node 10 local incompatible con tsc moderno)
+
+**Feature/auth — Auth mock + protección de rutas (rama feature/auth, 2026-06-04) implementada:**
+- `src/domain/auth/` — ya existía: auth-types, permissions, mock-users, auth-service (NO recrear)
+- `src/stores/authStore.ts` — Zustand store: currentUser, isAuthenticated, login, logout, initFromStorage
+- `src/hooks/useAuth.ts` — llama initFromStorage en useEffect; devuelve currentUser/isAuthenticated/login/logout
+- `src/hooks/usePermissions.ts` — wrappers tipados sobre todas las funciones de permissions.ts
+- `src/domain/roi/roi-types.ts` — Exploration ahora incluye ownerId? y visibility?; re-exporta User/UserRole
+- `src/lib/presentation.ts` — toPresentationViewModel acepta user?: User|null; viewer/learner reciben subset reducido
+- `src/components/auth/ProtectedRoute/` — redirige a /login si no autenticado; muestra AccessDeniedPage si sin permiso de ruta
+- `src/components/auth/AccessGate/` — renderiza children solo si el usuario tiene el Permission dado
+- `src/components/auth/RoleBadge/` — badge de rol con colores por rol
+- `src/components/auth/UserMenu/` — dropdown con nombre, RoleBadge, y botón de logout
+- `src/pages/LoginPage/` — selector de usuario mock con motion, ROLE_LABELS/ROLE_COLORS
+- `src/pages/AccessDeniedPage/` — pantalla de error con ShieldX de lucide-react
+- `src/pages/UsersPage/` — lista de MOCK_USERS con RoleBadge (solo admin puede acceder)
+- `src/components/layout/AppShell/` — sidebar filtra NAV_LINKS por hasPermission; Topbar incluye UserMenu
+- `src/components/layout/MobileBottomNav/` — filtra NAV_ITEMS por hasPermission
+- `src/App.tsx` — Login y PresentationMode son públicas; demás rutas bajo ProtectedRoute; initFromStorage en App
+- 178 tests pasan; tsc --noEmit sin errores

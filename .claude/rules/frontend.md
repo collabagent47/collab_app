@@ -96,3 +96,118 @@ frontend/src/
 ## Lineamientos completos
 
 `.claude/docs/lineamientos/dev-guidelines.md` — Clean Code, SOLID, API REST, Seguridad, Observabilidad.
+
+---
+
+## Override de Stack — Tailwind CSS v4
+
+> Aplica cuando la spec incluye la nota `✅ STACK APROBADO: Tailwind CSS` con override explícito del Tech Lead.
+> En ese caso, las reglas de CSS Modules y Firebase de arriba NO aplican para ese proyecto.
+
+### Clases canónicas Tailwind v4 (renombradas respecto a v3)
+
+| v3 (obsoleta) | v4 (canónica) | Contexto |
+|---------------|--------------|---------|
+| `break-words` | `wrap-break-word` | texto largo en contenedores flex/grid |
+| `bg-gradient-to-br` | `bg-linear-to-br` | gradientes direccionales |
+| `shrink` | `shrink` | igual (no cambió) |
+| `overflow-ellipsis` | `text-ellipsis` | truncado de texto |
+
+El IDE puede mostrar warnings `suggestCanonicalClasses` — siempre usar la versión canónica.
+
+### Reglas de Responsive Web Design (obligatorias con Tailwind v4)
+
+#### 1. `min-w-0` en hijos flex/grid con texto
+
+Todo contenedor flex o grid cuyo hijo contenga texto largo DEBE tener `min-w-0`:
+
+```tsx
+// Correcto
+<div className="flex gap-3">
+  <div className="min-w-0 flex-1">
+    <p className="truncate">texto largo...</p>
+  </div>
+  <span className="shrink-0">badge</span>
+</div>
+
+// Incorrecto — el texto fuerza el ancho y rompe el layout
+<div className="flex gap-3">
+  <div className="flex-1">
+    <p>texto largo...</p>
+  </div>
+</div>
+```
+
+#### 2. `shrink-0` en badges e iconos
+
+Badges, iconos y etiquetas que no deben comprimirse llevan `shrink-0`:
+
+```tsx
+<span className="inline-flex shrink-0 items-center whitespace-nowrap rounded-full px-2.5 py-1 text-xs">
+  Baja confianza
+</span>
+```
+
+#### 3. Header de card — badge nunca sobre título
+
+El patrón correcto para header de card con badge lateral:
+
+```tsx
+<div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+  <div className="min-w-0">
+    <h3 className="wrap-break-word text-lg font-bold leading-tight">Título</h3>
+    <p className="mt-0.5 text-xs">Subtítulo</p>
+  </div>
+  <span className="inline-flex shrink-0 self-start whitespace-nowrap rounded-full ...">
+    Badge
+  </span>
+</div>
+```
+
+En mobile se apilan verticalmente; en sm+ quedan en fila con badge a la derecha.
+
+#### 4. Alturas de workspace full-screen
+
+En layouts de tres columnas dentro de un AppShell con padding:
+
+```tsx
+// Incorrecto — no descuenta el padding del AppShell
+<div className="flex h-[calc(100dvh-64px)] overflow-hidden">
+
+// Correcto — se adapta al contenedor padre disponible
+<div className="flex h-full min-h-0 overflow-hidden">
+```
+
+Si el AppShell tiene `padding: 32` y topbar de 56px, la altura disponible es `dvh - 56px - 64px`. Usar `h-full` dentro del `<Outlet>` es más mantenible que hardcodear la resta.
+
+#### 5. Sidebar responsive
+
+La sidebar de navegación lateral DEBE ocultarse en mobile:
+
+```tsx
+// Siempre
+<aside className="hidden lg:flex flex-col ...">
+```
+
+Y proveer navegación alternativa en mobile (tabs, pills, bottom-nav).
+
+#### 6. Breakpoints estándar del proyecto
+
+| Breakpoint | Ancho | Comportamiento esperado |
+|------------|-------|------------------------|
+| mobile | < 640px | 1 columna, botones full-width, nav en pills |
+| sm | 640px | cards en 2 col si hay espacio |
+| lg | 1024px | sidebar izquierda visible |
+| xl | 1280px | panel derecho visible |
+
+Grid de cards ROI:
+```tsx
+<div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+```
+
+#### 7. Anti-patrones RWD prohibidos
+
+- `position: absolute` para badges o etiquetas dentro de cards (causa superposición)
+- Alturas fijas `h-48`, `h-64` en cards con contenido dinámico (corta el texto)
+- `h-[calc(100dvh-Xpx)]` sin descontar el padding del AppShell padre
+- Sidebar sin `hidden lg:flex` (ocupa espacio en mobile)
