@@ -32,3 +32,16 @@ El frontend completo del Collab ROI Explorer MVP fue construido sobre el dominio
 **Nota de entorno:** El entorno local tiene Node.js v10.24.1, incompatible con Vite 6 y TypeScript 5. El build real debe ejecutarse en CI (Node 20). Build previo confirmado exitoso en sesión anterior.
 
 **TODO:** ESLint no está instalado como devDependency. El script `lint` está en package.json pero se omite del `quality` gate hasta que se instale (`npm install -D eslint @typescript-eslint/eslint-plugin @typescript-eslint/parser eslint-plugin-react-hooks`).
+
+**Feature/ROI — Sesión Rápida (rama feature/ROI, 2026-06-04) implementada:**
+- `src/services/followUpLossService.ts` — wrapper de calculateFollowUpOpportunity()
+- `src/hooks/useFollowUpLoss.ts` — hook con calculate/reset/result/inputs
+- `src/components/quick-session/GuidedQuestionCard/` — tarjeta con textarea + pills confirmed/assumption/pending
+- `src/components/quick-session/GuidedQuestionsPanel/` — orquesta 5 preguntas del paso understand
+- `src/components/quick-session/FollowUpLossCalculator/` — React Hook Form + Zod, 4 inputs type=text inputMode=numeric
+- `src/components/quick-session/FollowUpLossResultCard/` — muestra expectedLostSales SIN mencionar ROI, con QualityWarning
+- `src/components/quick-session/MiniProposalEditor/` — exporta MiniProposalData + generateProposal()
+- `src/pages/QuickSessionPage/` — wizard 3 pasos, AnimatePresence, h-dvh, usa useExplorationStore
+- `src/App.tsx` — ruta /session/quick dentro de AppShell
+- `src/lib/presentation.ts` — guidedAnswers excluido explícitamente del DTO de presentación
+- Typecheck: pasa 0 errores con Node 23 (Node 10 local incompatible con tsc moderno)

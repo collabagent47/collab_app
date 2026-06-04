@@ -3,6 +3,7 @@ import { Zap, LayoutDashboard, Compass, GraduationCap, Database, BookOpen } from
 import { motion } from 'framer-motion'
 import { useAppMode } from '../../../hooks/useAppMode'
 import { cn } from '../../../lib/utils'
+import { MobileBottomNav } from '../MobileBottomNav'
 
 const NAV_LINKS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
@@ -115,7 +116,7 @@ export function AppShell() {
       <Sidebar />
       <div className="flex flex-col flex-1 min-w-0 overflow-hidden">
         <Topbar title="Collab ROI Explorer" />
-        <main className="flex-1 overflow-auto" style={{ padding: 32 }}>
+        <main className="flex-1 overflow-auto pb-20 lg:pb-0" style={{ padding: 32 }}>
           <motion.div
             key="page-content"
             initial={{ opacity: 0, y: 8 }}
@@ -127,6 +128,7 @@ export function AppShell() {
           </motion.div>
         </main>
       </div>
+      <MobileBottomNav />
     </div>
   )
 }
