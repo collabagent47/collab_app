@@ -4,6 +4,9 @@
  * Sin dependencias de UI.
  */
 
+import type { GuidedQuestionAnswer, ExplorationType } from '../session/session-types'
+export type { GuidedQuestionAnswer, ExplorationType }
+
 // ---------------------------------------------------------------------------
 // Enumeraciones de estado y clasificación
 // ---------------------------------------------------------------------------
@@ -207,6 +210,10 @@ export interface Exploration {
   executiveSummary?: string;
   /** Notas internas — NO renderizar en modo presentación. */
   notes?: InternalNote[];
+  /** Tipo de exploración: sesión rápida o exploración completa EVIAR. */
+  explorationType?: ExplorationType;
+  /** Respuestas a preguntas guía — NO renderizar en modo presentación. */
+  guidedAnswers?: GuidedQuestionAnswer[];
 }
 
 // ---------------------------------------------------------------------------
