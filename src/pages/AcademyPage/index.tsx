@@ -10,6 +10,7 @@ import {
   COMMON_MISTAKES,
   READY_TO_USE_PHRASES,
   DISCLAIMERS,
+  FOLLOW_UP_LOSS_LESSON,
 } from '../../data/templates/academy-content'
 import { PRACTICE_CASES } from '../../data/templates/practice-cases'
 import { cn } from '../../lib/utils'
@@ -24,6 +25,7 @@ type SectionId =
   | 'mistakes'
   | 'phrases'
   | 'practice'
+  | 'follow-up-loss'
 
 const SECTIONS: Array<{ id: SectionId; label: string }> = [
   { id: 'purpose', label: 'Propósito' },
@@ -35,6 +37,7 @@ const SECTIONS: Array<{ id: SectionId; label: string }> = [
   { id: 'mistakes', label: 'Errores comunes' },
   { id: 'phrases', label: 'Frases listas' },
   { id: 'practice', label: 'Casos de práctica' },
+  { id: 'follow-up-loss', label: 'Calculadora de oportunidad' },
 ]
 
 const DIFFICULTY_LABELS = { beginner: 'Principiante', intermediate: 'Intermedio', advanced: 'Avanzado' }
@@ -222,8 +225,56 @@ export function AcademyPage() {
               ))}
             </Article>
           )}
+
+          {activeSection === 'follow-up-loss' && (
+            <div className="flex flex-col gap-8">
+              <div>
+                <h2 className="mb-2 text-2xl font-bold text-[#0F172A]">
+                  {FOLLOW_UP_LOSS_LESSON.title}
+                </h2>
+                <p className="text-[#71717A]">{FOLLOW_UP_LOSS_LESSON.subtitle}</p>
+              </div>
+
+              {FOLLOW_UP_LOSS_LESSON.sections.map((section) => (
+                <div key={section.title} className="rounded-xl border border-[#E4E4E7] bg-white p-6">
+                  <h3 className="mb-3 font-semibold text-[#0F172A]">{section.title}</h3>
+                  <p className="whitespace-pre-line text-sm leading-relaxed text-[#71717A]">
+                    {section.content}
+                  </p>
+                </div>
+              ))}
+
+              {/* Ejemplo interactivo */}
+              <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
+                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-emerald-700">
+                  Ejemplo canónico — Caso Ihann
+                </p>
+                <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+                  <Metric label="Leads/mes" value="50" />
+                  <Metric label="Ticket promedio" value="$400.000" />
+                  <Metric label="Perdidos" value="12" />
+                  <Metric label="Cierres actuales" value="6" />
+                </div>
+                <div className="mt-4 border-t border-emerald-200 pt-4">
+                  <p className="text-lg font-bold text-emerald-700">
+                    Venta esperada perdida: $576.000 / mes
+                  </p>
+                  <p className="mt-1 text-xs text-emerald-600">{FOLLOW_UP_LOSS_LESSON.disclaimer}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </motion.div>
       </main>
+    </div>
+  )
+}
+
+function Metric({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="rounded-lg bg-white p-3 text-center shadow-sm">
+      <p className="text-xs text-[#71717A]">{label}</p>
+      <p className="mt-0.5 font-bold text-[#0F172A]">{value}</p>
     </div>
   )
 }

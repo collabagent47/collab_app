@@ -23,12 +23,11 @@ const MOBILE_EXTRA_STATUSES: ExplorationStatus[] = [
 ]
 
 function FilterButton({
-  value,
   active,
   label,
   onClick,
 }: {
-  value: StatusWithAll
+  value?: StatusWithAll
   active: boolean
   label: string
   onClick: () => void

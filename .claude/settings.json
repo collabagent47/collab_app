@@ -68,7 +68,17 @@
       "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run src/tests/unit/follow-up-loss-engine.test.ts --reporter=verbose 2>&1 | Select-Object -Last 30)",
       "Bash(\"C:\\\\Program Files\\\\nodejs\\\\node.exe\" \".\\\\node_modules\\\\typescript\\\\bin\\\\tsc\" --noEmit)",
       "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npx.cmd\" tsc --noEmit)",
-      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-Object -Last 5)"
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx vitest run 2>&1 | Select-Object -Last 5)",
+      "Bash(\"C:\\\\Program Files\\\\nodejs\\\\npx.cmd\" vitest run)",
+      "Bash(\"C:\\\\nvm4w\\\\nodejs\\\\node.exe\" --version)",
+      "Read(//c//**)",
+      "Bash(ls /mnt/c/nvm4w/ 2>&1 || ls \"C:/nvm4w/\" 2>&1)",
+      "Read(//mnt/c/**)",
+      "Bash(\"C:/nvm4w/nodejs/node.exe\" --version)",
+      "Bash(\"C:/Program Files/nodejs/node.exe\" --version)",
+      "Bash(Get-Content \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\\\\src\\\\data\\\\templates\\\\academy-content.ts\")",
+      "Bash(Measure-Object -Line)",
+      "PowerShell($env:Path = \"C:\\\\Program Files\\\\nodejs;\" + $env:Path; cd \"d:\\\\Estudio\\\\studyVue\\\\pokemon-game\\\\src\\\\node_modules\\\\asd\"; npx tsc --noEmit 2>&1 | Select-Object -First 10)"
     ],
     "deny": [
       "Read(./.env)",

@@ -3,6 +3,13 @@
   "outputDirectory": "dist",
   "installCommand": "npm ci",
   "framework": "vite",
+  "git": {
+    "deploymentEnabled": {
+      "main": false,
+      "feature/ROI": false,
+      "develop": true
+    }
+  },
   "rewrites": [
     {
       "source": "/(.*)",
