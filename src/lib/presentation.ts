@@ -47,5 +47,6 @@ export function toPresentationViewModel(exploration: Exploration): PresentationV
     // exploration.operation        — datos operativos crudos
     // exploration.insumos          — catálogo interno de productos
     // exploration.dataQuality      — métrica interna de calidad
+    // exploration.guidedAnswers    — respuestas guía internas de sesión rápida
   }
 }

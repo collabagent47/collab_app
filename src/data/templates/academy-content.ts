@@ -284,3 +284,60 @@ export const DISCLAIMERS = {
   sensitivityToAssumptions:
     'Los resultados del ROI son sensibles a los supuestos de entrada (margen, ticket, tasa de cierre). Una variación del 5% en el margen puede cambiar significativamente el resultado. Siempre muestra el rango de escenarios.',
 };
+
+// ---------------------------------------------------------------------------
+// Lección: Pérdida por mal seguimiento
+// ---------------------------------------------------------------------------
+
+export const FOLLOW_UP_LOSS_LESSON = {
+  id: 'lesson-follow-up-loss',
+  title: '¿Cuánto cuesta perder leads por mal seguimiento?',
+  subtitle: 'Calcula una oportunidad comercial simple sin llamarla ROI financiero completo.',
+  sections: [
+    {
+      title: 'El problema del seguimiento',
+      content: `La mayoría de los negocios pierden oportunidades no porque su producto sea malo,
+sino porque no hacen seguimiento a tiempo. Un lead que preguntó hoy y no recibió
+respuesta oportuna, mañana compró con la competencia.`,
+    },
+    {
+      title: 'Cómo calculamos la oportunidad',
+      content: `No asumimos que todos los leads perdidos iban a comprar. Usamos la tasa de cierre
+actual del cliente para estimar cuántas ventas podrían haberse cerrado con mejor seguimiento.`,
+    },
+    {
+      title: 'Ejemplo Ihann',
+      content: `Con 50 leads por mes, ticket promedio de $400.000, 12 leads perdidos por mal
+seguimiento y 6 cierres actuales:
+
+• Tasa de cierre actual: 12%
+• Cierres potenciales perdidos: 12 × 12% = 1.44
+• Venta esperada perdida: 1.44 × $400.000 = $576.000 / mes
+
+Este número no es una promesa de ventas. Es una estimación basada en los datos del cliente.`,
+    },
+    {
+      title: 'Diferencia entre venta esperada y ROI',
+      content: `La "Venta esperada perdida" es el primer nivel de la conversación.
+Para calcular ROI financiero completo necesitamos también:
+• Margen bruto del negocio
+• Inversión mensual en la solución
+• Ahorro operativo estimado
+
+Sin esos datos, no calculamos ROI. Calculamos oportunidad comercial.`,
+    },
+    {
+      title: 'Qué NO decirle al cliente',
+      content: `No digas: "Estás perdiendo $576.000 al mes".
+Di: "Con los datos que me diste, estimamos que podrías estar dejando de capturar
+aproximadamente $576.000 en ventas por mes. ¿Tiene sentido este número para ti?"
+
+La pregunta al final es clave. El cliente valida — tú no prometes.`,
+    },
+  ],
+  example: {
+    inputs: { monthlyLeads: 50, averageTicket: 400000, lostLeadsByPoorFollowUp: 12, closedDeals: 6 },
+    outputs: { closeRate: 0.12, potentialLostClosures: 1.44, expectedLostSales: 576000 },
+  },
+  disclaimer: 'Este número no es una promesa de ventas. Es una estimación basada en la tasa de cierre actual del cliente.',
+}

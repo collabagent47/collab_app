@@ -8,6 +8,7 @@ import { SessionPreparationPage } from './pages/SessionPreparationPage'
 import { PresentationModePage } from './pages/PresentationModePage'
 import { AcademyPage } from './pages/AcademyPage'
 import { KnowledgeBasePage } from './pages/KnowledgeBasePage'
+import { QuickSessionPage } from './pages/QuickSessionPage'
 
 export default function App() {
   return (
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/explorations/:id/preparation" element={<SessionPreparationPage />} />
           <Route path="/academy" element={<AcademyPage />} />
           <Route path="/knowledge-base" element={<KnowledgeBasePage />} />
+          <Route path="/session/quick" element={<QuickSessionPage />} />
         </Route>
       </Routes>
     </BrowserRouter>

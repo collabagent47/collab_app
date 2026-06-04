@@ -77,9 +77,16 @@ export function ExplorationCard({ exploration, onClick, onDelete }: ExplorationC
           <h3 className="font-semibold text-slate-900">{exploration.clientName}</h3>
           <p className="mt-0.5 text-sm text-slate-500">{exploration.sector}</p>
         </div>
-        <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', statusBadge)}>
-          {STATUS_LABELS[exploration.status] ?? exploration.status}
-        </span>
+        <div className="flex flex-col items-end gap-1">
+          <span className={cn('rounded-full px-2.5 py-0.5 text-xs font-medium', statusBadge)}>
+            {STATUS_LABELS[exploration.status] ?? exploration.status}
+          </span>
+          {exploration.explorationType === 'quick' && (
+            <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[10px] font-semibold text-emerald-700">
+              Sesión rápida
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="flex items-center gap-4 text-xs text-slate-400">
