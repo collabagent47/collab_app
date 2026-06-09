@@ -27,8 +27,9 @@ Copia skills, rules y meta-prompts desde el repositorio fuente y los coloca en l
 2. Verificar que la ruta existe y es un proyecto (tiene package.json o es un repo git)
 3. Copiar estructura completa de .claude/
 4. Copiar estructura completa de .github/skills/ (mirror)
-5. Verificar que todos los archivos llegaron
-6. Reportar resumen de lo instalado
+5. Descargar skill externo: emil-design-eng desde GitHub
+6. Verificar que todos los archivos llegaron
+7. Reportar resumen de lo instalado
 ```
 
 ---
@@ -117,7 +118,51 @@ echo "Framework ASDD instalado en $DESTINO"
 
 ---
 
-## Paso 4 — Verificar integridad
+## Paso 4 — Descargar skills externos
+
+Algunos skills provienen de repositorios externos y deben descargarse por separado.
+
+### emil-design-eng (Emil Kowalski — UI polish y animaciones)
+
+**Fuente:** https://github.com/emilkowalski/skill
+
+#### Windows (PowerShell)
+
+```powershell
+$emilUrl = "https://raw.githubusercontent.com/emilkowalski/skill/main/skills/emil-design-eng/SKILL.md"
+$emilContent = Invoke-RestMethod $emilUrl -Headers @{"User-Agent"="Mozilla/5.0"}
+
+New-Item -ItemType Directory -Force "$destino\.claude\skills\emil-design-eng" | Out-Null
+New-Item -ItemType Directory -Force "$destino\.github\skills\emil-design-eng" | Out-Null
+
+$emilContent | Out-File -FilePath "$destino\.claude\skills\emil-design-eng\SKILL.md" -Encoding utf8
+$emilContent | Out-File -FilePath "$destino\.github\skills\emil-design-eng\SKILL.md" -Encoding utf8
+
+Write-Host "✅ emil-design-eng instalado"
+```
+
+#### Linux / macOS (bash)
+
+```bash
+EMIL_URL="https://raw.githubusercontent.com/emilkowalski/skill/main/skills/emil-design-eng/SKILL.md"
+
+mkdir -p "$DESTINO/.claude/skills/emil-design-eng"
+mkdir -p "$DESTINO/.github/skills/emil-design-eng"
+
+curl -s -H "User-Agent: Mozilla/5.0" "$EMIL_URL" \
+  -o "$DESTINO/.claude/skills/emil-design-eng/SKILL.md"
+cp "$DESTINO/.claude/skills/emil-design-eng/SKILL.md" \
+   "$DESTINO/.github/skills/emil-design-eng/SKILL.md"
+
+echo "✅ emil-design-eng instalado"
+```
+
+> Si no hay conexión a internet, saltar este paso y documentarlo como pendiente.
+> El skill se puede agregar después ejecutando solo el bloque de descarga anterior.
+
+---
+
+## Paso 5 — Verificar integridad
 
 Después de copiar, verificar que existen los archivos críticos en el destino:
 
@@ -128,6 +173,7 @@ Después de copiar, verificar que existen los archivos críticos en el destino:
 ✅ .claude/skills/unit-testing/SKILL.md
 ✅ .claude/skills/responsive-review/SKILL.md
 ✅ .claude/skills/feedback/SKILL.md
+✅ .claude/skills/emil-design-eng/SKILL.md   ← skill externo
 ✅ .claude/rules/testing.md
 ✅ .claude/rules/frontend.md
 ✅ .claude/rules/backend.md
@@ -139,26 +185,27 @@ Si falta alguno: reportar qué falló y ejecutar la copia del archivo específic
 
 ---
 
-## Paso 5 — Reportar al usuario
+## Paso 6 — Reportar al usuario
 
 ```
 Framework ASDD instalado en: <RUTA_DESTINO>
 
-Skills disponibles (13):
-  /asdd-orchestrate   — Orquesta el ciclo completo Spec → Impl → Tests → QA → Deploy
-  /generate-spec      — Genera spec técnica antes de cualquier implementación
-  /deploy-setup       — Configura CI/CD para GitHub Pages + Vercel + Netlify
-  /unit-testing       — Genera tests unitarios e integración
-  /responsive-review  — Auditoría RWD para React + Tailwind
-  /feedback           — Retrospectiva y mejora del framework
-  /owasp-scan         — Auditoría de seguridad OWASP Top 10
-  /implement-backend  — Implementa features de backend
-  /implement-frontend — Implementa features de frontend
+Skills disponibles (14):
+  /asdd-orchestrate      — Orquesta el ciclo completo Spec → Impl → Tests → QA → Deploy
+  /generate-spec         — Genera spec técnica antes de cualquier implementación
+  /deploy-setup          — Configura CI/CD para GitHub Pages + Vercel + Netlify
+  /unit-testing          — Genera tests unitarios e integración
+  /responsive-review     — Auditoría RWD para React + Tailwind
+  /feedback              — Retrospectiva y mejora del framework
+  /owasp-scan            — Auditoría de seguridad OWASP Top 10
+  /implement-backend     — Implementa features de backend
+  /implement-frontend    — Implementa features de frontend
   /gherkin-case-generator — Genera casos de prueba Gherkin
-  /risk-identifier    — Identifica riesgos antes de implementar
-  /performance-analyzer — Define estrategia de performance testing
+  /risk-identifier       — Identifica riesgos antes de implementar
+  /performance-analyzer  — Define estrategia de performance testing
   /automation-flow-proposer — Propone qué automatizar y en qué orden
-  /init-framework     — (este skill) Bootstrap del framework en nuevos proyectos
+  /init-framework        — (este skill) Bootstrap del framework en nuevos proyectos
+  /emil-design-eng       — UI polish, animaciones, easing — filosofía de Emil Kowalski ★ externo
 
 Rules activas:
   testing.md    — Vitest, testing-library, estructura AAA
