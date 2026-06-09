@@ -1,11 +1,7 @@
 /**
  * Tests de reglas de oportunidad — Collab ROI Explorer MVP
  *
- * La función inferOpportunityType vive en ExplorationWorkspacePage (no es exportada
- * como módulo de dominio independiente). Los tests validan la lógica equivalente
- * con una implementación local que replica exactamente el algoritmo de la página.
- *
- * Algoritmo (ExplorationWorkspacePage, líneas 37-47):
+ * Algoritmo (src/domain/roi/opportunity-type.ts):
  *   - Si hay alguna fricción 'mixed' O hay comercial Y operacional → 'mixed'
  *   - Si más comerciales que operacionales → 'commercial'
  *   - Si más operacionales que comerciales → 'operational'
@@ -13,29 +9,7 @@
  */
 
 import { describe, it, expect } from 'vitest'
-import type { OpportunityType } from '../../domain/roi/roi-types'
-
-// ---------------------------------------------------------------------------
-// Réplica local del algoritmo de inferOpportunityType
-// (función privada en ExplorationWorkspacePage — no exportada)
-// ---------------------------------------------------------------------------
-
-type SimpleFriction = { id: string; impactType: string }
-
-function inferOpportunityType(
-  frictionIds: string[],
-  allFrictions: SimpleFriction[],
-): OpportunityType {
-  const selected = allFrictions.filter((f) => frictionIds.includes(f.id))
-  const commercialCount = selected.filter((f) => f.impactType === 'commercial').length
-  const operationalCount = selected.filter((f) => f.impactType === 'operational').length
-  const mixedCount = selected.filter((f) => f.impactType === 'mixed').length
-
-  if (mixedCount > 0 || (commercialCount > 0 && operationalCount > 0)) return 'mixed'
-  if (commercialCount > operationalCount) return 'commercial'
-  if (operationalCount > commercialCount) return 'operational'
-  return 'mixed'
-}
+import { inferOpportunityType } from '../../domain/roi/opportunity-type'
 
 // ---------------------------------------------------------------------------
 // Fricciones de ejemplo

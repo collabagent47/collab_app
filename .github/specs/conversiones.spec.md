@@ -1,9 +1,9 @@
 ---
 id: SPEC-001
-status: DRAFT
+status: DEPRECATED
 feature: conversiones
 created: 2026-03-13
-updated: 2026-03-13
+updated: 2026-06-09
 author: spec-generator
 version: "1.0"
 related-specs: []

@@ -26,11 +26,12 @@ argument-hint: "<nombre-feature> | status"
   Condición: spec contiene auth, PII, pagos, APIs externas o risk-matrix tiene riesgo ALTO de seguridad
 
 [FASE 6 — CONDICIONAL]
-  deploy-validator → CI/CD pipeline + primera URL verificada
+  /deploy-setup + validación → CI/CD pipeline + primera URL verificada
   Condición: spec incluye "CI/CD requerido desde MVP" O plataforma de deploy definida en sección Entorno
   Acciones:
-    - Verificar / crear vercel.json o .github/workflows/deploy-*.yml
-    - Confirmar que lint + typecheck + test + build pasan en el pipeline
+    - Si NO existe .github/workflows/deploy-*.yml → ejecutar /deploy-setup para crearlos
+    - Si YA existen → verificar que rama de deploy, Node version y scripts coinciden con la spec
+    - Confirmar que lint + typecheck + npx vitest run + build pasan en el pipeline
     - Verificar que la URL de producción carga sin errores de consola
     - Ejecutar checklist RWD mínimo: viewport 390px, 768px, 1280px sin scroll horizontal
 ```
@@ -45,8 +46,10 @@ argument-hint: "<nombre-feature> | status"
 4. Cuando Fase 3 completa → lanza Fase 4 (qa-agent)
 5. Si la condición de seguridad se cumple → lanza Fase 5 (`/owasp-scan`)
    - Si hay findings CRÍTICOS o ALTOS → detener y notificar al usuario antes de marcar IMPLEMENTED
-6. Si hay plataforma de deploy definida → lanza Fase 6 (deploy-validator)
-   - Verificar pipeline CI/CD + URL + checklist RWD
+6. Si hay plataforma de deploy definida → lanza Fase 6
+   - Sin CI/CD existente → ejecutar `/deploy-setup` primero
+   - Con CI/CD existente → verificar coherencia de ramas, Node version y scripts
+   - Validar pipeline CI/CD + URL producción + checklist RWD
 7. Actualiza spec a `IMPLEMENTED` y reporta estado final
 
 ## Comando status

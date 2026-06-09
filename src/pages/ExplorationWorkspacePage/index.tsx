@@ -22,6 +22,7 @@ import { AutomationModuleCard } from '../../components/exploration/AutomationMod
 import { ROIScenarioCard } from '../../components/exploration/ROIScenarioCard'
 import type { RecommendedModule, OpportunityType } from '../../domain/knowledge-base/knowledge-types'
 import type { ROIInputs } from '../../domain/roi/roi-types'
+import { inferOpportunityType } from '../../domain/roi/opportunity-type'
 import { EVIAR_STEPS } from '../../domain/methodology/eviar'
 import { cn } from '../../lib/utils'
 
@@ -34,18 +35,6 @@ const STEP_HINTS: Record<string, string> = {
 }
 
 type EviarKey = 'E' | 'V' | 'I' | 'A' | 'R'
-
-function inferOpportunityType(frictionIds: string[], allFrictions: { id: string; impactType: string }[]): OpportunityType {
-  const selected = allFrictions.filter((f) => frictionIds.includes(f.id))
-  const commercialCount = selected.filter((f) => f.impactType === 'commercial').length
-  const operationalCount = selected.filter((f) => f.impactType === 'operational').length
-  const mixedCount = selected.filter((f) => f.impactType === 'mixed').length
-
-  if (mixedCount > 0 || (commercialCount > 0 && operationalCount > 0)) return 'mixed'
-  if (commercialCount > operationalCount) return 'commercial'
-  if (operationalCount > commercialCount) return 'operational'
-  return 'mixed'
-}
 
 export function ExplorationWorkspacePage() {
   const { id } = useParams()

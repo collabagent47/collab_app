@@ -2,6 +2,81 @@
 
 ---
 
+## 2026-06-09 (sesión 4) — Proyecto: collab-roi-explorer-mvp — Dominio + Viewport + Framework
+
+### Cambios aplicados (P0)
+
+- **`src/domain/roi/opportunity-type.ts`**: Extraída `inferOpportunityType` de ExplorationWorkspacePage
+  - Razón: función con lógica de negocio era privada → tests replicaban código de producción (antipatrón)
+  - Ahora: exportada como módulo de dominio, importada desde la página y los tests
+  - Regla aplicada: toda función testeable vive en `src/domain/` (ver rules/backend.md)
+
+- **`src/tests/unit/opportunity-rules.test.ts`**: Eliminada réplica local, ahora importa desde dominio
+  - Razón: con la extracción, la réplica local era duplicación sin valor; si la función cambia, el test lo detecta automáticamente
+
+- **`src/tests/e2e/viewport.spec.ts`**: Tests Playwright multi-viewport creados (390px, 768px, 1280px)
+  - 3 suites × 3 viewports = 9 tests
+  - Cubre: CTA visible, navegación accesible, sin scroll horizontal (overflow-x)
+  - Razón: smoke.spec.ts solo validaba desktop por defecto; bugs de layout no son detectables sin viewport tests
+
+- **`.claude/meta-prompts/gpt-dev-prompt-factory.md`**: Sección 10 ampliada con 3 preguntas
+  - Agrega: ¿rama de deploy? ¿breakpoints obligatorios? ¿tests E2E en 3 viewports desde inicio?
+  - Razón: sin estas preguntas se asumió `main` como rama deploy (era `testing`) y no se planificaron viewport tests desde el inicio
+
+### Skills nuevos (sesión 3, completados en sesión 4)
+
+- **`.claude/skills/deploy-setup/SKILL.md`** + mirror: Skill de CI/CD en 3 plataformas
+- **`.claude/skills/init-framework/SKILL.md`** + mirror: Skill de copia de framework ASDD completo
+- **`.claude/skills/feedback/SKILL.md`** + mirror: Reescrito con 3 fases + modo rápido
+- **`CLAUDE.md`**: Contexto permanente del proyecto creado en raíz
+- **`.env.example`**: Template de variables de entorno
+
+### Backlog actualizado
+
+- Conectar Vercel al repo GitHub (collab-roi) — P1 (15min manual, pendiente)
+- Code splitting bundle 280KB → < 200KB — P2 (pendiente)
+- `npm run test:coverage` bloqueado por Node v10.24.1 local — requiere Node 22+ o correr en CI
+
+---
+
+## 2026-06-05 (sesión 3) — Proyecto: collab-roi-explorer-mvp — Skill deploy-setup
+
+### Cambios aplicados (P0)
+
+- **`.claude/skills/deploy-setup/SKILL.md`** + mirror `.github/`: Nuevo skill creado
+  - Razón: setup de CI/CD era manual cada proyecto, generando bugs recurrentes (watch mode, .tsbuildinfo, base faltante)
+  - Cubre 3 plataformas: GitHub Pages + Vercel + Netlify
+  - Detecta y corrige 8 anti-patrones antes de que ocurran (tabla incluida en el skill)
+  - Parchea automáticamente: vite.config.ts (base), package.json (scripts), .gitignore (*.tsbuildinfo)
+  - Hace las 5 preguntas mínimas antes de generar nada
+
+- **`.claude/skills/asdd-orchestrate/SKILL.md`** + mirror `.github/`: Fase 6 actualizada
+  - Razón: Fase 6 decía "deploy-validator" (skill inexistente); ahora apunta a `/deploy-setup`
+  - Lógica condicional: sin CI/CD existente → crear; con CI/CD → verificar coherencia
+
+### Anti-patrones cubiertos por deploy-setup
+
+| Anti-patrón | Frecuencia real |
+|-------------|----------------|
+| `npm run test` en CI (watch mode) | 1 vez collab-roi |
+| `tsc -b` genera .tsbuildinfo commiteados | 1 vez collab-roi |
+| Sin `base` en vite.config.ts (GitHub Pages 404) | 1 vez collab-roi |
+| `redirects` en Vercel SPA (URL visible cambia) | documentado como aprendizaje |
+| Sin `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24` | documentado como aprendizaje |
+| `npm install` en CI (ignora lockfile) | prevenido |
+| Sin `concurrency` en deploy workflow | 1 vez detectado |
+| `*.tsbuildinfo` en gitignore | 1 vez collab-roi |
+
+### Backlog actualizado
+
+- Agregar preguntas breakpoints + rama deploy a `gpt-dev-prompt-factory.md` — P1 (pendiente)
+- Tests Playwright multi-viewport (390px, 768px, 1280px) en flujo ROI — P1 (pendiente)
+- Extraer `inferOpportunityType` a `src/domain/` como exportación — P1 (pendiente)
+- Conectar Vercel al repo GitHub (collab-roi) — P1 (15min manual, pendiente)
+- Code splitting bundle 280KB → < 200KB — P2 (pendiente)
+
+---
+
 ## 2026-06-04 (sesión 2) — Proyecto: collab-roi-explorer-mvp — Fase Responsive + P1 aplicados
 
 ### Cambios aplicados (P0)

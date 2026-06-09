@@ -117,11 +117,19 @@ Incluir respuestas a estas preguntas — si no están en los insumos, declararla
 ¿Qué plataforma de deploy se usará en el MVP (Vercel / Netlify / GitHub Pages / otro)?
 ¿Cuál es el repositorio git destino? ¿Existe o se crea desde cero?
 ¿Hay un CI/CD mínimo requerido desde el inicio (lint + typecheck + test + build)?
+¿Qué rama dispara el pipeline de deploy (main / testing / release)?
+¿Cuáles son los breakpoints de diseño obligatorios? (default: 390px mobile, 768px tablet, 1280px desktop)
+  - ¿Existe un diseño Figma o solo se sigue Tailwind defaults?
+  - ¿Los tests E2E deben correr en los 3 viewports desde el inicio?
 ```
 
 > Aprendizaje (2026-06-04, collab-roi-explorer-mvp): la ausencia de estas preguntas causó
 > ~30% de tiempo extra en resolver incompatibilidad de Node.js, corpus binarios sin proceso
 > y ambigüedad en repositorio de destino.
+>
+> Aprendizaje (2026-06-09, collab-roi-explorer-mvp): sin preguntar rama de deploy se asumió
+> `main` pero el equipo usaba `testing`; sin definir breakpoints los tests E2E se crearon
+> solo para desktop y tuvieron que reescribirse para multi-viewport.
 
 ## Antes de responder — autochequeo (no lo incluyas en la salida)
 - [ ] ¿Cada criterio de aceptación tiene su entrada en el Definition of Done medible?
