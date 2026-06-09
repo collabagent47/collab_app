@@ -106,7 +106,7 @@ Skills disponibles: `/asdd-orchestrate`, `/generate-spec`, `/deploy-setup`,
 `/unit-testing`, `/responsive-review`, `/feedback`, `/init-framework`,
 `/owasp-scan`, `/implement-frontend`, `/implement-backend`,
 `/gherkin-case-generator`, `/risk-identifier`, `/performance-analyzer`,
-`/automation-flow-proposer`
+`/automation-flow-proposer`, `/emil-design-eng`
 
 Specs en `.github/specs/` — pipeline actual:
 - SPEC-001 `conversiones` → DEPRECATED
