@@ -9,6 +9,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render } from '@testing-library/react'
 import { toPresentationViewModel } from '../../lib/presentation'
 import type { Exploration } from '../../domain/roi/roi-types'
+import type { User } from '../../domain/auth/auth-types'
 
 // ---------------------------------------------------------------------------
 // Tests del mapper toPresentationViewModel
@@ -96,6 +97,85 @@ describe('toPresentationViewModel — R-004 (Prioridad 3)', () => {
     // THEN: serializar el ViewModel no contiene el texto secreto
     const serialized = JSON.stringify(vm)
     expect(serialized).not.toContain(INTERNAL_NOTE_TEXT)
+  })
+})
+
+// ---------------------------------------------------------------------------
+// Tests con usuario autenticado — viewer y null (MVP 3)
+// ---------------------------------------------------------------------------
+
+const viewerUser: User = {
+  id: 'user-viewer', name: 'Invitado', email: 'viewer@client.local',
+  role: 'viewer', status: 'active', createdAt: '', updatedAt: '',
+}
+
+const explorationWithGuidedAnswers: Exploration = {
+  ...explorationWithNotes,
+  id: 'test-002',
+  guidedAnswers: [
+    {
+      id: 'ga-001',
+      eviarStep: 'understand',
+      question: 'Pregunta interna',
+      answer: 'RESPUESTA_GUIA_INTERNA',
+      status: 'confirmed',
+      createdAt: '2026-06-04T00:00:00.000Z',
+      updatedAt: '2026-06-04T00:00:00.000Z',
+    },
+  ],
+}
+
+describe('toPresentationViewModel — con usuario autenticado (MVP 3)', () => {
+  it('viewer: el ViewModel no contiene notes', () => {
+    // GIVEN: viewer autenticado + exploración con notas internas
+    // WHEN: se transforma pasando el usuario viewer
+    const vm = toPresentationViewModel(explorationWithNotes, viewerUser)
+    // THEN: notes excluido del ViewModel
+    expect('notes' in vm).toBe(false)
+    expect(JSON.stringify(vm)).not.toContain(INTERNAL_NOTE_TEXT)
+  })
+
+  it('viewer: el ViewModel es subconjunto reducido (sin city, mainChannel, etc.)', () => {
+    // GIVEN: viewer — solo recibe campos públicos mínimos
+    const exploration: Exploration = {
+      ...explorationWithNotes,
+      city: 'CIUDAD_SECRETA',
+      mainChannel: 'CANAL_SECRETO',
+    }
+    const vm = toPresentationViewModel(exploration, viewerUser)
+    // THEN: campos restringidos excluidos
+    expect('city' in vm).toBe(false)
+    expect('mainChannel' in vm).toBe(false)
+    expect(JSON.stringify(vm)).not.toContain('CIUDAD_SECRETA')
+    expect(JSON.stringify(vm)).not.toContain('CANAL_SECRETO')
+  })
+
+  it('null user: el ViewModel no contiene guidedAnswers', () => {
+    // GIVEN: usuario null (sin sesión) → efectivo como viewer
+    // WHEN: se transforma con user=null
+    const vm = toPresentationViewModel(explorationWithGuidedAnswers, null)
+    // THEN: guidedAnswers excluido (nunca pasan el mapper)
+    expect('guidedAnswers' in vm).toBe(false)
+    expect(JSON.stringify(vm)).not.toContain('RESPUESTA_GUIA_INTERNA')
+  })
+
+  it('advisor: recibe ViewModel completo (city y mainChannel incluidos)', () => {
+    // GIVEN: advisor autenticado + exploración con campos completos
+    const advisorUser: User = {
+      id: 'user-advisor', name: 'Asesor', email: 'advisor@collab.local',
+      role: 'advisor', status: 'active', createdAt: '', updatedAt: '',
+    }
+    const exploration: Exploration = {
+      ...explorationWithNotes,
+      city: 'Bogotá',
+      mainChannel: 'WhatsApp',
+    }
+    const vm = toPresentationViewModel(exploration, advisorUser)
+    // THEN: campos extendidos presentes para roles internos
+    expect(vm.city).toBe('Bogotá')
+    expect(vm.mainChannel).toBe('WhatsApp')
+    // THEN: pero las notas internas siguen excluidas
+    expect('notes' in vm).toBe(false)
   })
 })
 
