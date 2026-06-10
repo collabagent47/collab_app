@@ -147,12 +147,42 @@ En Vercel: **Project Settings → Environment Variables** → agregar las variab
 
 ---
 
+## Autenticación (MVP 3 — Mock)
+
+### Usuarios disponibles en modo demo
+
+| Usuario | Rol | Permisos principales |
+|---------|-----|---------------------|
+| Admin Collab | `admin` | Todo — incluye gestión de usuarios |
+| Curador Collab | `curator` | Aprobar conocimiento, editar cualquier exploración |
+| Asesor Collab | `advisor` | Crear/editar exploración propia, sesión rápida |
+| Aprendiz Collab | `learner` | Academia, base de conocimiento, sesión rápida |
+| Cliente Invitado | `viewer` | Solo presentaciones compartidas |
+
+### Advertencias de seguridad
+
+> **Modo demo:** Los usuarios son simulados para validar permisos.
+> En producción se conectará Supabase. **No almacenes información sensible real de clientes en esta versión.**
+
+- Las sesiones se guardan en `localStorage` bajo la clave `collab_auth_session`
+- No hay contraseñas — el login es selección de usuario para demostración
+- Ver `src/domain/auth/SUPABASE-MIGRATION.md` para el plan de migración a auth real
+
+### Protección de datos en modo presentación
+
+`src/lib/presentation.ts` → `toPresentationViewModel()` actúa como filtro DTO:
+- **Viewer/null**: solo recibe `clientName`, `sector`, `frictionIds`, módulos MVP y ROI optimista
+- **Advisor/Curator/Admin**: recibe ViewModel completo excepto datos internos
+- **Excluidos siempre**: `notes`, `sessionPreparations`, `roiInputs`, `operation`, `guidedAnswers`
+
+---
+
 ## CI/CD
 
 El quality gate corre automáticamente en cada push y pull request a `main` y `develop`:
 
 ```
-lint → typecheck → test (101 tests, incluye regresión DoD-027) → build
+lint → typecheck → test (187 tests, incluye regresión DoD-027) → build
 ```
 
 Un fallo en cualquier paso **bloquea el merge**.
@@ -164,6 +194,7 @@ Un fallo en cualquier paso **bloquea el merge**.
 ```
 src/
   domain/
+    auth/               ← Tipos, permisos, mock-users, auth-service (MVP 3)
     roi/                ← Motor ROI puro (sin dependencias de UI)
     methodology/        ← Metodología EVIAR
     knowledge-base/     ← Tipos de base de conocimiento
@@ -174,17 +205,18 @@ src/
     presentation.ts     ← DTO mapper seguro para modo presentación
     storage.ts          ← localStorage con schema versioning
   services/             ← CRUD localStorage (interfaz migrable a API)
-  stores/               ← Zustand stores (explorations, app, knowledge)
-  hooks/                ← Lógica de UI (wraps de stores + services)
+  stores/               ← Zustand stores (explorations, app, knowledge, auth)
+  hooks/                ← useAuth, usePermissions, wraps de stores + services
   components/
+    auth/               ← ProtectedRoute, AccessGate, RoleBadge, UserMenu
     shared/             ← QualityWarning, LearnerHint, DataBadge, ProgressRing
     exploration/        ← ExplorationCard, FrictionCard, ROIScenarioCard
     workspace/          ← ClientStoryBlock, ROIInputPanel, InsumosList
-    layout/             ← AppShell, Sidebar, Topbar
-  pages/                ← DashboardPage, ExplorationWorkspacePage, AcademyPage, etc.
+    layout/             ← AppShell (filtrado por rol), MobileBottomNav
+  pages/                ← DashboardPage, LoginPage, AccessDeniedPage, UsersPage, etc.
   tests/
-    unit/               ← Motor ROI (27 tests), validaciones (9), componentes (18), etc.
-    integration/        ← Flujos + seguridad modo presentación
+    unit/               ← Motor ROI, validaciones, componentes, permisos auth
+    integration/        ← Rutas protegidas, seguridad presentación, flujos
     e2e/                ← Playwright smoke tests
 ```
 
@@ -195,7 +227,8 @@ src/
 | Gap | Estado |
 |-----|--------|
 | Backend real (FastAPI + MongoDB) | Post-MVP |
-| Autenticación y roles | Post-MVP |
+| Autenticación y roles (mock) | ✅ MVP 3 — `feature/auth` |
+| Auth real (Supabase) | Post-MVP — ver `src/domain/auth/SUPABASE-MIGRATION.md` |
 | Exportación PDF | TODO documentado en componentes |
 | Modo oscuro | Post-MVP |
 | Templates adicionales (Restaurante, Inmobiliaria, Viajes) | Post-MVP — fuentes en `src/data/comercial/` |

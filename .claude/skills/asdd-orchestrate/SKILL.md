@@ -24,6 +24,16 @@ argument-hint: "<nombre-feature> | status"
 [FASE 5 — CONDICIONAL]
   /owasp-scan → docs/output/security/<feature>-owasp-report.md
   Condición: spec contiene auth / PII / pagos / APIs externas  ─OR─  risk-matrix tiene nivel ALTO de seguridad
+
+[FASE 6 — CONDICIONAL]
+  /deploy-setup + validación → CI/CD pipeline + primera URL verificada
+  Condición: spec incluye "CI/CD requerido desde MVP" O plataforma de deploy definida en sección Entorno
+  Acciones:
+    - Si NO existe .github/workflows/deploy-*.yml → ejecutar /deploy-setup para crearlos
+    - Si YA existen → verificar que ram de deploy, Node version y scripts coinciden con la spec
+    - Confirmar que lint + typecheck + npx vitest run + build pasan en el pipeline
+    - Verificar que la URL de producción carga sin errores de consola
+    - Ejecutar checklist RWD mínimo: viewport 390px, 768px, 1280px sin scroll horizontal
 ```
 
 ## Proceso
@@ -36,7 +46,11 @@ argument-hint: "<nombre-feature> | status"
 4. Cuando Fase 3 completa → lanza Fase 4 (qa-agent)
 5. Evalúa condición de seguridad → si se cumple, lanza Fase 5 (`/owasp-scan`)
    - Si hay findings CRÍTICOS o ALTOS → detener flujo y notificar al usuario antes de marcar IMPLEMENTED
-6. Actualiza spec a `IMPLEMENTED` y reporta estado final al usuario
+6. Si hay plataforma de deploy definida → lanza Fase 6
+   - Sin CI/CD existente → ejecutar `/deploy-setup` primero
+   - Con CI/CD existente → verificar coherencia de ramas, Node version y scripts
+   - Validar pipeline CI/CD + URL producción + checklist RWD
+7. Actualiza spec a `IMPLEMENTED` y reporta estado final al usuario
 
 ## Comando status
 Al recibir `status`: lista specs en `.github/specs/` con su estado actual y próxima acción.

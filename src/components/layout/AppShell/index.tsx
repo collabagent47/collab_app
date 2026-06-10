@@ -1,20 +1,39 @@
 import { NavLink, Outlet } from 'react-router-dom'
-import { Zap, LayoutDashboard, Compass, GraduationCap, Database, BookOpen } from 'lucide-react'
+import { Zap, LayoutDashboard, Compass, GraduationCap, Database, BookOpen, Settings } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useAppMode } from '../../../hooks/useAppMode'
+import { useAuthStore } from '../../../stores/authStore'
+import { hasPermission } from '../../../domain/auth/permissions'
 import { cn } from '../../../lib/utils'
 import { MobileBottomNav } from '../MobileBottomNav'
+import { UserMenu } from '../../auth/UserMenu'
+import type { Permission } from '../../../domain/auth/auth-types'
 
 const NAV_LINKS = [
   { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
   { to: '/explorations/new', label: 'Exploraciones', icon: Compass, end: false },
   { to: '/academy', label: 'Academia ROI', icon: GraduationCap, end: false },
   { to: '/knowledge-base', label: 'Base de Conocimiento', icon: Database, end: false },
+  { to: '/settings/users', label: 'Usuarios', icon: Settings, end: false },
 ]
+
+const NAV_LINK_PERMISSIONS: Record<string, Permission> = {
+  '/': 'dashboard:view',
+  '/explorations/new': 'explorations:view',
+  '/session/quick': 'quick-session:create',
+  '/academy': 'academy:view',
+  '/knowledge-base': 'knowledge:view',
+  '/settings/users': 'users:manage',
+}
 
 function Sidebar() {
   const { userMode, setUserMode } = useAppMode()
+  const currentUser = useAuthStore((s) => s.currentUser)
   const isLearner = userMode === 'learner'
+
+  const visibleLinks = NAV_LINKS.filter((l) =>
+    hasPermission(currentUser, NAV_LINK_PERMISSIONS[l.to] ?? 'dashboard:view'),
+  )
 
   return (
     <aside
@@ -38,7 +57,7 @@ function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 px-3 py-2 flex flex-col gap-1">
-        {NAV_LINKS.map(({ to, label, icon: Icon, end }) => (
+        {visibleLinks.map(({ to, label, icon: Icon, end }) => (
           <NavLink
             key={to}
             to={to}
@@ -93,7 +112,7 @@ function Sidebar() {
 function Topbar({ title }: { title: string }) {
   return (
     <header
-      className="flex items-center px-8 shrink-0"
+      className="flex items-center justify-between px-8 shrink-0"
       style={{
         height: 56,
         borderBottom: '1px solid var(--color-border)',
@@ -106,6 +125,7 @@ function Topbar({ title }: { title: string }) {
       >
         {title}
       </h1>
+      <UserMenu />
     </header>
   )
 }

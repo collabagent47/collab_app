@@ -220,3 +220,39 @@ CRITERIO-1.3: [nombre del caso borde]
 - [ ] Revisar cobertura de tests contra criterios de aceptación
 - [ ] Validar que todas las reglas de negocio están cubiertas
 - [ ] Actualizar estado spec: `status: IMPLEMENTED`
+
+### Deploy y Entorno (si aplica)
+- [ ] Verificar `.github/workflows/deploy-*.yml` o `vercel.json` existe y es correcto
+- [ ] Confirmar que lint + typecheck + test + build pasan en CI
+- [ ] Verificar URL de producción carga sin errores de consola
+- [ ] Checklist RWD: viewport 390px, 768px, 1280px sin texto superpuesto ni scroll horizontal
+
+---
+
+## Entorno de ejecución
+
+> Completar antes de marcar spec como `APPROVED`. Si no está disponible, declarar como ASUNCIÓN en sección 2.
+
+| Variable | Valor | Fuente |
+|----------|-------|--------|
+| Node.js versión mínima | [X.X] | local + CI |
+| Plataforma de deploy | [Vercel / Netlify / GitHub Pages / otro] | Tech Lead |
+| Repositorio git destino | [URL o "crear nuevo"] | Tech Lead |
+| Corpus de datos reales | [sí/no — storage: repo / Drive / SharePoint] | equipo |
+| Rama de deploy | [main / testing / otro] | Tech Lead |
+| CI/CD desde MVP | [sí/no — lint + typecheck + test + build] | Tech Lead |
+
+> Aprendizaje (2026-06-04, collab-roi-explorer-mvp): sin esta sección se pierde ~30% de la sesión
+> en incompatibilidades de entorno y ambigüedad de repositorio destino.
+
+---
+
+## Notas de arquitectura para el implementador
+
+> Reglas que aplican a TODOS los features que usen esta spec-template:
+
+1. **Dominio exportable:** Toda función con lógica de negocio testeable DEBE estar en `src/domain/` como exportación — NUNCA como función privada de un componente. Si la lógica está en un componente y un test tiene que replicarla localmente, es un smell que indica que debe moverse a dominio.
+
+2. **Responsividad en cards:** Si el diseño incluye cards con badge lateral, el header DEBE usar `flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between` con `min-w-0` en el título y `shrink-0` en el badge. Ver `.claude/rules/frontend.md` sección "Override Tailwind CSS v4".
+
+3. **Alturas de layouts full-screen:** Usar `h-full min-h-0 overflow-hidden` en lugar de `h-[calc(100dvh-Npx)]` dentro de AppShell para que la altura se calcule correctamente respecto al contenedor padre.

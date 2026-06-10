@@ -1,216 +1,386 @@
 ---
 name: feedback
-description: Captura retrospectiva de un proyecto o fase y aplica los aprendizajes directamente al framework ASDD. Produce un documento de lecciones aprendidas, propone mejoras a skills/rules/meta-prompts y actualiza el changelog del framework. Convierte experiencia en mejora permanente.
-argument-hint: "<nombre-proyecto | nombre-feature> [--modo=sprint|cierre|rapido]"
+description: Auditoría completa del proyecto en 3 fases — Evaluación (Project Graph), Validación (análisis detallado de cada gap con impacto y riesgo), Ejecución (plan de skills recomendado con orden y justificación). Convierte el estado real del proyecto en acciones concretas y mejoras permanentes al framework ASDD.
+argument-hint: "<nombre-proyecto> [--modo=sprint|cierre|rapido]"
 ---
 
-# Skill: feedback [FRAMEWORK EVOLUTION]
+# Skill: feedback [EVALUACIÓN · VALIDACIÓN · EJECUCIÓN]
 
-Retrospectiva estructurada que transforma aprendizajes del proyecto en mejoras
-permanentes del framework ASDD. Cada vez que se ejecuta, el framework sale mejor
-para el siguiente proyecto.
+Auditoría estructurada en 3 fases que parte del estado real del proyecto,
+explica qué falta y por qué importa, y propone un plan de acción ejecutable
+con los skills del framework en el orden correcto.
 
 ---
 
 ## Cuándo ejecutar
 
-| Momento | Modo | Qué captura |
-|---------|------|-------------|
-| Al cerrar una fase ASDD | `--modo=sprint` | Aprendizajes de esa fase específica |
-| Al terminar el proyecto | `--modo=cierre` | Retrospectiva completa del ciclo |
-| Al descubrir algo importante | `--modo=rapido` | Una sola lección aplicada inmediatamente |
-| Sin argumento | `--modo=cierre` | Asume cierre de proyecto por defecto |
+| Momento | Modo | Alcance |
+|---------|------|---------|
+| Al cerrar una fase ASDD | `--modo=sprint` | Solo la fase completada |
+| Al terminar el proyecto | `--modo=cierre` | Ciclo completo |
+| Al descubrir algo urgente | `--modo=rapido` | Un gap, acción inmediata |
+| Sin argumento | `--modo=cierre` | Asume cierre por defecto |
 
 ---
 
-## Proceso
+## MODO RÁPIDO (`--modo=rapido`) — Para uso diario
+
+Flujo de 3 pasos, sin Project Graph completo, sin 7 categorías.
+Úsalo cuando descubres algo concreto que mejorar ahora mismo.
 
 ```
-1. Leer el contexto del proyecto
-2. Ejecutar la retrospectiva por categorías
-3. Priorizar mejoras por impacto
-4. Aplicar mejoras al framework
-5. Documentar en changelog
+1. ¿Qué aprendiste o encontraste? (una frase)
+2. ¿En qué archivo del framework lo corriges? (skill / rule / meta-prompt / CLAUDE.md)
+3. Aplicar el cambio + agregar 2 líneas al framework-changelog.md
 ```
 
-### Paso 1 — Leer contexto
-
+Formato de entrada:
 ```
-.github/requirements/<proyecto>.md        ← requerimiento original
-.github/specs/<proyecto>.spec.md          ← spec técnica
-src/                                      ← implementación real
-docs/output/qa/                           ← artefactos QA generados
-docs/output/security/                     ← artefactos de seguridad (si existen)
-src/data/comercial/ o equivalente         ← corpus de datos reales del proyecto
+/feedback --modo=rapido
+"El skill X no cubre el caso Y — agregar sección Z"
 ```
 
-### Paso 2 — Retrospectiva por 7 categorías
+Formato de salida:
+```
+[RAPIDO] Mejora aplicada
+  Archivo: .claude/skills/X/SKILL.md
+  Cambio:  [descripción en 1 línea]
+  Razón:   [evidencia]
+  Log:     docs/output/feedback/framework-changelog.md ✅
+```
 
-Para cada categoría, extraer: **qué funcionó** · **qué falló** · **qué faltaba** · **mejora concreta propuesta**.
+Cuándo NO usar rapido: cuando hay más de 1 gap o no sabes bien qué cambiar → usar `--modo=sprint` o `--modo=cierre`.
 
 ---
 
-#### CATEGORÍA 1 — Framework y proceso ASDD
+## FASE 1 — EVALUACIÓN (Project Graph)
 
-Preguntas a responder con evidencia del proyecto:
+**Objetivo:** construir el mapa de estado real del proyecto escaneando todos los artefactos.
+No asumir nada — solo evidencia de archivos.
+
+### 1.1 — Pipeline ASDD (`.github/specs/`)
+
+Leer el frontmatter de cada `.spec.md`. Extraer `id`, `status`, `feature`, `updated`.
 
 ```
-¿El flujo Spec → Implementación → Tests → QA se respetó?
-¿Hubo código escrito sin spec APPROVED? ¿Por qué?
-¿El Orchestrator coordinó bien las fases paralelas?
-¿Alguna fase del flujo faltó o sobró?
-¿El ciclo de vida DRAFT→APPROVED→IN_PROGRESS→IMPLEMENTED fue útil?
-¿Cuántos GAPSs quedaron sin resolver al aprobar la spec?
+ASDD Pipeline — Estado actual
+══════════════════════════════════════════════════════════
+SPEC-001  [DRAFT]        conversiones            2026-03-13
+SPEC-002  [IMPLEMENTED]  collab-roi-explorer     2026-06-03
+SPEC-003  [APPROVED]     collab-roi-cicd         2026-06-03
+══════════════════════════════════════════════════════════
+Completadas: 1   Aprobadas sin cerrar: 1   Huérfanas: 1
 ```
 
-Mejora tipo: agregar/quitar fase del orquestador, ajustar la Regla de Oro.
+### 1.2 — Framework instalado (`.claude/`)
+
+Escanear `.claude/skills/*/SKILL.md`, `.claude/rules/*.md`, `.claude/meta-prompts/*.md`.
+
+```
+Skills:       N instalados  → [lista de nombres]
+Rules:        N activas     → [lista de nombres]
+Meta-prompts: N             → [lista de nombres]
+```
+
+### 1.3 — Cobertura de tests
+
+Buscar `**/*.test.{ts,tsx,js,py}` y `**/*.spec.{ts,tsx}`. Contar por tipo y total de `it(` / `test(`.
+
+```
+Tests:
+  unit/         N archivos   ~N tests
+  integration/  N archivos   ~N tests
+  e2e/          N archivos   ~N tests
+  ──────────────────────────
+  Total:        N archivos   ~N tests
+  Coverage:     [% si existe report | desconocida si no]
+```
+
+### 1.4 — CI/CD
+
+Verificar existencia de cada archivo:
+
+```
+CI/CD:
+  .github/workflows/ci.yml            [✅ | ❌]
+  .github/workflows/deploy-*.yml      [✅ | ❌]  rama: [nombre]
+  vercel.json                         [✅ | ❌]
+  netlify.toml                        [✅ | ❌]
+  .env.example                        [✅ | ❌]
+```
+
+### 1.5 — Artefactos de calidad (`.docs/output/`)
+
+```
+docs/output/qa/              [✅ N archivos | ❌ vacío]
+docs/output/security/        [✅ N archivos | ❌ vacío]
+docs/output/responsive-review/ [✅ N archivos | ❌ vacío]
+docs/output/feedback/        [✅ N retrospectivas | ❌ vacío]
+```
+
+### 1.6 — Corpus de datos
+
+Buscar `src/data/`, `data/`, `corpus/` o equivalente:
+
+```
+Corpus:
+  [ruta]/comercial/   N archivos (docx, xlsx, pdf, pptx)
+  [ruta]/templates/   N archivos (ts, json)
+  [ruta]/fixtures/    N archivos (ts, json)
+```
+
+### 1.7 — Mostrar Project Graph y confirmar
+
+Presentar el resumen visual al usuario y esperar confirmación antes de FASE 2.
+
+```
+╔═══════════════════════════════════════════════════════════╗
+║           PROJECT GRAPH — [nombre-proyecto]               ║
+╠═══════════════════════════════════════════════════════════╣
+║  PIPELINE ASDD         [resumen de specs y estados]       ║
+║  FRAMEWORK .claude/    Skills: N  Rules: N  Prompts: N    ║
+║  TESTS                 unit: N  integration: N  e2e: N    ║
+║  CI/CD                 [checkmarks o gaps]                ║
+║  ARTEFACTOS QA         [checkmarks o gaps]                ║
+║  CORPUS                [N archivos encontrados]           ║
+╚═══════════════════════════════════════════════════════════╝
+
+Gaps detectados: N críticos · N medios · N bajos
+
+¿Continuar con FASE 2 — Validación? (s/n)
+```
 
 ---
 
-#### CATEGORÍA 2 — Calidad del Prompt de Desarrollo
+## FASE 2 — VALIDACIÓN (Análisis detallado por gap)
 
-Preguntas a responder:
+**Objetivo:** para cada gap detectado en FASE 1, entregar un análisis completo
+con descripción, impacto real y riesgo si no se corrige.
 
-```
-¿El gpt-dev-prompt-factory.md produjo un requerimiento suficientemente preciso?
-¿Qué secciones del requerimiento estuvieron incompletas o ambiguas?
-¿Cuántas preguntas bloqueantes quedaron sin respuesta al arrancar?
-¿El requerimiento cubrió mobile/PWA, seguridad, corpus de datos?
-¿Qué pregunta faltaba en el factory y hubiera evitado un problema real?
-```
-
-Mejora tipo: agregar pregunta o sección al `gpt-dev-prompt-factory.md`.
-
----
-
-#### CATEGORÍA 3 — Calidad de la Spec
-
-Preguntas a responder:
+El formato de cada gap es:
 
 ```
-¿Los criterios de aceptación Gherkin fueron suficientemente precisos?
-¿Algún criterio fue ambiguo o imposible de testear?
-¿Los modelos de datos reflejaron la realidad del dominio?
-¿Los GAPSs documentados se resolvieron antes de implementar?
-¿Hubo que modificar la spec después de APPROVED? ¿Cuántas veces?
+─────────────────────────────────────────────────────────
+GAP-[N] · [CRÍTICO | MEDIO | BAJO]
+─────────────────────────────────────────────────────────
+Qué es:
+  [Descripción precisa del gap con referencia al archivo o artefacto]
+
+Por qué es un problema:
+  [Explicación de qué falla o se degrada cuando este gap existe.
+   Ser concreto: "sin esto, X ocurre" no "podría causar problemas"]
+
+Riesgo si no se corrige:
+  [Qué podría fallar en producción, en el próximo proyecto, o en el equipo.
+   Incluir probabilidad: alta / media / baja y consecuencia específica]
+
+Evidencia:
+  [Ruta del archivo o artefacto que confirma el gap. Citar línea si aplica]
+
+Skill que lo resuelve:
+  [nombre del skill ASDD que corrige este gap, o "acción manual"]
+─────────────────────────────────────────────────────────
 ```
 
-Mejora tipo: agregar sección a la spec-template, ajustar el DoR.
+### Categorías a cubrir en la validación
 
----
+Además de los gaps técnicos del Project Graph, analizar cada categoría con sus preguntas.
+Para cada una extraer: **qué funcionó · qué falló · qué faltaba · mejora concreta**.
 
-#### CATEGORÍA 4 — Decisiones técnicas
+**A — Proceso ASDD**
+- ¿El flujo Spec → Implementación → Tests → QA → Deploy se respetó?
+- ¿Hubo código escrito sin spec APPROVED? ¿Por qué?
+- ¿El orquestador coordinó bien las fases paralelas?
+- ¿Alguna fase del flujo faltó o sobró?
+- ¿El ciclo DRAFT→APPROVED→IN_PROGRESS→IMPLEMENTED fue útil?
+- ¿Cuántos GAPSs quedaron sin resolver al aprobar la spec?
+- *Mejora tipo:* agregar/quitar fase del orquestador, ajustar la Regla de Oro.
 
-Preguntas a responder:
+**B — Calidad del prompt de desarrollo**
+- ¿El gpt-dev-prompt-factory.md produjo un requerimiento suficientemente preciso?
+- ¿Qué secciones del requerimiento estuvieron incompletas o ambiguas?
+- ¿Cuántas preguntas bloqueantes quedaron sin respuesta al arrancar?
+- ¿El requerimiento cubrió mobile/PWA, seguridad, corpus de datos, entorno de deploy?
+- ¿Qué pregunta faltaba y hubiera evitado un problema real?
+- *Mejora tipo:* agregar pregunta o sección al `gpt-dev-prompt-factory.md`.
 
-```
-¿Qué decisiones de arquitectura resultaron correctas en la práctica?
-¿Qué decisiones se tuvieron que revertir o ajustar durante el desarrollo?
-¿Qué decisión habría cambiado el resultado más positivamente?
-¿Hubo conflictos entre las rules del framework y los requerimientos del proyecto?
-¿El stack elegido fue el adecuado para el caso?
-```
+**C — Calidad de la spec**
+- ¿Los criterios de aceptación Gherkin fueron suficientemente precisos?
+- ¿Algún criterio fue ambiguo o imposible de testear?
+- ¿Los modelos de datos reflejaron la realidad del dominio?
+- ¿Los GAPSs documentados se resolvieron antes de implementar?
+- ¿Hubo que modificar la spec después de APPROVED? ¿Cuántas veces?
+- *Mejora tipo:* agregar sección a la spec-template, ajustar el DoR.
 
-Mejora tipo: agregar Architectural Decision Record (ADR), actualizar rules.
+**D — Decisiones técnicas**
+- ¿Qué decisiones de arquitectura resultaron correctas en la práctica?
+- ¿Qué decisiones se tuvieron que revertir o ajustar durante el desarrollo?
+- ¿Qué decisión habría cambiado el resultado más positivamente?
+- ¿Hubo conflictos entre las rules del framework y los requerimientos del proyecto?
+- ¿El stack elegido fue el adecuado para el caso?
+- *Mejora tipo:* agregar ADR (Architectural Decision Record), actualizar rules.
 
----
+**E — Tests y cobertura**
+- ¿Los tests encontraron bugs reales antes de la UI? ¿O los bugs los encontró la UI?
+- ¿Hubo tests que pasaban pero cubrían mal el comportamiento real?
+- ¿El caso de regresión principal se definió con datos reales?
+- ¿La cobertura mínima acordada (≥80%) se alcanzó?
+- ¿Hubo deuda técnica introducida conscientemente? ¿Está documentada?
+- *Mejora tipo:* ajustar unit-testing SKILL, agregar patrones a rules/testing.md.
 
-#### CATEGORÍA 5 — Tests y calidad del código
+**F — Corpus y dominio**
+- ¿Existía documentación real del dominio (docs comerciales, exploraciones, Excel)?
+- ¿Esa documentación se usó para construir las plantillas y fixtures?
+- ¿Los datos reales permitieron encontrar casos edge que datos hipotéticos no habrían revelado?
+- ¿El equipo sabe dónde están los documentos fuente de cada template?
+- ¿Hay documentos en el corpus sin template correspondiente aún?
+- *Mejora tipo:* agregar sección "Corpus" al gpt-dev-prompt-factory.md.
 
-Preguntas a responder:
+**G — UX, deploy y publicación**
+- ¿El producto se pudo publicar sin bloqueos técnicos?
+- ¿El flujo completo funciona en mobile/tablet sin regresiones?
+- ¿El modo presentación (o equivalente) protege datos internos correctamente?
+- ¿El CI/CD funcionó desde el primer deploy?
+- ¿Un usuario nuevo puede usar el producto sin instrucciones?
+- ¿La UI alcanzó el estándar de calidad definido (no parece Excel, no parece formulario)?
+- *Mejora tipo:* agregar checklist UX a la DoD, agregar test E2E a smoke suite.
 
-```
-¿Los tests encontraron bugs reales antes de la UI? (o ¿los bugs los encontró la UI?)
-¿Hubo tests que pasaban pero cubrían mal el comportamiento real?
-¿El caso de regresión principal (si existe) se definió con datos reales?
-¿La cobertura mínima acordada se alcanzó?
-¿Hubo deuda técnica introducida conscientemente? ¿Está documentada?
-```
+### Priorización de mejoras
 
-Mejora tipo: ajustar unit-testing SKILL, agregar patrones a rules/testing.md.
+Para cada mejora propuesta, asignar prioridad:
 
----
+| Impacto | Esfuerzo | Prioridad | Acción |
+|---------|----------|-----------|--------|
+| Alto — afecta todos los proyectos futuros | Bajo < 1h | **P0** | Aplicar en esta sesión |
+| Alto | Alto > 1h | **P1** | Próximo sprint de framework |
+| Medio | Bajo | **P2** | Backlog framework |
+| Bajo | Cualquiera | **P3** | Registro sin compromiso |
 
-#### CATEGORÍA 6 — Corpus de datos y conocimiento del dominio
-
-Preguntas a responder:
-
-```
-¿Existía documentación real del dominio (docs comerciales, exploraciones, Excel)?
-¿Esa documentación se usó para construir las plantillas y fixtures?
-¿Los datos reales permitieron encontrar casos edge que los datos hipotéticos no habrían revelado?
-¿El equipo sabe dónde están los documentos fuente de cada template?
-¿Existe un proceso para actualizar las plantillas cuando cambia la realidad del cliente?
-```
-
-Mejora tipo: agregar sección "Corpus" al gpt-dev-prompt-factory.md, documentar protocolo de actualización de templates.
-
----
-
-#### CATEGORÍA 7 — UX, producto y publicación
-
-Preguntas a responder:
-
-```
-¿El producto se pudo publicar sin bloqueos técnicos?
-¿El flujo completo funciona en mobile/tablet sin regresiones?
-¿El modo presentación (o equivalente) protege datos internos correctamente?
-¿El CI/CD funcionó desde el primer deploy?
-¿Un usuario nuevo puede usar el producto sin instrucciones?
-¿La UI alcanzó el estándar de calidad definido (no parece Excel, no parece formulario)?
-```
-
-Mejora tipo: agregar checklist UX a la DoD del framework, agregar test E2E de presentación a smoke suite base.
-
----
-
-### Paso 3 — Priorización de mejoras
-
-Para cada mejora propuesta, clasificar:
-
-| Impacto | Esfuerzo | Prioridad |
-|---------|---------|-----------|
-| Alto (afecta todos los proyectos futuros) | Bajo (< 1 hora) | P0 — aplicar ahora |
-| Alto | Alto (> 1 hora) | P1 — próximo sprint |
-| Medio | Bajo | P2 — backlog framework |
-| Bajo | Cualquiera | P3 — registro, sin compromiso |
-
----
-
-### Paso 4 — Aplicar mejoras P0 al framework
-
-El skill aplica directamente los cambios P0 a:
+**Archivos del framework que puede modificar este skill (P0 únicamente):**
 
 | Archivo | Cuándo modificar |
 |---------|-----------------|
-| `.claude/meta-prompts/gpt-dev-prompt-factory.md` | Cuando faltó una pregunta crítica |
-| `.claude/skills/<skill>/SKILL.md` | Cuando un skill produjo resultados insuficientes |
-| `.claude/rules/testing.md` | Cuando se descubrió un antipatrón de testing |
-| `.claude/rules/frontend.md` | Cuando el stack necesita una regla nueva |
-| `.github/skills/<skill>/SKILL.md` | Sincronizar con Claude Code (mismo contenido) |
-| `CLAUDE.md` del proyecto | Cuando hay contexto de dominio que no debe perderse |
+| `.claude/meta-prompts/gpt-dev-prompt-factory.md` | Faltó una pregunta crítica |
+| `.claude/skills/<skill>/SKILL.md` | Un skill produjo resultados insuficientes |
+| `.claude/rules/testing.md` | Se descubrió un antipatrón de testing |
+| `.claude/rules/frontend.md` | El stack necesita una regla nueva |
+| `.github/skills/<skill>/SKILL.md` | Sincronizar mirror (mismo contenido) |
+| `CLAUDE.md` | Hay contexto de dominio que no debe perderse entre sesiones |
+
+### Cierre de FASE 2
+
+Terminar con tabla de priorización:
+
+```
+Resumen de validación
+══════════════════════════════════════════════════════════
+GAP-N  [CRÍTICO]  [descripción corta]  → /skill-que-resuelve
+GAP-N  [MEDIO]    [descripción corta]  → /skill-que-resuelve
+GAP-N  [BAJO]     [descripción corta]  → acción manual
+══════════════════════════════════════════════════════════
+Total: N gaps  |  Críticos: N  Medios: N  Bajos: N
+
+¿Continuar con FASE 3 — Plan de ejecución? (s/n)
+```
 
 ---
 
-### Paso 5 — Documentar en changelog y retrospectiva
+## FASE 3 — EJECUCIÓN DE SKILLS (Plan de acción)
 
-**Generar dos archivos:**
+**Objetivo:** convertir los gaps validados en un plan de skills concreto
+con orden recomendado, justificación y output esperado por cada uno.
 
-#### `docs/output/feedback/<proyecto>-retrospective.md`
-Documento completo de la retrospectiva. Se comparte con el equipo.
+### 3.1 — Construir el plan de ejecución
 
-#### `docs/output/feedback/framework-changelog.md`
-Log acumulativo de todas las mejoras aplicadas al framework. Se actualiza con cada ejecución de `/feedback`.
+Para cada skill recomendado, generar:
 
----
+```
+┌─────────────────────────────────────────────────────────┐
+│  PASO [N] — /[nombre-skill]                             │
+│  Prioridad: CRÍTICO | MEDIO | BAJO                      │
+├─────────────────────────────────────────────────────────┤
+│  Por qué ahora:                                         │
+│    [Gap específico que resuelve, referenciando GAP-N]   │
+│                                                         │
+│  Qué produce:                                           │
+│    [Output concreto: archivo generado, fix aplicado,    │
+│     reporte creado, etc.]                               │
+│                                                         │
+│  Depende de:                                            │
+│    [Skills que deben ejecutarse antes, o "ninguno"]     │
+│                                                         │
+│  Esfuerzo estimado:                                     │
+│    [< 5 min | 5–15 min | 15–30 min | > 30 min]         │
+└─────────────────────────────────────────────────────────┘
+```
 
-## Entregable: `docs/output/feedback/<proyecto>-retrospective.md`
+### 3.2 — Orden recomendado
+
+Los skills se ordenan según estas reglas:
+
+1. **Primero:** fixes de estado inconsistente (specs con status incorrecto, .gitignore faltante)
+2. **Segundo:** gaps de CI/CD y deploy (bloquean todo lo demás si fallan)
+3. **Tercero:** gaps de calidad — tests, cobertura, security
+4. **Cuarto:** gaps de documentación — responsive-review, QA artefactos
+5. **Último:** mejoras al framework (rules, skills, meta-prompts)
+
+### 3.3 — Presentar el plan al usuario
+
+```
+PLAN DE EJECUCIÓN — [nombre-proyecto]
+══════════════════════════════════════════════════════════════
+PASO 1  /deploy-setup        [CRÍTICO]  ~5 min   sin deps
+        → Crea .env.example, verifica ci.yml coherencia
+
+PASO 2  acción manual        [CRÍTICO]  ~2 min   sin deps
+        → Actualizar SPEC-003 status: IMPLEMENTED
+
+PASO 3  /unit-testing        [MEDIO]    ~15 min  sin deps
+        → Genera coverage report + tests faltantes
+
+PASO 4  /owasp-scan          [MEDIO]    ~10 min  sin deps
+        → Reporte seguridad para proyecto con auth + datos PII
+
+PASO 5  /responsive-review   [BAJO]     ~5 min   sin deps
+        → Genera reporte RWD en docs/output/responsive-review/
+
+PASO 6  (mejoras framework)  [BAJO]     ~10 min  requiere PASOS 1–5
+        → Actualiza changelog + aplica P0 al framework
+══════════════════════════════════════════════════════════════
+Tiempo total estimado: ~47 min
+Críticos resueltos: 2  Medios: 2  Bajos: 2
+
+¿Ejecutar el plan completo, seleccionar pasos, o exportar como checklist? 
+  [1] Ejecutar todo en orden
+  [2] Seleccionar pasos
+  [3] Exportar como checklist en docs/output/feedback/
+```
+
+### 3.4 — Ejecutar según elección del usuario
+
+**Si elige [1] — Ejecutar todo:**
+Ejecutar cada skill en el orden del plan. Reportar resultado antes de pasar al siguiente.
+Si un paso falla: pausar, informar el error, preguntar si continuar con el siguiente.
+
+**Si elige [2] — Seleccionar pasos:**
+El usuario indica qué pasos ejecutar (e.g. "1, 3, 4").
+Ejecutar solo esos, en el orden del plan.
+
+**Si elige [3] — Exportar checklist:**
+Generar `docs/output/feedback/[proyecto]-action-plan.md` con el plan como lista de tareas.
+El usuario lo ejecuta manualmente cuando quiera.
+
+### 3.5 — Cierre y documentación
+
+Después de ejecutar los skills seleccionados, generar o actualizar estos dos archivos:
+
+#### Template: `docs/output/feedback/[proyecto]-retrospective.md`
 
 ```markdown
 # Retrospectiva — [Proyecto] · [Fecha]
 **Modo:** cierre | sprint | rápido
-**Fase cubierta:** [Fase 1–N o Completo]
-**Ejecutado por:** feedback-skill v1.0
+**Fase cubierta:** Completo | Fase N
+**Skills ejecutados:** [lista de /skills corridos]
 
 ---
 
@@ -219,105 +389,122 @@ Log acumulativo de todas las mejoras aplicadas al framework. Se actualiza con ca
 
 ---
 
-## Resultados por categoría
+## Project Graph al momento del feedback
 
-### Proceso ASDD
-| Aspecto | Estado | Evidencia |
-|---------|--------|-----------|
-| Spec APPROVED antes de código | ✅ / ❌ | [evidencia] |
-| GAPSs resueltos antes de implementar | ✅ / ❌ | [número de GAPS abiertos] |
-| Fases paralelas ejecutadas | ✅ / ❌ | [qué se ejecutó en paralelo] |
+| Dimensión | Estado | Gaps encontrados |
+|-----------|--------|-----------------|
+| Pipeline ASDD | N specs — N IMPLEMENTED | [gaps] |
+| Framework | N skills, N rules | [gaps] |
+| Tests | N tests — cobertura N% | [gaps] |
+| CI/CD | [estado] | [gaps] |
+| Artefactos QA | [estado] | [gaps] |
 
-**Aprendizaje:** [texto libre]
-**Mejora propuesta:** [acción concreta]
+---
 
-### Calidad del Prompt de Desarrollo
+## Validación por categoría
+
+### A — Proceso ASDD
 **Qué funcionó:** [lista]
-**Qué faltó:** [lista]
-**Pregunta que hubiera salvado tiempo:** [texto]
-**Mejora propuesta a gpt-dev-prompt-factory.md:** [sección/pregunta a agregar]
+**Qué falló:** [lista]
+**Evidencia:** [archivos / líneas]
+**Mejora aplicada:** [cambio P0] | **Backlog:** [cambio P1/P2]
 
-### Calidad de la Spec
-**Criterios ambiguos encontrados:** [número + descripción]
-**Modificaciones post-APPROVED:** [número + razón]
-**Mejora propuesta a spec-template:** [texto]
+### B — Calidad del prompt de desarrollo
+**Pregunta que faltó en gpt-dev-prompt-factory:** [texto]
+**Mejora aplicada:** [cambio P0] | **Backlog:** [cambio P1/P2]
 
-### Decisiones técnicas
+### C — Calidad de la spec
+**Criterios ambiguos encontrados:** N — [descripción]
+**Modificaciones post-APPROVED:** N — [razón]
+**Mejora aplicada:** [cambio P0] | **Backlog:** [cambio P1/P2]
+
+### D — Decisiones técnicas
 | Decisión | Resultó | Evidencia |
 |----------|---------|-----------|
-| [stack/arquitectura] | ✅ Correcta / ❌ Se revirtió / ⚠️ Parcial | [evidencia] |
+| [stack/arquitectura] | ✅ Correcta / ❌ Revertida / ⚠️ Parcial | [evidencia] |
 
 **Decisión más valiosa:** [texto]
 **Decisión que cambiaría:** [texto + alternativa]
 
-### Tests y calidad
-**Bugs encontrados por tests (antes de UI):** [número]
-**Bugs encontrados por UI (tests los perdieron):** [número]
-**Tests con lógica incorrecta descubiertos:** [número + descripción]
-**Cobertura alcanzada:** [%] vs objetivo [%]
+### E — Tests y cobertura
+**Bugs encontrados por tests (antes de UI):** N
+**Bugs encontrados por UI (tests los perdieron):** N
+**Cobertura alcanzada:** N% vs objetivo 80%
 
-### Corpus de datos
+### F — Corpus y dominio
 **Documentos reales usados:** [lista]
-**Fixtures basados en datos reales:** [sí/no]
-**Casos edge descubiertos por datos reales:** [descripción]
+**Templates pendientes de crear:** [lista de sectores sin template]
 
-### UX y publicación
+### G — UX y publicación
 **Deploy exitoso en primer intento:** ✅ / ❌
-**Flujo completo funcional en mobile:** ✅ / ❌
-**UI sin regresiones del estándar premium:** ✅ / ❌
+**Flujo funcional en mobile:** ✅ / ❌
+**UI alcanzó estándar premium:** ✅ / ❌
+
+---
+
+## Plan de ejecución ejecutado
+
+| Paso | Skill | Estado | Output |
+|------|-------|--------|--------|
+| 1 | /nombre-skill | ✅ / ❌ / ⏭ skipped | [archivo generado] |
 
 ---
 
 ## Mejoras aplicadas al framework (P0)
 
-| Archivo modificado | Cambio aplicado | Razón |
-|-------------------|-----------------|-------|
-| [archivo] | [cambio] | [por qué era necesario] |
+| Archivo modificado | Cambio | Razón |
+|-------------------|--------|-------|
+| [archivo] | [descripción] | [evidencia del proyecto] |
 
-## Backlog de mejoras (P1/P2)
+## Backlog (P1/P2)
 
-| Mejora | Prioridad | Esfuerzo estimado |
-|--------|-----------|-------------------|
-| [mejora] | P1 | [tiempo] |
+| Mejora | Prioridad | Esfuerzo |
+|--------|-----------|---------|
+| [mejora] | P1 | ~N min |
 
 ---
 
-## Lección más valiosa de este proyecto
+## Lección más valiosa
 
-> [Una frase. El insight más importante que todo el equipo debe recordar para el próximo proyecto.]
+> [Una sola frase. El insight que todo el equipo debe recordar para el próximo proyecto.]
 ```
 
----
-
-## Entregable: `docs/output/feedback/framework-changelog.md`
+#### Template: entrada en `docs/output/feedback/framework-changelog.md`
 
 ```markdown
-# Framework ASDD — Changelog de Mejoras
+## [YYYY-MM-DD] (sesión N) — Proyecto: [nombre]
 
-## [YYYY-MM-DD] — Proyecto: [nombre]
-### Cambios aplicados
+### Cambios aplicados (P0)
 - **[archivo]**: [descripción del cambio]
-  - Razón: [por qué se hizo]
-  - Aprendizaje origen: [qué falló o funcionó en el proyecto]
+  - Razón: [evidencia concreta del proyecto]
+  - Aprendizaje: [qué falló o funcionó]
 
 ### Backlog agregado
-- [mejora pendiente] — P[1/2]
+- [mejora] — P1
+```
+
+#### Reporte final en consola
+
+```
+FEEDBACK COMPLETADO — [nombre-proyecto] · [fecha]
+══════════════════════════════════════════════════════════
+Gaps resueltos:              N/N
+Skills ejecutados:           [lista]
+Archivos generados/actualizados: [lista]
+Mejoras P0 al framework:     N
+══════════════════════════════════════════════════════════
+Lección más valiosa:
+  "[Una frase que todo el equipo debe recordar]"
 ```
 
 ---
 
 ## Reglas
 
-- Solo proponer mejoras que tengan evidencia concreta del proyecto — sin mejoras hipotéticas
-- No modificar implementación del proyecto — solo archivos del framework (`.claude/`, `.github/`)
-- Si una mejora P0 rompe retrocompatibilidad con proyectos en curso, crear versión nueva del skill en lugar de editar el existente
+- FASE 1 es obligatoria — nunca saltar directo a la retrospectiva
+- FASE 2 solo describe gaps con evidencia real del proyecto; no inventar problemas hipotéticos
+- FASE 3 solo recomienda skills que existen en `.claude/skills/`
+- El plan de ejecución respeta siempre el orden de dependencias
 - El changelog es acumulativo — nunca borrar entradas, solo agregar
-- La lección más valiosa debe ser UNA sola frase — si no se puede sintetizar en una frase, la retrospectiva no fue suficientemente profunda
-
----
-
-## Restricciones
-
-- No modificar specs ni código fuente del proyecto
-- No inventar problemas que no tuvieron evidencia real
-- Si el proyecto está en estado IN_PROGRESS, usar `--modo=sprint` — no `--modo=cierre`
+- Si el modo es `--modo=sprint`, la validación (FASE 2) cubre solo la fase completada, no el proyecto completo
+- No modificar código fuente del proyecto — solo artefactos de framework (`.claude/`, `.github/skills/`, `docs/output/`)
